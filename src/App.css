@@ -1,0 +1,10 @@
+#overlay {
+  position: absolute;
+}
+body {
+  margin: 0;
+  background: #f6f9fc;
+}
+.btn {
+  border-radius: 0px;
+}
