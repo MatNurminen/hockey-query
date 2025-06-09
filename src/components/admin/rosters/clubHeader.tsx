@@ -1,3 +1,4 @@
+import { memo, useState } from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import SectionFirst from '../../common/Sections/sectionFirst';
@@ -5,7 +6,6 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import { styled } from '@mui/material/styles';
-import { memo, useState } from 'react';
 import GreenButton from '../../common/Buttons/greenButton';
 import SearchPlayer from '../../common/SearchPlayer';
 import { useAddPlayerTournament } from '../../../api/players-tournaments/mutations';
@@ -19,14 +19,15 @@ const Img = styled('img')({
   maxHeight: '70px',
 });
 
-const ClubHeader = ({
+const AddPlayerDialog = ({
   teamTournamentId,
   leagueId,
   seasonId,
-  team,
-  logo,
-}: any) => {
-  console.log('render club header');
+}: {
+  teamTournamentId: number;
+  leagueId: number;
+  seasonId: number;
+}) => {
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: addPlayerTournament } = useAddPlayerTournament(
     leagueId,
@@ -55,6 +56,39 @@ const ClubHeader = ({
   };
 
   return (
+    <>
+      <GreenButton
+        size='small'
+        text='Add Player'
+        onClick={handleOpen}
+        iconIndex={0}
+      />
+      <Dialog maxWidth='sm' fullWidth={true} open={open} onClose={handleClose}>
+        <DialogContent>
+          <SearchPlayer onPlayerSelect={addPlayer} />
+        </DialogContent>
+        <DialogActions sx={{ mr: 3, mb: 3, p: 0 }}>
+          <GrayButton size='small' text='Cancel' onClick={handleClose} />
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+};
+
+const ClubHeader = ({
+  teamTournamentId,
+  leagueId,
+  seasonId,
+  team,
+  logo,
+}: {
+  teamTournamentId: number;
+  leagueId: number;
+  seasonId: number;
+  team: string;
+  logo: string;
+}) => {
+  return (
     <Box sx={{ mt: 4, mb: 1 }}>
       <Grid
         container
@@ -69,27 +103,13 @@ const ClubHeader = ({
           <SectionFirst content={team} txtAlign='left' />
         </Grid>
         <Grid size={2}>
-          <GreenButton
-            size='small'
-            text='Add Player'
-            onClick={handleOpen}
-            iconIndex={0}
+          <AddPlayerDialog
+            teamTournamentId={teamTournamentId}
+            leagueId={leagueId}
+            seasonId={seasonId}
           />
         </Grid>
       </Grid>
-      <Dialog
-        maxWidth={'sm'}
-        fullWidth={true}
-        open={open}
-        onClose={handleClose}
-      >
-        <DialogContent>
-          <SearchPlayer onPlayerSelect={addPlayer} />
-        </DialogContent>
-        <DialogActions sx={{ mr: 3, mb: 3, p: 0 }}>
-          <GrayButton size='small' text='Cancel' onClick={handleClose} />
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 };

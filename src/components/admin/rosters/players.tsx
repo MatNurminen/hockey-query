@@ -13,8 +13,6 @@ import RedButton from '../../common/Buttons/redButton';
 import { useDeletePlayerTournament } from '../../../api/players-tournaments/mutations';
 
 const Players = ({ players, teams }: any) => {
-  console.log('render players');
-
   const [searchParams] = useSearchParams();
   const leagueId = Number(searchParams.get('league'));
   const seasonId = Number(searchParams.get('season'));
