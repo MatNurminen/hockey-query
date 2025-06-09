@@ -23,7 +23,7 @@ export function useAddPlayerTournament(leagueId: number, seasonId: number) {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(
-        ['playersStatsDetail'],
+        queryKey,
         (oldTeamsTournaments: TPlayerStatDetail[] | undefined) => {
           const updatedTeamsTournaments = oldTeamsTournaments
             ? [...oldTeamsTournaments, data]
@@ -31,9 +31,7 @@ export function useAddPlayerTournament(leagueId: number, seasonId: number) {
           return updatedTeamsTournaments;
         }
       );
-      queryClient.invalidateQueries({
-        queryKey: queryKey,
-      });
+      queryClient.invalidateQueries({ queryKey });
     },
     onError: (
       err,
@@ -44,7 +42,7 @@ export function useAddPlayerTournament(leagueId: number, seasonId: number) {
       }
     ) => {
       if (context?.previousData) {
-        queryClient.setQueryData(['playersStatsDetail'], context.previousData);
+        queryClient.setQueryData(queryKey, context.previousData);
       }
       if (!context?.hasShownError) {
         if (axios.isAxiosError(err) && err.response?.data?.message) {

@@ -9,33 +9,20 @@ import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import TableFlag from '../../common/Images/tableFlag';
 import ClubHeader from './clubHeader';
-import { getStandings } from '../../../api/teams-stats/queries';
-import { getPlayersStatsDetail } from '../../../api/players-stats/queries';
 import RedButton from '../../common/Buttons/redButton';
 import { useDeletePlayerTournament } from '../../../api/players-tournaments/mutations';
 
-const Players = () => {
+const Players = ({ players, teams }: any) => {
+  console.log('render players');
+
   const [searchParams] = useSearchParams();
-  const leagueId = [Number(searchParams.get('league'))];
+  const leagueId = Number(searchParams.get('league'));
   const seasonId = Number(searchParams.get('season'));
 
-  const {
-    data: teams = [],
-    isError,
-    isLoading,
-  } = getStandings({ leagueId, seasonId });
-
-  const { data: players } = getPlayersStatsDetail({ leagueId, seasonId });
-
   const { mutate: deletePlayerTournament } = useDeletePlayerTournament(
-    leagueId[0],
+    leagueId,
     seasonId
   );
-
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-  if (!teams) return <h3>No data available</h3>;
-  if (!players) return <h3>No data available</h3>;
 
   const handleDelete = (id: number) => {
     deletePlayerTournament({ id });

@@ -5,7 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import GreenButton from '../../common/Buttons/greenButton';
 import SearchPlayer from '../../common/SearchPlayer';
 import { useAddPlayerTournament } from '../../../api/players-tournaments/mutations';
@@ -26,9 +26,10 @@ const ClubHeader = ({
   team,
   logo,
 }: any) => {
+  console.log('render club header');
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: addPlayerTournament } = useAddPlayerTournament(
-    leagueId[0],
+    leagueId,
     seasonId
   );
   const [open, setOpen] = useState(false);
@@ -93,4 +94,4 @@ const ClubHeader = ({
   );
 };
 
-export default ClubHeader;
+export default memo(ClubHeader);

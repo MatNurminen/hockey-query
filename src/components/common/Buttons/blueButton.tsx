@@ -2,11 +2,13 @@ import Button from '@mui/material/Button';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PaletteIcon from '@mui/icons-material/Palette';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 const icons: JSX.Element[] = [
   <CreateNewFolderIcon />,
   <CloudUploadIcon />,
   <PaletteIcon />,
+  <PictureAsPdfIcon />,
 ];
 
 const BlueButton = ({
