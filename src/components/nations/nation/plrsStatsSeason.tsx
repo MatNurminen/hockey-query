@@ -133,7 +133,12 @@ const PlrsStatsSeason = ({ nationId, natName }: any) => {
             </Table>
           </TableContainer>
           <Box mt={1}>
-            <GreenButton fullWidth={true} text='SHOW MORE' />
+            <Link
+              component={RouterLink}
+              to={`/nation?nation=${nationId}&season=${seasonId}`}
+            >
+              <GreenButton fullWidth={true} text='SHOW MORE' />
+            </Link>
           </Box>
           <Divider sx={{ my: 3 }} />
         </Container>

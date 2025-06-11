@@ -28,6 +28,7 @@ import Tournaments from './components/tournaments';
 import Tournament from './components/admin/tournaments/updateTournament';
 import Rosters from './components/rosters';
 import AdmRosters from './components/admin/rosters';
+import NationStats from './components/players-stats';
 
 function App() {
   return (
@@ -53,6 +54,8 @@ function App() {
             <Route path='/tournaments' element={<Tournaments />} />
             <Route path='/tournaments/:id' element={<Tournament />} />
             <Route path='/rosters' element={<Rosters />} />
+            <Route path='/nation' element={<NationStats />} />
+
             <Route path='/adm-rosters' element={<AdmRosters />} />
 
             <Route path='*' element={<NotFound />} />
