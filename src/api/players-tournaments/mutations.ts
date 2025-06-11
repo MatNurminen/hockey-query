@@ -3,7 +3,7 @@ import { useShowSnackbar } from '../../components/layout/useShowSnackbar';
 import { createMutation } from '../factories/mutationFactory';
 import { TPlayerStatDetail } from '../players-stats/types';
 import queryClient from '../queryClient';
-import { TCreatePlayerTournamentDto } from './types';
+import { TCreatePlayerTournamentDto, TPlayerTournamentDto } from './types';
 
 export function useAddPlayerTournament(leagueId: number, seasonId: number) {
   const showSnackbar = useShowSnackbar();
@@ -49,6 +49,43 @@ export function useAddPlayerTournament(leagueId: number, seasonId: number) {
           showSnackbar(err.response.data.message, 'error');
         } else {
           showSnackbar('Failed to add player into tournament', 'error');
+        }
+        if (context) {
+          context.hasShownError = true;
+        }
+      }
+    },
+  });
+}
+
+export function useUpdatePlayerTournament() {
+  const showSnackbar = useShowSnackbar();
+
+  return createMutation<
+    TPlayerTournamentDto,
+    TCreatePlayerTournamentDto & { id: number },
+    { previousData?: TPlayerTournamentDto[]; hasShownError?: boolean }
+  >(({ id }) => `/api/players-tournaments/${id}`, 'PATCH', {
+    transformBody: (variables: TCreatePlayerTournamentDto & { id: number }) => {
+      const { id, ...bodyData } = variables;
+      return bodyData;
+    },
+    onSuccess: () => {
+      showSnackbar('Player Tournament updated successfully', 'success');
+    },
+    onError: (
+      err,
+      _playerTournament,
+      context?: {
+        previousData?: TPlayerTournamentDto[];
+        hasShownError?: boolean;
+      }
+    ) => {
+      if (!context?.hasShownError) {
+        if (axios.isAxiosError(err) && err.response?.data?.message) {
+          showSnackbar(err.response.data.message, 'error');
+        } else {
+          showSnackbar('Failed to update player tournament', 'error');
         }
         if (context) {
           context.hasShownError = true;

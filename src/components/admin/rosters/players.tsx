@@ -1,33 +1,153 @@
-import HeaderMain from '../../common/Table/headerMain';
-import TableContainer from '@mui/material/TableContainer';
+import { useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import TableFlag from '../../common/Images/tableFlag';
 import ClubHeader from './clubHeader';
 import RedButton from '../../common/Buttons/redButton';
-import { useDeletePlayerTournament } from '../../../api/players-tournaments/mutations';
+import {
+  useDeletePlayerTournament,
+  useUpdatePlayerTournament,
+} from '../../../api/players-tournaments/mutations';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-const Players = ({ players, teams }: any) => {
+const Players = ({ players: initialPlayers, teams }: any) => {
   const [searchParams] = useSearchParams();
   const leagueId = Number(searchParams.get('league'));
   const seasonId = Number(searchParams.get('season'));
 
+  const [players, setPlayers] = useState(initialPlayers);
+  const [updatedCells, setUpdatedCells] = useState<Set<string>>(new Set());
+
+  const { mutateAsync: updatePlayerTournament } = useUpdatePlayerTournament();
   const { mutate: deletePlayerTournament } = useDeletePlayerTournament(
     leagueId,
     seasonId
   );
 
+  useEffect(() => {
+    setPlayers(initialPlayers);
+  }, [initialPlayers]);
+
   const handleDelete = (id: number) => {
     deletePlayerTournament({ id });
   };
 
+  const handleProcessRowUpdate = async (newRow: any, oldRow: any) => {
+    const changedFields = Object.keys(newRow).filter(
+      (key) => key !== 'id' && newRow[key] !== oldRow[key]
+    );
+
+    if (changedFields.length === 0) return oldRow;
+
+    await updatePlayerTournament({
+      id: newRow.id,
+      teams_tournament_id: newRow.teams_tournament_id,
+      player_id: newRow.player_id,
+      games: newRow.games || 0,
+      goals: newRow.goals || 0,
+      postseason: newRow.postseason,
+    });
+
+    setPlayers((prev: any[]) =>
+      prev.map((row) => (row.id === newRow.id ? newRow : row))
+    );
+
+    setUpdatedCells((prev) => {
+      const next = new Set(prev);
+      changedFields.forEach((field) => next.add(`${newRow.id}-${field}`));
+      return next;
+    });
+
+    return newRow;
+  };
+
+  const columns: GridColDef<(typeof players)[number]>[] = [
+    {
+      headerClassName: 'header-bc',
+      field: 'jersey_number',
+      headerName: '#',
+      sortable: false,
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'player_position',
+      headerName: 'POS',
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'fullName',
+      headerName: 'NAME',
+      flex: 1,
+      sortable: false,
+      renderCell: (params) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {params.row.player_flag && <TableFlag src={params.row.player_flag} />}
+          <Link
+            underline='hover'
+            component={RouterLink}
+            to={`/players/${params.row.player_id}`}
+          >
+            {params.row.first_name} {params.row.last_name}
+          </Link>
+        </div>
+      ),
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'games',
+      headerName: 'GP',
+      editable: true,
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'goals',
+      headerName: 'G',
+      editable: true,
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'postseason',
+      headerName: 'POSTSEASN',
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'age',
+      headerName: 'AGE',
+      valueGetter: (_value, row) => `${row.season_id - row.birth_year}`,
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'birth_year',
+      headerName: 'BORN',
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'height',
+      headerName: 'HEIGHT',
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'delete',
+      headerName: '',
+      sortable: false,
+      flex: 1,
+      renderCell: (params) => (
+        <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+          <RedButton
+            text='Delete'
+            size='small'
+            onClick={() => {
+              handleDelete(Number(params.row.id));
+            }}
+          />
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <TableContainer component={Paper}>
+    <Paper>
       {teams
         .sort((a: any, b: any) => a.full_name.localeCompare(b.full_name))
         .map((team: any) => (
@@ -39,67 +159,44 @@ const Players = ({ players, teams }: any) => {
               team={team.full_name}
               logo={team.logo}
             />
-            <Table size='small'>
-              <HeaderMain
-                align='center'
-                cells={[
-                  '#',
-                  'Pos',
-                  'Nat',
-                  'Name',
-                  'GP',
-                  'G',
-                  'Postseason',
-                  'Age',
-                  'Born',
-                  'Height',
-                  '',
-                ]}
-              />
-              <TableBody>
-                {players
-                  .filter((player: any) => player.team_id === team.team_id)
-                  .sort((b: any, a: any) => b.player_order - a.player_order)
-                  .map((player: any, key: any) => (
-                    <TableRow key={key}>
-                      <TableCell>{player.jersey_number}</TableCell>
-                      <TableCell>{player.player_position}</TableCell>
-                      <TableCell>
-                        <TableFlag src={player.player_flag} />
-                      </TableCell>
-                      <TableCell>
-                        <Link
-                          underline='hover'
-                          component={RouterLink}
-                          to={`/players/${player.player_id}`}
-                        >
-                          {player.first_name} {player.last_name}
-                        </Link>
-                      </TableCell>
-                      <TableCell>{player.games}</TableCell>
-                      <TableCell>{player.goals}</TableCell>
-                      <TableCell>{player.postseason}</TableCell>
-                      <TableCell>
-                        {player.season_id - player.birth_year}
-                      </TableCell>
-                      <TableCell>{player.birth_year}</TableCell>
-                      <TableCell>{player.height}</TableCell>
-                      <TableCell>
-                        <RedButton
-                          text='Delete'
-                          size='small'
-                          onClick={() => {
-                            handleDelete(Number(player.id));
-                          }}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
+            <DataGrid
+              rows={players
+                .filter((player: any) => player.team_id === team.team_id)
+                .sort((b: any, a: any) => b.player_order - a.player_order)}
+              columns={columns}
+              hideFooter
+              disableColumnMenu
+              columnHeaderHeight={40}
+              rowHeight={40}
+              processRowUpdate={handleProcessRowUpdate}
+              getCellClassName={(params) => {
+                const key = `${params.id}-${params.field}`;
+                return updatedCells.has(key) ? 'updated-cell' : '';
+              }}
+              sx={{
+                '& .header-bc': {
+                  backgroundColor: '#093f56',
+                },
+                '& .MuiDataGrid-columnHeaderTitle': {
+                  color: '#fff',
+                },
+                '& .MuiDataGrid-columnSeparator': {
+                  visibility: 'hidden',
+                },
+                '& .MuiDataGrid-columnHeader:focus-within .MuiDataGrid-sortIcon, \
+                & .MuiDataGrid-columnHeader:hover .MuiDataGrid-sortIcon': {
+                  color: '#fff',
+                },
+                '& .updated-cell': {
+                  backgroundColor: '#d0ffd0',
+                  fontWeight: 'medium',
+                  fontStyle: 'italic',
+                },
+              }}
+            />
           </div>
         ))}
-    </TableContainer>
+    </Paper>
   );
 };
 
