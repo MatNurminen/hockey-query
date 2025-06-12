@@ -45,11 +45,11 @@ const AddPlayerDialog = ({
 
   const addPlayer = async (playerId: number) => {
     try {
+      setOpen(false);
       await addPlayerTournament({
         teams_tournament_id: teamTournamentId,
         player_id: playerId,
       });
-      setOpen(false);
     } catch (error) {
       enqueueSnackbar('Failed to add player.', { variant: 'error' });
     }

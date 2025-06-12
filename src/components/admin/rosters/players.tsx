@@ -68,11 +68,17 @@ const Players = ({ players: initialPlayers, teams }: any) => {
       field: 'jersey_number',
       headerName: '#',
       sortable: false,
+      width: 80,
+      align: 'center',
+      headerAlign: 'center',
     },
     {
       headerClassName: 'header-bc',
       field: 'player_position',
       headerName: 'POS',
+      align: 'center',
+      headerAlign: 'center',
+      width: 80,
     },
     {
       headerClassName: 'header-bc',
@@ -90,6 +96,10 @@ const Players = ({ players: initialPlayers, teams }: any) => {
           >
             {params.row.first_name} {params.row.last_name}
           </Link>
+          {Array.isArray(players) &&
+            players.length > 0 &&
+            players[0].type_id === 2 &&
+            (params.row.club_name ? `/${params.row.club_name}/` : 'No club')}
         </div>
       ),
     },
@@ -98,40 +108,33 @@ const Players = ({ players: initialPlayers, teams }: any) => {
       field: 'games',
       headerName: 'GP',
       editable: true,
+      align: 'center',
+      headerAlign: 'center',
+      width: 80,
     },
     {
       headerClassName: 'header-bc',
       field: 'goals',
       headerName: 'G',
       editable: true,
+      align: 'center',
+      headerAlign: 'center',
+      width: 80,
     },
     {
       headerClassName: 'header-bc',
       field: 'postseason',
-      headerName: 'POSTSEASN',
-    },
-    {
-      headerClassName: 'header-bc',
-      field: 'age',
-      headerName: 'AGE',
-      valueGetter: (_value, row) => `${row.season_id - row.birth_year}`,
-    },
-    {
-      headerClassName: 'header-bc',
-      field: 'birth_year',
-      headerName: 'BORN',
-    },
-    {
-      headerClassName: 'header-bc',
-      field: 'height',
-      headerName: 'HEIGHT',
+      headerName: 'POSTSEASON',
+      editable: true,
+      flex: 1,
     },
     {
       headerClassName: 'header-bc',
       field: 'delete',
       headerName: '',
       sortable: false,
-      flex: 1,
+      //flex: 1,
+      width: 120,
       renderCell: (params) => (
         <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
           <RedButton
