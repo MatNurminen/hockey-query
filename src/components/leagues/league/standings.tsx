@@ -233,7 +233,16 @@ const Standings = ({ leagueId, seasonId, title }: any) => {
           processRowUpdate={handleProcessRowUpdate}
           getCellClassName={(params) => {
             const key = `${params.id}-${params.field}`;
-            return updatedCells.has(key) ? 'updated-cell' : '';
+            const row = params.row;
+
+            const mismatch =
+              row.games !== row.wins + row.ties + row.losts &&
+              params.field === 'games';
+
+            if (mismatch) return 'error-cell';
+            if (updatedCells.has(key)) return 'updated-cell';
+
+            return '';
           }}
           sx={{
             '& .header-bc': {
@@ -254,6 +263,9 @@ const Standings = ({ leagueId, seasonId, title }: any) => {
               backgroundColor: '#d0ffd0 !important',
               fontWeight: 'medium',
               fontStyle: 'italic',
+            },
+            '& .error-cell': {
+              backgroundColor: '#f96b52 !important',
             },
             '& .MuiDataGrid-cell': {
               backgroundColor: 'inherit',
