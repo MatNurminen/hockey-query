@@ -1,10 +1,7 @@
+import { useEffect, useState, useMemo } from 'react';
 import HeaderMain from '../../common/Table/headerMain';
-import HeaderSection from '../../common/Table/headerSection';
 import TableContainer from '@mui/material/TableContainer';
 import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import {
@@ -13,83 +10,260 @@ import {
 } from '../../../api/teams-stats/queries';
 import TableFlag from '../../common/Images/tableFlag';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import GreenButton from '../../common/Buttons/greenButton';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { useUpdateTeamTournament } from '../../../api/teams-tournaments/mutations';
 import Paper from '@mui/material/Paper';
 
 const Standings = ({ leagueId, seasonId, title }: any) => {
   getPrefetchStandings(leagueId, seasonId - 1);
 
   const {
-    data: data = [],
+    data: teams = [],
     isError,
     isLoading,
   } = getStandings({ leagueId, seasonId });
 
+  const [teamsState, setTeamsState] = useState(teams);
+  const [updatedCells, setUpdatedCells] = useState<Set<string>>(new Set());
+
+  const { mutateAsync: updateTeamTournament } = useUpdateTeamTournament();
+
+  useEffect(() => {
+    if (
+      teams.length !== teamsState.length ||
+      teams.some((team, i) => team.id !== teamsState[i]?.id)
+    ) {
+      setTeamsState(teams);
+      setUpdatedCells(new Set());
+    }
+  }, [teams]);
+
+  const rowsWithRank = useMemo(() => {
+    const sortedTeams = [...teamsState].sort((a, b) => {
+      if (b.pts !== a.pts) return b.pts - a.pts;
+      return b.gd - a.gd;
+    });
+    return sortedTeams.map((team, index) => ({
+      ...team,
+      key: index + 1,
+    }));
+  }, [teamsState]);
+
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
-  if (!data) return <h3>No data available</h3>;
+  if (!teams) return <h3>No data available</h3>;
+
+  const handleProcessRowUpdate = async (newRow: any, oldRow: any) => {
+    const toNumber = (val: any) => Number(val) || 0;
+
+    const updatedRow = {
+      ...newRow,
+      games: toNumber(newRow.games),
+      wins: toNumber(newRow.wins),
+      ties: toNumber(newRow.ties),
+      losts: toNumber(newRow.losts),
+      goals_for: toNumber(newRow.goals_for),
+      goals_against: toNumber(newRow.goals_against),
+    };
+
+    updatedRow.pts = updatedRow.wins * 2 + updatedRow.ties;
+    updatedRow.gd = updatedRow.goals_for - updatedRow.goals_against;
+
+    const changedFields = Object.keys(updatedRow).filter(
+      (key) => key !== 'id' && key !== 'key' && updatedRow[key] !== oldRow[key]
+    );
+
+    if (changedFields.length === 0) return oldRow;
+
+    await updateTeamTournament({
+      id: updatedRow.id,
+      tournament_id: updatedRow.tournament_id,
+      team_id: updatedRow.team_id,
+      games: updatedRow.games,
+      wins: updatedRow.wins,
+      ties: updatedRow.ties,
+      losts: updatedRow.losts,
+      goals_for: updatedRow.goals_for,
+      goals_against: updatedRow.goals_against,
+      postseason: updatedRow.postseason,
+    });
+
+    setTeamsState((prev) =>
+      prev.map((row) => (row.id === updatedRow.id ? updatedRow : row))
+    );
+
+    setUpdatedCells((prev) => {
+      const next = new Set(prev);
+      changedFields.forEach((field) => next.add(`${updatedRow.id}-${field}`));
+      if (updatedRow.pts !== oldRow.pts) next.add(`${updatedRow.id}-pts`);
+      if (updatedRow.gd !== oldRow.gd) next.add(`${updatedRow.id}-gd`);
+      return next;
+    });
+
+    return updatedRow;
+  };
+
+  const columns: GridColDef<(typeof teams)[number]>[] = [
+    {
+      headerClassName: 'header-bc',
+      field: 'key',
+      headerName: '#',
+      width: 80,
+      align: 'center',
+      headerAlign: 'center',
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'fullName',
+      headerName: 'TEAM',
+      flex: 1,
+      sortable: false,
+      renderCell: (params) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {params.row.logo && <TableFlag src={params.row.logo} />}
+          <Link
+            underline='hover'
+            component={RouterLink}
+            to={`/players/${params.row.team_id}`}
+          >
+            {params.row.full_name}
+          </Link>
+        </div>
+      ),
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'games',
+      headerName: 'GP',
+      editable: true,
+      align: 'center',
+      headerAlign: 'center',
+      width: 80,
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'wins',
+      headerName: 'W',
+      editable: true,
+      align: 'center',
+      headerAlign: 'center',
+      width: 80,
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'ties',
+      headerName: 'T',
+      editable: true,
+      align: 'center',
+      headerAlign: 'center',
+      width: 80,
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'losts',
+      headerName: 'L',
+      editable: true,
+      align: 'center',
+      headerAlign: 'center',
+      width: 80,
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'goals_for',
+      headerName: 'GF',
+      editable: true,
+      align: 'center',
+      headerAlign: 'center',
+      width: 80,
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'goals_against',
+      headerName: 'GA',
+      editable: true,
+      align: 'center',
+      headerAlign: 'center',
+      width: 80,
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'gd',
+      headerName: '+/-',
+      editable: true,
+      align: 'center',
+      headerAlign: 'center',
+      width: 80,
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'pts',
+      headerName: 'PTS',
+      align: 'center',
+      headerAlign: 'center',
+      width: 80,
+    },
+    {
+      headerClassName: 'header-bc',
+      field: 'postseason',
+      headerName: 'POSTSEASON',
+      editable: true,
+      flex: 1,
+    },
+  ];
 
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table size='small'>
-          <HeaderMain
-            cells={[`${seasonId}-${seasonId - 1999} ${title} Standings`]}
-          />
-        </Table>
-        {Object.keys(data).length > 0 && (
+      <Paper>
+        <TableContainer sx={{ mb: -0.5 }}>
           <Table size='small'>
-            <HeaderSection
-              cells={[
-                { align: 'center', text: '#' },
-                { text: 'team' },
-                { align: 'center', text: 'gp' },
-                { align: 'center', text: 'w' },
-                { align: 'center', text: 't' },
-                { align: 'center', text: 'L' },
-                { align: 'center', text: 'GF' },
-                { align: 'center', text: 'GA' },
-                { align: 'center', text: '+/-' },
-                { align: 'center', text: 'pts' },
-                { text: 'Postseason' },
-              ]}
+            <HeaderMain
+              cells={[`${seasonId}-${seasonId - 1999} ${title} Standings`]}
             />
-            <TableBody>
-              {data.map((team: any, key: any) => (
-                <TableRow key={team.id}>
-                  <TableCell align='center'>{key + 1}</TableCell>
-                  <TableCell>
-                    <Stack direction='row' alignItems='center' spacing={2}>
-                      <Box width={40} display='flex' justifyContent='center'>
-                        <TableFlag src={team.logo} />
-                      </Box>
-                      <Box>
-                        <Link
-                          underline='hover'
-                          component={RouterLink}
-                          to={`/teams/${team.team_id}`}
-                        >
-                          {team.full_name}
-                        </Link>
-                      </Box>
-                    </Stack>
-                  </TableCell>
-                  <TableCell align='center'>{team.games}</TableCell>
-                  <TableCell align='center'>{team.wins}</TableCell>
-                  <TableCell align='center'>{team.ties}</TableCell>
-                  <TableCell align='center'>{team.losts}</TableCell>
-                  <TableCell align='center'>{team.goals_for}</TableCell>
-                  <TableCell align='center'>{team.goals_against}</TableCell>
-                  <TableCell align='center'>{team.gd}</TableCell>
-                  <TableCell align='center'>{team.pts}</TableCell>
-                  <TableCell>{team.postseason}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
           </Table>
-        )}
-      </TableContainer>
+        </TableContainer>
+        <DataGrid
+          rows={rowsWithRank}
+          columns={columns}
+          getRowId={(row) => row.id}
+          hideFooter
+          disableColumnMenu
+          columnHeaderHeight={36}
+          rowHeight={36}
+          processRowUpdate={handleProcessRowUpdate}
+          getCellClassName={(params) => {
+            const key = `${params.id}-${params.field}`;
+            return updatedCells.has(key) ? 'updated-cell' : '';
+          }}
+          sx={{
+            '& .header-bc': {
+              backgroundColor: '#ca3136',
+            },
+            '& .MuiDataGrid-columnHeaderTitle': {
+              color: '#fff',
+              fontSize: '16px',
+            },
+            '& .MuiDataGrid-columnSeparator': {
+              visibility: 'hidden',
+            },
+            '& .MuiDataGrid-columnHeader:focus-within .MuiDataGrid-sortIcon, \
+                & .MuiDataGrid-columnHeader:hover .MuiDataGrid-sortIcon': {
+              color: '#fff',
+            },
+            '& .updated-cell': {
+              backgroundColor: '#d0ffd0 !important',
+              fontWeight: 'medium',
+              fontStyle: 'italic',
+            },
+            '& .MuiDataGrid-cell': {
+              backgroundColor: 'inherit',
+            },
+            '& .MuiDataGrid-row': {
+              backgroundColor: 'inherit',
+            },
+          }}
+        />
+      </Paper>
       <Box mt={1}>
         <GreenButton
           fullWidth
@@ -100,14 +274,5 @@ const Standings = ({ leagueId, seasonId, title }: any) => {
     </>
   );
 };
-
-{
-  /* <Router>
-          <Link href="/">Link</Link>
-          <Button href="/" variant="contained">
-            Link
-          </Button>
-        </Router> */
-}
 
 export default Standings;

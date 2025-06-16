@@ -2,7 +2,11 @@ import axios from 'axios';
 import { useShowSnackbar } from '../../components/layout/useShowSnackbar';
 import { createMutation } from '../factories/mutationFactory';
 import queryClient from '../queryClient';
-import { TCreateTeamTournamentDto, TTeamByTournamentDto } from './types';
+import {
+  TCreateTeamTournamentDto,
+  TTeamByTournamentDto,
+  TTeamTournamentDto,
+} from './types';
 
 export function useAddTeamTournament(tournamentId: number) {
   const showSnackbar = useShowSnackbar();
@@ -59,7 +63,44 @@ export function useAddTeamTournament(tournamentId: number) {
   });
 }
 
-export function useDeleteTeamTournment(tournamentId: number) {
+export function useUpdateTeamTournament() {
+  const showSnackbar = useShowSnackbar();
+
+  return createMutation<
+    TTeamTournamentDto,
+    TCreateTeamTournamentDto & { id: number },
+    { previousData?: TTeamTournamentDto[]; hasShownError?: boolean }
+  >(({ id }) => `/api/teams-tournaments/${id}`, 'PATCH', {
+    transformBody: (variables: TCreateTeamTournamentDto & { id: number }) => {
+      const { id, ...bodyData } = variables;
+      return bodyData;
+    },
+    onSuccess: () => {
+      showSnackbar('Team Tournament updated successfully', 'success');
+    },
+    onError: (
+      err,
+      _playerTournament,
+      context?: {
+        previousData?: TTeamTournamentDto[];
+        hasShownError?: boolean;
+      }
+    ) => {
+      if (!context?.hasShownError) {
+        if (axios.isAxiosError(err) && err.response?.data?.message) {
+          showSnackbar(err.response.data.message, 'error');
+        } else {
+          showSnackbar('Failed to update team tournament', 'error');
+        }
+        if (context) {
+          context.hasShownError = true;
+        }
+      }
+    },
+  });
+}
+
+export function useDeleteTeamTournament(tournamentId: number) {
   const showSnackbar = useShowSnackbar();
   const queryKey = ['teamsByTournament', tournamentId];
 

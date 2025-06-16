@@ -133,7 +133,6 @@ const Players = ({ players: initialPlayers, teams }: any) => {
       field: 'delete',
       headerName: '',
       sortable: false,
-      //flex: 1,
       width: 120,
       renderCell: (params) => (
         <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
@@ -182,6 +181,7 @@ const Players = ({ players: initialPlayers, teams }: any) => {
                 },
                 '& .MuiDataGrid-columnHeaderTitle': {
                   color: '#fff',
+                  fontSize: '17px',
                 },
                 '& .MuiDataGrid-columnSeparator': {
                   visibility: 'hidden',

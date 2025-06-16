@@ -11,7 +11,7 @@ import GreenButton from '../../../common/Buttons/greenButton';
 import RedButton from '../../../common/Buttons/redButton';
 import {
   useAddTeamTournament,
-  useDeleteTeamTournment,
+  useDeleteTeamTournament,
 } from '../../../../api/teams-tournaments/mutations';
 import { getTournament } from '../../../../api/tournaments/queries';
 
@@ -24,7 +24,8 @@ const Tournament = () => {
   const { data: tournament, isLoading, isError } = getTournament(tournamentId);
 
   const { mutateAsync: addTeamTournament } = useAddTeamTournament(tournamentId);
-  const { mutate: deleteTeamTournament } = useDeleteTeamTournment(tournamentId);
+  const { mutate: deleteTeamTournament } =
+    useDeleteTeamTournament(tournamentId);
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
