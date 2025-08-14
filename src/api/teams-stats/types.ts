@@ -29,6 +29,8 @@ export type TTeamsForNation = {
   season_id: number;
   short_name: string;
   postseason: string;
+  league_id: number;
+  team_id: number;
 };
 
 export type TeamsForNationParams = {

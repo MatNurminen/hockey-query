@@ -171,6 +171,7 @@ const Players = ({ players: initialPlayers, teams }: any) => {
               columnHeaderHeight={40}
               rowHeight={40}
               processRowUpdate={handleProcessRowUpdate}
+              localeText={{ noRowsLabel: 'No players' }}
               getCellClassName={(params) => {
                 const key = `${params.id}-${params.field}`;
                 return updatedCells.has(key) ? 'updated-cell' : '';

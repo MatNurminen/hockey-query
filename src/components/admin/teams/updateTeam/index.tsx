@@ -209,7 +209,7 @@ const UpdateTeam = ({ open, onClose, teamId }: UpdateTeamDialogProps) => {
   return (
     <Dialog open={open}>
       <DialogContent>
-        <SectionHeader txtAlign='left' content='Add Team' />
+        <SectionHeader txtAlign='left' content='Edit Team' />
         <Box position='relative'>
           {saving && (
             <Box

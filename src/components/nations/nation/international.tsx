@@ -60,39 +60,42 @@ const International = ({ nation }: { nation: any }) => {
       <Grid container sx={{ py: 1 }}>
         {items.map((item: any) => (
           <Grid size={6} key={item.id}>
-            <List dense={true} disablePadding={true}>
-              <ListItem sx={{ py: 0 }}>
-                <ListItemIcon sx={{ mr: -2 }}>
-                  <TableFlag src={nation.flag} />
-                </ListItemIcon>
-                <Link
-                  underline='hover'
-                  component={RouterLink}
-                  to={'/nations/' + nation.id}
-                >
-                  <ListItemText primary={item.name} />
-                </Link>
-              </ListItem>
-              {item.data.map((team: any, key: any) => (
-                <ListItem key={key} sx={{ py: 0 }}>
-                  <ListItemText
-                    primary={
-                      <>
-                        <Link
-                          underline='hover'
-                          component={RouterLink}
-                          to={`/seasons/${team.season_id}`}
-                          style={{ marginRight: 4 }}
-                        >
-                          {team.season_id}
-                        </Link>
-                        {team.short_name} {team.postseason}
-                      </>
-                    }
-                  />
+            {item.data?.length > 0 && (
+              <List dense={true} disablePadding={true}>
+                <ListItem sx={{ py: 0 }}>
+                  <ListItemIcon sx={{ mr: -2 }}>
+                    <TableFlag src={nation.flag} />
+                  </ListItemIcon>
+
+                  <Link
+                    underline='hover'
+                    component={RouterLink}
+                    to={`/teams/${item.data[0].team_id}`}
+                  >
+                    <ListItemText primary={item.name} />
+                  </Link>
                 </ListItem>
-              ))}
-            </List>
+                {item.data.map((team: any, key: any) => (
+                  <ListItem key={key} sx={{ py: 0 }}>
+                    <ListItemText
+                      primary={
+                        <>
+                          <Link
+                            underline='hover'
+                            component={RouterLink}
+                            to={`/rosters?league=${team.league_id}&season=${team.season_id}`}
+                            style={{ marginRight: 4 }}
+                          >
+                            {team.season_id}
+                          </Link>
+                          {team.short_name} {team.postseason}
+                        </>
+                      }
+                    />
+                  </ListItem>
+                ))}
+              </List>
+            )}
           </Grid>
         ))}
       </Grid>

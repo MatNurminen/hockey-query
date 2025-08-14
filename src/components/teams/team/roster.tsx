@@ -21,6 +21,7 @@ const Roster = ({ teamId, seasonId, title }: any) => {
     teamId,
     seasonId,
     typeId: 1,
+    //leagueId: [23],
   });
 
   if (isLoading) return <p>Loading...</p>;

@@ -6,7 +6,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import TableFlag from '../../common/Images/tableFlag';
-//import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import ListItemText from '@mui/material/ListItemText';
 
@@ -30,8 +30,8 @@ const Leagues = ({ nationId }: any) => {
             </ListItemIcon>
             <Link
               underline='hover'
-              //component={RouterLink}
-              //to={'/leagues/' + league.id}
+              component={RouterLink}
+              to={'/leagues/' + league.id + '?season=2025'}
             >
               <ListItemText primary={league.short_name} />
             </Link>
