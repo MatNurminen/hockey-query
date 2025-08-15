@@ -59,7 +59,7 @@ const AddNation = (props: AddNationDialogProps) => {
       short_name: '',
       flag: noImage,
       logo: noImage,
-      color: undefined,
+      color: '#ffffff',
     },
     validationSchema: nationSchema,
     onSubmit: async (values) => {
@@ -305,8 +305,9 @@ const AddNation = (props: AddNationDialogProps) => {
                         width: 32,
                         height: 32,
                         borderRadius: '50%',
-                        bgcolor: formik.values.color || '#fff',
+                        bgcolor: formik.values.color || '#ffffff',
                         border: '2px solid #ccc',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                       }}
                     />
                   </Stack>
@@ -314,7 +315,6 @@ const AddNation = (props: AddNationDialogProps) => {
                     text='Select color'
                     iconIndex={2}
                     size='small'
-                    component='label'
                     onClick={handleOpenColor}
                   />
                 </Stack>
@@ -322,6 +322,9 @@ const AddNation = (props: AddNationDialogProps) => {
                   open={openColor}
                   onClose={handleCloseColor}
                   onColorChange={handleColorChange}
+                  initialColor={formik.values.color || '#ffffff'}
+                  title='Select color'
+                  disableAlpha={true}
                 />
               </BorderedBox>
             </Grid>
