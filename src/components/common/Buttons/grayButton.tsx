@@ -7,6 +7,7 @@ type GrayButtonProps = {
   fullWidth?: boolean;
   onClick?: () => void;
   disabled?: boolean;
+  autoFocus?: boolean;
 };
 
 const GrayButton = ({
@@ -15,6 +16,7 @@ const GrayButton = ({
   fullWidth,
   onClick,
   disabled = false,
+  autoFocus = false,
 }: GrayButtonProps) => {
   const props: any = {
     fullWidth,
@@ -24,6 +26,7 @@ const GrayButton = ({
     sx: { textTransform: 'uppercase' },
     disabled,
     onClick: onClick,
+    autoFocus,
   };
   return (
     <Button {...props} startIcon={<CancelIcon />}>

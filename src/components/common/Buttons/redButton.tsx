@@ -6,9 +6,16 @@ type RedButtonProps = {
   size?: 'small' | 'medium' | 'large';
   onClick?: () => void;
   hidden?: boolean;
+  disabled?: boolean;
 };
 
-const RedButton = ({ text, size, hidden, onClick }: RedButtonProps) => {
+const RedButton = ({
+  text,
+  size,
+  hidden,
+  onClick,
+  disabled = false,
+}: RedButtonProps) => {
   const props: any = {
     size,
     variant: 'contained',
@@ -16,6 +23,7 @@ const RedButton = ({ text, size, hidden, onClick }: RedButtonProps) => {
     sx: { textTransform: 'uppercase' },
     onClick: onClick,
     hidden,
+    disabled,
   };
 
   return (

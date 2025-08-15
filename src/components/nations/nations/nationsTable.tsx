@@ -75,7 +75,7 @@ const NationsTable = () => {
                     text='Delete'
                     size='small'
                     onClick={() => {
-                      handleOpen(nation.id), setName(nation.name + ' nation');
+                      handleOpen(nation.id), setName(nation.name);
                     }}
                   />
                 </TableCell>

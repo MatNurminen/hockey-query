@@ -101,8 +101,7 @@ const LeaguesTable = ({ leagues, seasonId }: any) => {
                           text='Delete'
                           size='small'
                           onClick={() => {
-                            handleOpen(league.id),
-                              setName(league.name + ' league');
+                            handleOpen(league.id), setName(league.name);
                           }}
                         />
                       </TableCell>
