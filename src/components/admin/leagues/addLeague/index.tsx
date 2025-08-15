@@ -213,7 +213,7 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
             <Grid size={{ xs: 12 }}>
               <BorderedBox title='League Logos'>
                 <Grid container spacing={2} direction='row' sx={{ mt: 1 }}>
-                  {logos?.map((logo: any, key: any) => (
+                  {logos?.map((logo: LocalLeagueLogo, key: number) => (
                     <Grid key={key} size={{ xs: 6 }}>
                       <BorderedBox title={`Logo ${key + 1}`}>
                         <Logos
