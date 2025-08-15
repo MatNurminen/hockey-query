@@ -4,7 +4,17 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PaletteIcon from '@mui/icons-material/Palette';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
-const icons: JSX.Element[] = [
+type BlueButtonProps = {
+  text: string;
+  size?: 'small' | 'medium' | 'large';
+  fullWidth?: boolean;
+  onClick?: () => void;
+  iconIndex?: number;
+  disabled?: boolean;
+  children?: React.ReactNode;
+};
+
+const icons = [
   <CreateNewFolderIcon />,
   <CloudUploadIcon />,
   <PaletteIcon />,
@@ -13,24 +23,27 @@ const icons: JSX.Element[] = [
 
 const BlueButton = ({
   text,
-  size,
-  disabled,
-  fullWidth,
+  size = 'medium',
+  disabled = false,
+  fullWidth = false,
   onClick,
   iconIndex,
   children,
-}: any) => {
+}: BlueButtonProps) => {
+  const icon = iconIndex !== undefined ? icons[iconIndex] : undefined;
+
+  const props: any = {
+    fullWidth,
+    size,
+    variant: 'contained',
+    color: 'primary',
+    sx: { textTransform: 'uppercase' },
+    startIcon: icon,
+    disabled,
+    onClick: onClick,
+  };
   return (
-    <Button
-      fullWidth={fullWidth}
-      size={size}
-      variant='contained'
-      sx={{ textTransform: 'uppercase' }}
-      onClick={onClick}
-      startIcon={icons[iconIndex]}
-      component='label'
-      disabled={disabled}
-    >
+    <Button {...props}>
       {text} {children}
     </Button>
   );

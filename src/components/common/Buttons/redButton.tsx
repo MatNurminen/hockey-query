@@ -1,19 +1,25 @@
 import Button from '@mui/material/Button';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-const RedButton = ({ text, size, hidden, onClick }: any) => {
+type RedButtonProps = {
+  text: string;
+  size?: 'small' | 'medium' | 'large';
+  onClick?: () => void;
+  hidden?: boolean;
+};
+
+const RedButton = ({ text, size, hidden, onClick }: RedButtonProps) => {
+  const props: any = {
+    size,
+    variant: 'contained',
+    color: 'error',
+    sx: { textTransform: 'uppercase' },
+    onClick: onClick,
+    hidden,
+  };
+
   return (
-    <Button
-      size={size}
-      variant='contained'
-      color='error'
-      sx={{
-        textTransform: 'uppercase',
-        display: hidden ? 'none' : undefined,
-      }}
-      onClick={onClick}
-      startIcon={<DeleteForeverIcon />}
-    >
+    <Button {...props} startIcon={<DeleteForeverIcon />}>
       {text}
     </Button>
   );
