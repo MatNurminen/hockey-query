@@ -1,4 +1,4 @@
-import Button from '@mui/material/Button';
+import Button, { ButtonProps } from '@mui/material/Button';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PaletteIcon from '@mui/icons-material/Palette';
@@ -32,7 +32,7 @@ const BlueButton = ({
 }: BlueButtonProps) => {
   const icon = iconIndex !== undefined ? icons[iconIndex] : undefined;
 
-  const props: any = {
+  const props: ButtonProps = {
     fullWidth,
     size,
     variant: 'contained',

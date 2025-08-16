@@ -1,4 +1,4 @@
-import Button from '@mui/material/Button';
+import Button, { ButtonProps } from '@mui/material/Button';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 type GrayButtonProps = {
@@ -18,7 +18,7 @@ const GrayButton = ({
   disabled = false,
   autoFocus = false,
 }: GrayButtonProps) => {
-  const props: any = {
+  const props: ButtonProps = {
     fullWidth,
     size,
     variant: 'contained',

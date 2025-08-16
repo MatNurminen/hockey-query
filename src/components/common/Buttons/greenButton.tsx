@@ -1,4 +1,4 @@
-import Button from '@mui/material/Button';
+import Button, { ButtonProps } from '@mui/material/Button';
 import { Link as RouterLink } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -9,14 +9,10 @@ import CheckIcon from '@mui/icons-material/Check';
 
 type GreenButtonProps = {
   text: string;
-  size?: 'small' | 'medium' | 'large';
-  fullWidth?: boolean;
-  onClick?: () => void;
   iconIndex?: number;
-  disabled?: boolean;
   to?: string;
   href?: string;
-};
+} & ButtonProps;
 
 const icons = [
   <AddIcon key='add' />,

@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import TableFlag from '../../common/Images/tableFlag';
 import { getPlayers } from '../../../api/players/queries';
+import { TPlayerDto } from '../../../api/players/types';
 
 type Props = {
   onPlayerSelect: (playerId: number) => void;
@@ -12,7 +13,7 @@ type Props = {
 
 const SearchPlayer = ({ onPlayerSelect }: Props) => {
   const [inputValue, setInputValue] = useState('');
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState<TPlayerDto | null>(null);
   const [debouncedInput] = useDebounce(inputValue, 400);
   const enabled = debouncedInput.length > 2;
 
@@ -43,8 +44,6 @@ const SearchPlayer = ({ onPlayerSelect }: Props) => {
         }
       }}
       renderOption={(props, option) => {
-        if (!option.nation?.flag) return null;
-
         return (
           <Box
             component='li'
@@ -53,7 +52,10 @@ const SearchPlayer = ({ onPlayerSelect }: Props) => {
             sx={{ display: 'flex', alignItems: 'center' }}
           >
             <Box display='flex' sx={{ mr: 1 }}>
-              <TableFlag src={option.nation.flag} />
+              <TableFlag
+                src={option.nation.flag}
+                alt={`${option.first_name} ${option.last_name} flag`}
+              />
             </Box>
             {option.first_name} {option.last_name} ({option.birth_year}) (
             {option.player_position})
@@ -61,11 +63,7 @@ const SearchPlayer = ({ onPlayerSelect }: Props) => {
         );
       }}
       sx={{ width: '100%', backgroundColor: '#fff' }}
-      open={
-        debouncedInput.length > 2 &&
-        !isFetching &&
-        players.every((p) => p.nation?.flag)
-      }
+      open={debouncedInput.length > 2 && !isFetching && players.length > 0}
       renderInput={(params) => (
         <TextField {...params} label='Search players' size='small' />
       )}

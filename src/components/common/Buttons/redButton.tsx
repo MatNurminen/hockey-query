@@ -1,4 +1,4 @@
-import Button from '@mui/material/Button';
+import Button, { ButtonProps } from '@mui/material/Button';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 type RedButtonProps = {
@@ -16,7 +16,7 @@ const RedButton = ({
   onClick,
   disabled = false,
 }: RedButtonProps) => {
-  const props: any = {
+  const props: ButtonProps = {
     size,
     variant: 'contained',
     color: 'error',
