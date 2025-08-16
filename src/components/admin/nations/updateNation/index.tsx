@@ -323,6 +323,7 @@ const UpdateNation = ({ onClose, open, nationId }: UpdateNationDialogProps) => {
                   open={openColor}
                   onClose={handleCloseColor}
                   onColorChange={handleColorChange}
+                  onCancel={handleCloseColor}
                   initialColor={formik.values.color || '#ffffff'}
                   title='Выберите цвет нации'
                   disableAlpha={true}

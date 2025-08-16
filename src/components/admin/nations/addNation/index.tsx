@@ -52,6 +52,9 @@ const AddNation = (props: AddNationDialogProps) => {
   const handleColorChange = (color: string) => {
     formik.setFieldValue('color', color);
   };
+  const handleColorCancel = () => {
+    formik.setFieldValue('color', '#ffffff'); // или initialColor
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -322,6 +325,7 @@ const AddNation = (props: AddNationDialogProps) => {
                   open={openColor}
                   onClose={handleCloseColor}
                   onColorChange={handleColorChange}
+                  onCancel={handleColorCancel}
                   initialColor={formik.values.color || '#ffffff'}
                   title='Select color'
                   disableAlpha={true}

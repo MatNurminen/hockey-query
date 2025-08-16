@@ -5,11 +5,13 @@ import DialogActions from '@mui/material/DialogActions';
 import { useState, useEffect } from 'react';
 import { ChromePicker, ColorResult } from 'react-color';
 import GreenButton from '../Buttons/greenButton';
+import GrayButton from '../Buttons/grayButton';
 
 export interface SelectColorProps {
   open: boolean;
   onClose: () => void;
   onColorChange: (color: string) => void;
+  onCancel?: () => void;
   initialColor?: string;
   title?: string;
   disableAlpha?: boolean;
@@ -30,6 +32,7 @@ const SelectColor = ({
   open,
   onClose,
   onColorChange,
+  onCancel,
   initialColor = '#ffffff',
   title = 'Select color',
   disableAlpha = true,
@@ -38,22 +41,29 @@ const SelectColor = ({
 
   useEffect(() => {
     setColor(normalizeColor(initialColor));
-  }, [initialColor]);
+  }, [initialColor, open]);
 
+  // Только обновляем внутреннее состояние, не вызываем onColorChange
   const handleColorChange = (colorResult: ColorResult) => {
-    const newColor = colorResult.hex;
-    setColor(newColor);
-    onColorChange(newColor);
+    setColor(colorResult.hex);
   };
 
-  const handleClose = () => {
+  // Подтверждение выбора цвета
+  const handleSelect = () => {
+    onColorChange(color);
+    onClose();
+  };
+
+  // Отмена выбора цвета
+  const handleCancel = () => {
+    if (onCancel) onCancel();
     onClose();
   };
 
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={handleCancel}
       aria-labelledby='color-picker-dialog-title'
       aria-describedby='color-picker-dialog-description'
       maxWidth='sm'
@@ -73,8 +83,9 @@ const SelectColor = ({
           text='Select'
           size='small'
           iconIndex={5}
-          onClick={handleClose}
+          onClick={handleSelect}
         />
+        <GrayButton text='Cancel' size='small' onClick={handleCancel} />
       </DialogActions>
     </Dialog>
   );
