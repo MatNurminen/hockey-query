@@ -30,12 +30,6 @@ interface LogosProps {
   ) => void;
 }
 
-/**
- * Валидация годов
- * @param startYear - начальный год
- * @param endYear - конечный год
- * @returns объект с ошибками валидации
- */
 const validateYears = (startYear: number | null, endYear: number | null) => {
   const errors: { start_year?: string; end_year?: string } = {};
 
