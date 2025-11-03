@@ -1,6 +1,6 @@
 import Box, { BoxProps } from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import React from 'react';
+import React, { useId } from 'react';
 
 interface BorderedBoxProps extends BoxProps {
   title?: string;
@@ -12,12 +12,16 @@ const BorderedBox: React.FC<BorderedBoxProps> = ({
   children,
   ...props
 }) => {
+  const titleId = useId();
+
   return (
     <Box
+      role='group'
+      aria-labelledby={title ? titleId : undefined}
       {...props}
       sx={{
         border: 1,
-        borderColor: 'grey.400',
+        borderColor: 'divider',
         borderRadius: 1,
         p: 2,
         position: 'relative',
@@ -26,15 +30,14 @@ const BorderedBox: React.FC<BorderedBoxProps> = ({
     >
       {title && (
         <Typography
-          component='span'
+          id={titleId}
+          variant='caption'
           sx={{
             position: 'absolute',
             top: -10,
             left: 8,
             px: 1,
             backgroundColor: 'background.paper',
-            color: 'text.secondary',
-            fontSize: '0.75rem',
           }}
         >
           {title}

@@ -2,7 +2,7 @@ import SectionHeader from '../../../common/Sections/sectionHeader';
 import Stack from '@mui/material/Stack';
 import GreenButton from '../../../common/Buttons/greenButton';
 import RedButton from '../../../common/Buttons/redButton';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
@@ -71,7 +71,8 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
         return p;
       }
       return logo.startsWith('/') ? logo.slice(1) : logo;
-    } catch {
+    } catch (e) {
+      // Fallback: try to normalize by removing leading slash
       return logo.replace(/^\//, '');
     }
   };
@@ -88,7 +89,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
           try {
             await moveCfFile({ fromKey: rawKey, toKey });
           } catch (e) {
-            // If move fails, still proceed with replaced key to keep consistency
+            // If move fails, still try to proceed with replaced key to keep consistency
             console.error(
               `Failed to move CF file from ${rawKey} to ${toKey}`,
               e
@@ -144,7 +145,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
         deleteAllFromTmp();
         helpers.resetForm({ values });
         onClose();
-      } catch {
+      } catch (e) {
         enqueueSnackbar('Failed to save league.', { variant: 'error' });
       } finally {
         setSaving(false);
@@ -222,7 +223,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
             component='form'
             noValidate
             autoComplete='off'
-            onSubmit={formik.handleSubmit}
+            onSubmit={formik.handleSubmit as any}
           >
             <Grid container spacing={2}>
               <Grid size={{ xs: 6 }}>
@@ -269,7 +270,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
                       <Grid key={key} size={{ xs: 6 }}>
                         <BorderedBox title={`Logo ${key + 1}`}>
                           <Logos
-                            //logo_id={logo.id}
+                            logo_id={logo.id}
                             logo={logo.logo}
                             start_year={logo.start_year}
                             end_year={logo.end_year}
@@ -294,7 +295,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
                       text='Add logo'
                       size='small'
                       onClick={handleAddLogo}
-                      icon='photo'
+                      iconIndex={3}
                       disabled={saving}
                     />
                   </Box>
@@ -314,7 +315,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
                     formik.touched.type_id && Boolean(formik.errors.type_id)
                   }
                   helperText={formik.touched.type_id && formik.errors.type_id}
-                  //disabled={saving}
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 6 }}>
@@ -368,7 +369,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
             text='Save'
             size='small'
             onClick={formik.submitForm}
-            icon='save'
+            iconIndex={1}
             disabled={saving}
           />
           <GrayButton
