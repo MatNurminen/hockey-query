@@ -1,7 +1,6 @@
 import SectionHeader from '../../../common/Sections/sectionHeader';
 import Stack from '@mui/material/Stack';
-import GreenButton from '../../../common/Buttons/greenButton';
-import GrayButton from '../../../common/Buttons/grayButton';
+import AppButton from '../../../common/Buttons/appButton';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
@@ -64,6 +63,8 @@ const UpdateNation = ({ onClose, open, nationId }: UpdateNationDialogProps) => {
     enableReinitialize: true,
     validationSchema: nationSchema,
     onSubmit: async (values) => {
+      console.log('test');
+      
       setSaving(true);
       try {
         let finalFlagPath = values.flag;
@@ -335,16 +336,19 @@ const UpdateNation = ({ onClose, open, nationId }: UpdateNationDialogProps) => {
       </DialogContent>
       <DialogActions sx={{ mb: 2, mr: 5 }}>
         <Stack direction='row' spacing={2}>
-          <GreenButton
+          <AppButton
             text='Save'
             size='small'
-            onClick={formik.handleSubmit}
-            iconIndex={2}
+            onClick={() => formik.handleSubmit}
+            color='success'
+            iconName='save'
             disabled={saving}
           />
-          <GrayButton
+          <AppButton
             text='Cancel'
             size='small'
+            iconName='cancel'
+            color='inherit'
             onClick={handleClose}
             disabled={saving}
           />

@@ -5,10 +5,8 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import SectionHeader from '../../../common/Sections/sectionHeader';
 import DialogActions from '@mui/material/DialogActions';
-import GreenButton from '../../../common/Buttons/greenButton';
 import { useFormik } from 'formik';
 import nationSchema from '../../validations/nationSchema';
-import GrayButton from '../../../common/Buttons/grayButton';
 import Stack from '@mui/material/Stack';
 import { useAddNation } from '../../../../api/nations/mutations';
 import Grid from '@mui/material/Grid2';
@@ -16,7 +14,7 @@ import BorderedBox from '../../../common/Boxes/borderedBox';
 import SbUploadFile from '../../../common/Supabase/sbUploadFile';
 import { useState } from 'react';
 import SelectColor from '../../../common/Colors/selectColor';
-import BlueButton from '../../../common/Buttons/blueButton';
+import AppButton from '../../../common/Buttons/appButton';
 import {
   useDeleteAllFromTmp,
   useMoveCfFile,
@@ -314,9 +312,9 @@ const AddNation = (props: AddNationDialogProps) => {
                       }}
                     />
                   </Stack>
-                  <BlueButton
+                  <AppButton
                     text='Select color'
-                    iconIndex={2}
+                    iconName='photo'
                     size='small'
                     onClick={handleOpenColor}
                   />
@@ -337,16 +335,19 @@ const AddNation = (props: AddNationDialogProps) => {
       </DialogContent>
       <DialogActions sx={{ mb: 2, mr: 5 }}>
         <Stack direction='row' spacing={2}>
-          <GreenButton
+          <AppButton
             text='Save'
             size='small'
-            onClick={formik.handleSubmit}
-            iconIndex={1}
+            onClick={() => formik.handleSubmit()}
+            color='success'
+            iconName='save'
             disabled={saving}
           />
-          <GrayButton
+          <AppButton
             text='Cancel'
             size='small'
+            iconName='cancel'
+            color='inherit'
             onClick={handleClose}
             disabled={saving}
           />

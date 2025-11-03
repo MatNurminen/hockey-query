@@ -10,7 +10,7 @@ import HeaderSection from '../../common/Table/headerSection';
 import TableFlag from '../../common/Images/tableFlag';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
-import GreenButton from '../../common/Buttons/greenButton';
+import AppButton from '../../common/Buttons/appButton';
 import Grid from '@mui/material/Grid2';
 import Container from '@mui/material/Container';
 import { useMultiplePlayersStatsTotal } from '../../../api/players-stats/hooks';
@@ -72,7 +72,7 @@ const PlrsStatsTotal = ({ nationId }: any) => {
                       <TableCell align='center'>{key + 1}</TableCell>
                       <TableCell>
                         <Box display='flex' alignItems='center'>
-                          <TableFlag src={player.player_flag} />
+                          <TableFlag alt='' src={player.player_flag} />
                           <Link
                             underline='hover'
                             component={RouterLink}
@@ -92,7 +92,7 @@ const PlrsStatsTotal = ({ nationId }: any) => {
               </Table>
             </TableContainer>
             <Box mt={1}>
-              <GreenButton fullWidth={true} text='SHOW MORE' />
+              <AppButton color='success' fullWidth={true} text='SHOW MORE' onClick={() => console.log('SHOW MORE')} />
             </Box>
           </Grid>
         ))}

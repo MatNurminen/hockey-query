@@ -6,7 +6,7 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
-import RedButton from '../../common/Buttons/redButton';
+import AppButton from '../../common/Buttons/appButton';
 import HeaderTable from './headerTable';
 import Stack from '@mui/material/Stack';
 import { memo, useState } from 'react';
@@ -58,7 +58,7 @@ const NationsTable = () => {
             {nations?.map((nation: any) => (
               <TableRow key={nation.id}>
                 <TableCell align='center'>
-                  <TableFlag src={nation.flag} />
+                  <TableFlag alt={nation.name} src={nation.flag} />
                 </TableCell>
                 <TableCell>
                   <Link
@@ -70,10 +70,12 @@ const NationsTable = () => {
                   </Link>
                 </TableCell>
                 <TableCell>{nation.short_name}</TableCell>
-                <TableCell align='center'>
-                  <RedButton
+                <TableCell align='right'>
+                  <AppButton
                     text='Delete'
                     size='small'
+                    color='error'
+                    iconName='delete'
                     onClick={() => {
                       handleOpen(nation.id), setName(nation.name);
                     }}

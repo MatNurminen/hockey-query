@@ -9,10 +9,9 @@ import TableRow from '@mui/material/TableRow';
 import Box from '@mui/material/Box';
 import HeaderMain from '../../common/Table/headerMain';
 import MainLogo from '../../common/Images/mainLogo';
-
 import { getPlayersCountByNation } from '../../../api/players/queries';
 import { getTeamsCountByNation } from '../../../api/teams/queries';
-import GreenButton from '../../common/Buttons/greenButton';
+import AppButton from '../../common/Buttons/appButton';
 import { useState } from 'react';
 import UpdateNation from '../../admin/nations/updateNation';
 
@@ -84,7 +83,7 @@ const Header = ({ nation, nationId }: { nation: any; nationId: number }) => {
               />
             </Grid>
             <Grid size={10}>
-              <MainLogo src={nation.logo} />
+              <MainLogo alt={nation.name} src={nation.logo} />
             </Grid>
           </Grid>
         </Grid>
@@ -114,11 +113,12 @@ const Header = ({ nation, nationId }: { nation: any; nationId: number }) => {
           </TableContainer>
         </Grid>
         <Grid textAlign='right' size={{ xs: 12 }} sx={{ mb: 1 }}>
-          <GreenButton
+          <AppButton
             text='Edit Nation'
             onClick={handleOpen}
             size='small'
-            iconIndex={1}
+            color='success'
+            iconName='edit'
           />
         </Grid>
       </Grid>

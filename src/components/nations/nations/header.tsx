@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid2';
 import SectionHeader from '../../common/Sections/sectionHeader';
-import GreenButton from '../../common/Buttons/greenButton';
+import AppButton from '../../common/Buttons/appButton';
 import { memo, useState } from 'react';
 import AddNation from '../../admin/nations/addNation';
 
@@ -21,11 +21,12 @@ const Header = () => {
           <SectionHeader txtAlign='left' content='Nations' />
         </Grid>
         <Grid>
-          <GreenButton
+          <AppButton
             onClick={handleOpen}
             text='Add Nation'
             size='small'
-            iconIndex={0}
+            iconName='add'
+            color='success'
           />
         </Grid>
       </Grid>

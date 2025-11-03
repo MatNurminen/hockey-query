@@ -64,7 +64,7 @@ const International = ({ nation }: { nation: any }) => {
               <List dense={true} disablePadding={true}>
                 <ListItem sx={{ py: 0 }}>
                   <ListItemIcon sx={{ mr: -2 }}>
-                    <TableFlag src={nation.flag} />
+                    <TableFlag alt={nation.name} src={nation.flag} />
                   </ListItemIcon>
 
                   <Link
