@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid2';
 import SectionHeader from '../../common/Sections/sectionHeader';
-import GreenButton from '../../common/Buttons/greenButton';
+import AppButton from '../../common/Buttons/appButton';
 import { memo, useState } from 'react';
 import AddLeague from '../../admin/leagues/addLeague';
 
@@ -21,11 +21,12 @@ const Header = () => {
           <SectionHeader txtAlign='left' content='Leagues' />
         </Grid>
         <Grid>
-          <GreenButton
+          <AppButton
             onClick={handleOpen}
             text='Add League'
             size='small'
-            iconIndex={0}
+            color='success'
+            iconName='add'
           />
         </Grid>
       </Grid>

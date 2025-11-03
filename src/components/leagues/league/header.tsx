@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid2';
 import SectionHeader from '../../common/Sections/sectionHeader';
 import MainLogo from '../../common/Images/mainLogo';
-import GreenButton from '../../common/Buttons/greenButton';
+import AppButton from '../../common/Buttons/appButton';
 import { memo, useState } from 'react';
 import UpdateLeague from '../../admin/leagues/updateLeague';
 
@@ -30,11 +30,12 @@ const Header = ({ league }: any) => {
           <SectionHeader txtAlign='left' content={league.name} />
         </Grid>
         <Grid size={{ xs: 6 }} container justifyContent='flex-end'>
-          <GreenButton
+          <AppButton
             text='Edit League'
             onClick={handleOpen}
             size='small'
-            iconIndex={1}
+            color='success'
+            iconName='edit'
           />
         </Grid>
       </Grid>
@@ -52,7 +53,7 @@ const Header = ({ league }: any) => {
       >
         {league.logos.map((logo: any, key: any) => (
           <Grid key={key} size={{ xs: 2 }}>
-            <MainLogo src={logo.logo} />
+            <MainLogo alt='' src={logo.logo} />
             <Typography variant='body1' gutterBottom>
               {logo.start_year} - {logo.end_year}
             </Typography>

@@ -10,7 +10,7 @@ import {
 } from '../../../api/teams-stats/queries';
 import TableFlag from '../../common/Images/tableFlag';
 import Box from '@mui/material/Box';
-import GreenButton from '../../common/Buttons/greenButton';
+import AppButton from '../../common/Buttons/appButton';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useUpdateTeamTournament } from '../../../api/teams-tournaments/mutations';
 import Paper from '@mui/material/Paper';
@@ -121,7 +121,7 @@ const Standings = ({ leagueId, seasonId, title }: any) => {
       sortable: false,
       renderCell: (params) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {params.row.logo && <TableFlag src={params.row.logo} />}
+          {params.row.logo && <TableFlag alt='' src={params.row.logo} />}
           <Link
             underline='hover'
             component={RouterLink}
@@ -277,9 +277,10 @@ const Standings = ({ leagueId, seasonId, title }: any) => {
         />
       </Paper>
       <Box mt={1}>
-        <GreenButton
+        <AppButton
           fullWidth
           text='Show Rosters'
+          color='success'
           to={`/rosters?league=${leagueId}&season=${seasonId}`}
         />
       </Box>

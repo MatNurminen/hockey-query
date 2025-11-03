@@ -6,7 +6,7 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
-import RedButton from '../../common/Buttons/redButton';
+import AppButton from '../../common/Buttons/appButton';
 import HeaderTable from './headerTable';
 import Stack from '@mui/material/Stack';
 
@@ -96,10 +96,12 @@ const LeaguesTable = ({ leagues, seasonId }: any) => {
                         </Link>
                       </TableCell>
                       <TableCell>{league.short_name}</TableCell>
-                      <TableCell>
-                        <RedButton
+                      <TableCell align='right'>
+                        <AppButton
                           text='Delete'
                           size='small'
+                          color='error'
+                          iconName='delete'
                           onClick={() => {
                             handleOpen(league.id), setName(league.name);
                           }}

@@ -10,7 +10,7 @@ import TableCell from '@mui/material/TableCell';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid2';
-import GreenButton from '../../common/Buttons/greenButton';
+import AppButton from '../../common/Buttons/appButton';
 import TableFlag from '../../common/Images/tableFlag';
 import { getPlayersStatsTotal } from '../../../api/players-stats/queries';
 
@@ -77,7 +77,7 @@ const PlayersStatsTotal = ({ leagueId }: any) => {
                     <TableCell align='center'>{key + 1}</TableCell>
                     <TableCell>
                       <Box display='flex' alignItems='center'>
-                        <TableFlag src={player.player_flag} />
+                        <TableFlag alt='' src={player.player_flag} />
                         <Link
                           underline='hover'
                           component={RouterLink}
@@ -97,7 +97,7 @@ const PlayersStatsTotal = ({ leagueId }: any) => {
             </Table>
           </TableContainer>
           <Box mt={1}>
-            <GreenButton fullWidth={true} text='Show More' />
+            <AppButton color='success' fullWidth={true} text='Show More' to=''/>
           </Box>
         </Grid>
       ))}
