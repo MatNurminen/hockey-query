@@ -11,7 +11,7 @@ import { getTournamentsByLeague } from '../../api/tournaments/queries';
 import HeaderMain from '../common/Table/headerMain';
 import HeaderSection from '../common/Table/headerSection';
 import { useDeleteTournament } from '../../api/tournaments/mutations';
-import RedButton from '../common/Buttons/redButton';
+import AppButton from '../common/Buttons/appButton';
 import DeleteDialog from '../common/Dialogs/deleteDialog';
 import GreenButton from '../common/Buttons/greenButton';
 import TableFlag from '../common/Images/tableFlag';
@@ -98,9 +98,10 @@ const TournamentsByLeague = ({ leagueId }: any) => {
                   </Link>
                 </TableCell>
                 <TableCell width={'10%'}>
-                  <RedButton
+                  <AppButton
                     text='Delete'
                     size='small'
+                    color='error'
                     onClick={() => {
                       handleOpen(tournament.id);
                     }}

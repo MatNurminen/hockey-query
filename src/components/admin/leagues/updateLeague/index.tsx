@@ -1,7 +1,7 @@
 import SectionHeader from '../../../common/Sections/sectionHeader';
 import Stack from '@mui/material/Stack';
 import GreenButton from '../../../common/Buttons/greenButton';
-import RedButton from '../../../common/Buttons/redButton';
+import AppButton from '../../../common/Buttons/appButton';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -277,9 +277,10 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
                             onUpdate={handleUpdateLogo}
                           />
                           <Box sx={{ mt: 1 }}>
-                            <RedButton
+                            <AppButton
                               text='Remove Logo'
                               size='small'
+                              color='error'
                               onClick={() => handleRemoveLogo(key)}
                               hidden={key === 0}
                               disabled={saving}

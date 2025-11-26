@@ -21,7 +21,7 @@ import {
 } from '../../../../api/cloudflare/mutations';
 import SelectLeagueType from '../../../common/Selects/selectLeagueType';
 import { TCreateLeagueLogoDto } from '../../../../api/league-logos/types';
-import RedButton from '../../../common/Buttons/redButton';
+import AppButton from '../../../common/Buttons/appButton';
 import Logos from '../../../common/Images/logos';
 import CircularProgress from '@mui/material/CircularProgress';
 
@@ -264,8 +264,9 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
                             onUpdate={handleUpdateLogo}
                           />
                           <Box sx={{ mt: 1 }}>
-                            <RedButton
+                            <AppButton
                               text='Remove Logo'
+                              color='error'
                               size='small'
                               onClick={() => handleRemoveLogo(key)}
                               hidden={key === 0}

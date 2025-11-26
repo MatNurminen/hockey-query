@@ -8,7 +8,7 @@ import ListAllTeams from './listAllTeams';
 import ListTournamentTeams from './listTournamentTeams';
 import Stack from '@mui/material/Stack';
 import GreenButton from '../../../common/Buttons/greenButton';
-import RedButton from '../../../common/Buttons/redButton';
+import AppButton from '../../../common/Buttons/appButton';
 import {
   useAddTeamTournament,
   useDeleteTeamTournament,
@@ -89,14 +89,15 @@ const Tournament = () => {
               }}
               iconIndex={0}
             />
-            <RedButton
+            <AppButton
               text='<'
               size='small'
+              color='error'
               onClick={() => {
                 handleCheckedRemove(Number(checked[0]));
               }}
             />
-            <RedButton text='<<' size='small' />
+            <AppButton text='<<' size='small' to=''/>
           </Stack>
         </Grid>
         <Grid size={{ xs: 5 }} mt={9}>

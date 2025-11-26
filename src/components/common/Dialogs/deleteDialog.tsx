@@ -4,7 +4,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import RedButton from '../Buttons/redButton';
+import AppButton from '../Buttons/appButton';
 import GrayButton from '../Buttons/grayButton';
 import Stack from '@mui/material/Stack';
 import DialogContent from '@mui/material/DialogContent';
@@ -67,9 +67,10 @@ export default function DeleteDialog({
             disabled={loading}
             autoFocus
           />
-          <RedButton
+          <AppButton
             text={loading ? 'Deleting...' : 'Delete'}
             size='small'
+            color='error'
             onClick={() => {
               onConfirm();
               onClose();

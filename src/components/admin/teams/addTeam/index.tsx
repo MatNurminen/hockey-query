@@ -17,7 +17,7 @@ import {
   useDeleteAllFromTmp,
   useMoveCfFile,
 } from '../../../../api/cloudflare/mutations';
-import RedButton from '../../../common/Buttons/redButton';
+import AppButton from '../../../common/Buttons/appButton';
 import Logos from '../../../common/Images/logos';
 import { useAddTeam } from '../../../../api/teams/mutations';
 import SelectNation from '../../../common/Selects/selectNation';
@@ -287,9 +287,10 @@ const AddTeam = ({ open, onClose }: AddTeamDialogProps) => {
                             onUpdate={handleUpdateLogo}
                           />
                           <Box sx={{ mt: 1 }}>
-                            <RedButton
+                            <AppButton
                               text='Remove Logo'
                               size='small'
+                              color='error'
                               onClick={() => handleRemoveLogo(key)}
                               hidden={key === 0}
                             />

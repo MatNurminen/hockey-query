@@ -8,6 +8,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import CheckIcon from '@mui/icons-material/Check';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import PaletteIcon from '@mui/icons-material/Palette';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { type ReactNode, memo } from 'react';
 
 type AppButtonPropsBase = {
@@ -21,6 +24,9 @@ type AppButtonPropsBase = {
     | 'search'
     | 'check'
     | 'cancel'
+    | 'palette'
+    | 'pdf'
+    | 'cloudUpload'
     | 'delete';
   startIcon?: ReactNode;
   sx?: ButtonProps['sx'];
@@ -41,6 +47,9 @@ const predefinedIcons: Record<string, ReactNode> = {
   search: <SearchIcon />,
   check: <CheckIcon />,
   cancel: <CancelIcon />,
+  palette: <PaletteIcon />,
+  pdf: <PictureAsPdfIcon />,
+  cloudUpload: <CloudUploadIcon />,
   delete: <DeleteForeverIcon />,
 };
 

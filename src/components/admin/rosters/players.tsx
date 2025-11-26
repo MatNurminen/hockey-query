@@ -4,7 +4,7 @@ import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import TableFlag from '../../common/Images/tableFlag';
 import ClubHeader from './clubHeader';
-import RedButton from '../../common/Buttons/redButton';
+import AppButton from '../../common/Buttons/appButton';
 import {
   useDeletePlayerTournament,
   useUpdatePlayerTournament,
@@ -88,7 +88,7 @@ const Players = ({ players: initialPlayers, teams }: any) => {
       sortable: false,
       renderCell: (params) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {params.row.player_flag && <TableFlag src={params.row.player_flag} />}
+          {params.row.player_flag && <TableFlag alt='' src={params.row.player_flag} />}
           <Link
             underline='hover'
             component={RouterLink}
@@ -136,8 +136,9 @@ const Players = ({ players: initialPlayers, teams }: any) => {
       width: 120,
       renderCell: (params) => (
         <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-          <RedButton
+          <AppButton
             text='Delete'
+            color='error'
             size='small'
             onClick={() => {
               handleDelete(Number(params.row.id));
