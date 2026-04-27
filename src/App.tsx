@@ -12,6 +12,7 @@ import Navbar from './components/layout/Navbar';
 import AdminNavbar from './components/layout/AdminNavbar';
 import Leagues from './components/leagues/leagues';
 import League from './components/leagues/league';
+import PlayersStats from './components/leagues/stats';
 import Nations from './components/nations/nations';
 import Teams from './components/teams/teams';
 import Loading from './components/layout/React-query/loading';
@@ -43,6 +44,7 @@ function App() {
             <Route path='/' element={<Main />} />
             <Route path='/leagues' element={<Leagues />} />
             <Route path='/leagues/:id' element={<League />} />
+            <Route path='/league-stats' element={<PlayersStats />} />
             <Route path='/nations' element={<Nations />} />
             <Route path='/nations/:id' element={<Nation />} />
             <Route path='/teams' element={<Teams />} />

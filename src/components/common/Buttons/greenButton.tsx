@@ -6,6 +6,7 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import SearchIcon from '@mui/icons-material/Search';
 import CheckIcon from '@mui/icons-material/Check';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 type GreenButtonProps = {
   text: string;
@@ -21,6 +22,7 @@ const icons = [
   <AddPhotoAlternateIcon key='photo' />,
   <SearchIcon key='search' />,
   <CheckIcon key='check' />,
+  <RestartAltIcon key='reset' />
 ];
 
 const GreenButton = ({

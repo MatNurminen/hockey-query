@@ -1,3 +1,4 @@
+import { keepPreviousData } from '@tanstack/react-query';
 import { createQuery } from '../factories/queryFactory';
 import { buildQueryString } from '../factories/queryUtils';
 import {
@@ -29,7 +30,7 @@ export const getPlayersStatsDetail = (params: PlayersStatsDetailParams) => {
 
   return createQuery<TPlayerStatDetail[], TPlayerStatDetail[]>(
     ['playersStatsDetail', params],
-    url
+    url, undefined, { placeholderData: keepPreviousData }
   );
 };
 

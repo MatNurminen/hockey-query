@@ -1,25 +1,25 @@
-import { useState } from 'react';
-import Tab from '@mui/material/Tab';
+import { useState } from "react";
+import Tab from "@mui/material/Tab";
 //import styles from './styles';
-import PublicIcon from '@mui/icons-material/Public';
-import AllInboxIcon from '@mui/icons-material/AllInbox';
-import GroupIcon from '@mui/icons-material/Group';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import HowToRegIcon from '@mui/icons-material/HowToReg';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import PostAddIcon from '@mui/icons-material/PostAdd';
-import Divider from '@mui/material/Divider';
-import Stack from '@mui/material/Stack';
-import LinkRoute from '../../../common/LinkRoute';
+import PublicIcon from "@mui/icons-material/Public";
+import AllInboxIcon from "@mui/icons-material/AllInbox";
+import GroupIcon from "@mui/icons-material/Group";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import PostAddIcon from "@mui/icons-material/PostAdd";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
+import LinkRoute from "../../../common/LinkRoute";
 //import AddPlayer from '../../../admin/players/addPlayer';
 //import AddNation from '../../../admin/nations/addNation';
-import Typography from '@mui/material/Typography';
-import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
-import AddTeam from '../../../admin/teams/addTeam';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import AddNation from '../../../admin/nations/addNation';
-import AddPlayer from '../../../admin/players/addPlayer';
+import Typography from "@mui/material/Typography";
+import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
+import AddTeam from "../../../admin/teams/addTeam";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import AddNation from "../../../admin/nations/addNation";
+import AddPlayer from "../../../admin/players/addPlayer";
 
 //function MenuTabs({ classes }: any) {
 function MenuTabs() {
@@ -52,34 +52,34 @@ function MenuTabs() {
 
   const tabItems = [
     {
-      label: 'Add Nation',
+      label: "Add Nation",
       icon: <AddLocationAltIcon />,
       onclick: handleOpenNation,
     },
-    { label: 'Rosters', path: '/rosters', icon: <AllInboxIcon /> },
-    { label: 'Add Team', icon: <GroupAddIcon />, onclick: handleOpenTeam },
+    { label: "Rosters", path: "/rosters", icon: <AllInboxIcon /> },
+    { label: "Add Team", icon: <GroupAddIcon />, onclick: handleOpenTeam },
     {
-      label: 'Add Player',
+      label: "Add Player",
       icon: <PersonAddIcon />,
       onclick: handleOpenPlayer,
     },
-    { label: 'Edit Player', path: '/players', icon: <HowToRegIcon /> },
-    { label: 'Add Roster', path: '', icon: <GroupAddIcon /> },
-    { label: 'Add Championship', path: '/champ', icon: <PostAddIcon /> },
+    { label: "Edit Player", path: "/players", icon: <HowToRegIcon /> },
+    { label: "Add Roster", path: "", icon: <GroupAddIcon /> },
+    { label: "Add Championship", path: "/champ", icon: <PostAddIcon /> },
   ];
 
   return (
     <>
       <Stack
-        width={'100%'}
+        width={"100%"}
         divider={
           // <Divider orientation='vertical' flexItem className={classes.dv} />
-          <Divider orientation='vertical' flexItem />
+          <Divider orientation="vertical" flexItem />
         }
-        direction='row'
-        justifyContent='space-between'
-        alignItems='center'
-        mx={'auto'}
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        mx={"auto"}
       >
         {tabItems.map((tab, key) => (
           <Tab
@@ -93,8 +93,11 @@ function MenuTabs() {
               }
             }
             //deal with links
-            component={LinkRoute}
-            to={tab.path}
+            // component={LinkRoute}
+            // to={tab.path}
+            {...(tab.path
+              ? { component: LinkRoute, to: tab.path }
+              : { onClick: tab.onclick })}
           />
         ))}
         <ButtonInTabs />

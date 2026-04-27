@@ -69,7 +69,7 @@ const SelectNation = (props: SelectProps) => {
           <MenuItem key={key} value={String(nation.id)}>
             <Box display='flex' alignItems='center'>
               <Box display='flex' sx={{ mr: 1 }}>
-                <TableFlag src={nation.flag} />
+                <TableFlag alt='' src={nation.flag} />
               </Box>
               {nation.name}
             </Box>

@@ -46,6 +46,7 @@ export type TPlayerStatDetail = {
   short_name: string;
   name: string;
   player_flag: string;
+  player_nation: string;
   team_flag: string;
   type_id: number;
   club_name: string;

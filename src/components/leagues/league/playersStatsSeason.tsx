@@ -104,7 +104,7 @@ const PlayersStatsSeason = ({ leagueId, seasonId, title }: any) => {
             </Table>
           </TableContainer>
           <Box mt={1}>
-            <AppButton color='success' fullWidth={true} text='Show More' to=''/>
+            <AppButton color='success' fullWidth={true} text='Show More' to={`/league-stats?league=${leagueId}&season=${seasonId}`}/>
           </Box>
         </Grid>
       ))}

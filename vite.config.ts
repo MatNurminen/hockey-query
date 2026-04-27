@@ -6,8 +6,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        //target: 'http://localhost:3002',
-        target: 'https://top-api-aws-dkhi.onrender.com',
+        target: 'http://localhost:3002',
+        //target: 'https://top-api-aws-dkhi.onrender.com',
         // target:
         //   'https://jj33cff2yo3egib3owyy43l77q0ifyzr.lambda-url.eu-north-1.on.aws',
         changeOrigin: true,
