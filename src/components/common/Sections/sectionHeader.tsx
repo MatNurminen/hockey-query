@@ -13,7 +13,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ txtAlign, content }) => {
         color='#063950'
         component={'span'}
         align={txtAlign}
-        variant='h5'
+        variant='h4'
       >
         <Box sx={{ fontWeight: 'bold', letterSpacing: 1 }}>{content}</Box>
       </Typography>

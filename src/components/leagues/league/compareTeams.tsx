@@ -45,7 +45,7 @@ const CompareTeams = ({ leagueId, seasonId, title }: any) => {
               <TableCell>
                 <Stack direction='row' alignItems='center' spacing={2}>
                   <Box width={40} display='flex' justifyContent='center'>
-                    <TableFlag src={team.logo} />
+                    <TableFlag alt='' src={team.logo} />
                   </Box>
                   <Box>
                     <Link

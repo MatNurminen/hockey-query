@@ -27,7 +27,7 @@ const Teams = ({ leagueId, title }: any) => {
         {data.map((team: any, key: any) => (
           <ListItem key={key}>
             <ListItemIcon sx={{ mr: -2 }}>
-              <TableFlag src={team.flag} />
+              <TableFlag alt='' src={team.flag} />
             </ListItemIcon>
             <Link
               underline='hover'
