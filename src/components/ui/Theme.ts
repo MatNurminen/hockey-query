@@ -6,12 +6,20 @@ declare module '@mui/material/styles' {
       adminMenuBG: string;
       menuBG: string;
     };
+    ocean: Palette['primary'];
   }
   interface PaletteOptions {
     extra?: {
       adminMenuBG: string;
       menuBG: string;
     };
+    ocean?: PaletteOptions['primary'];
+  }
+}
+
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    ocean: true;
   }
 }
 
@@ -30,6 +38,12 @@ const theme = createTheme({
     },
     secondary: {
       main: '#ca3136',
+    },
+    ocean: {
+      main: '#093f56',
+      light: '#0b4f6a',
+      dark: '#062d3d',
+      contrastText: '#fff',
     },
   },
   typography: {

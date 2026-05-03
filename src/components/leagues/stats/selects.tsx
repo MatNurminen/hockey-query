@@ -24,7 +24,7 @@ const Selects = ({ players }: any) => {
 
   const teams = [
     ...new Map(
-      players[0].list.map((team: any) => [
+      players.map((team: any) => [
         team.team_id,
         {
           id: team.team_id,
@@ -35,7 +35,7 @@ const Selects = ({ players }: any) => {
   ].sort((a: any, b: any) => a.name.localeCompare(b.name));
 
   const nations = Object.values(
-    players[0].list.reduce((acc: any, player: any) => {
+    players.reduce((acc: any, player: any) => {
       const { nation_id, player_nation, player_flag } = player;
       if (!acc[nation_id]) {
         acc[nation_id] = { nation_id, player_nation, player_flag, count: 0 };

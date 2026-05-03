@@ -1,48 +1,70 @@
-import { useMemo } from "react";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Header from "./header";
 import Selects from "./selects";
 import { useSearchParams } from "react-router-dom";
-import { useMultiplePlayersStatsDetail } from "../../../api/players-stats/hooks";
-import Players from "./players";
+import StatsTabs from "./stats-tabs";
+import {
+  getPlayersStatsDetail,
+  getPlayersStatsTotal,
+  getPlayersStatsTotalByTeam,
+} from "../../../api/players-stats/queries";
 
 const PlayersStats = () => {
   const [searchParams] = useSearchParams();
-  const leagueId = [Number(searchParams.get("league"))];
+  const leagueId = Number(searchParams.get("league"));
   const seasonId = Number(searchParams.get("season"));
-  const playerOrd = Number(searchParams.get("playerOrd")) || [];
-  const teamId = Number(searchParams.get("teamId")) || [0];
-  const nationId = Number(searchParams.get("nationId")) || [0];
+  const playerOrd = searchParams.get("playerOrd")
+    ? [Number(searchParams.get("playerOrd"))]
+    : undefined;
+  const teamId = Number(searchParams.get("teamId")) || undefined;
+  const nationId = Number(searchParams.get("nationId")) || undefined;
 
-  const configs = useMemo(
-    () => [
-      {
-        id: 1,
-        name: "",
-        params: {
-          leagueId,
-          seasonId,
-          playerOrd,
-          teamId,
-          nationId,
-        },
-      },
-    ],
-    [leagueId, seasonId, playerOrd, teamId, nationId],
-  );
+  const detailParams = {
+    leagueId: [leagueId],
+    seasonId,
+    playerOrd,
+    teamId,
+    nationId,
+  };
+  const totalParams = { leagueId, playerOrd, teamId, nationId };
+  const seasonParams = { leagueId: [leagueId], playerOrd, teamId, nationId };
 
   const {
     data: players,
-    isLoading,
-    isError,
-  } = useMultiplePlayersStatsDetail(configs);
+    isLoading: isLoadingDetail,
+    isError: isErrorDetail,
+  } = getPlayersStatsDetail(detailParams);
+  const {
+    data: totals,
+    isLoading: isLoadingTotal,
+    isError: isErrorTotal,
+  } = getPlayersStatsTotal(totalParams);
+  const {
+    data: seasons,
+    isLoading: isLoadingSeasons,
+    isError: isErrorSeasons,
+  } = getPlayersStatsDetail(seasonParams);
+  const {
+    data: totalteams,
+    isLoading: isLoadingTotalTeam,
+    isError: isErrorTotalTeam,
+  } = getPlayersStatsTotalByTeam(totalParams);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <h3>Error!</h3>;
+  if (
+    isLoadingDetail ||
+    isLoadingTotal ||
+    isLoadingSeasons ||
+    isLoadingTotalTeam
+  )
+    return <p>Loading...</p>;
+  if (isErrorDetail || isErrorTotal || isErrorSeasons || isErrorTotalTeam)
+    return <h3>Error!</h3>;
+  if (!players || !totals || !seasons || !totalteams)
+    return <h3>No data available</h3>;
 
-  const league = players[0].list[0].short_name;
-  const season = players[0].list[0].name;
+  const league = players[0].short_name;
+  const season = players[0].name;
 
   return (
     <Container sx={{ py: 1, mt: 2, mb: 10 }}>
@@ -53,7 +75,13 @@ const PlayersStats = () => {
         <Selects players={players} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
-        <Players season={season} players={players[0].list} />
+        <StatsTabs
+          season={season}
+          players={players}
+          totals={totals}
+          seasons={seasons}
+          totalteams={totalteams}
+        />
       </Paper>
     </Container>
   );

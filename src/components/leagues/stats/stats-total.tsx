@@ -12,28 +12,26 @@ import TableFlag from "../../common/Images/tableFlag";
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
 
-const Players = memo(({ season, players }: any) => {
+const StatsTotal = memo(({ totals }: any) => {
   return (
     <>
       <Paper>
         <TableContainer>
           <Table size="small">
-            <HeaderMain cells={[`${season} Regular Season Player Stats`]} />
+            <HeaderMain cells={[`All-time totals Player Stats`]} />
           </Table>
           <Table size="small">
             <HeaderSection
               cells={[
                 { align: "center", text: "#" },
                 { text: "player" },
-                { align: "center", text: "age" },
-                { text: "team" },
                 { align: "center", text: "gp" },
                 { align: "center", text: "g" },
-                { text: "Postseason" },
+                { align: "center", text: "years" },
               ]}
             />
             <TableBody>
-              {players.map((player: any, key: any) => (
+              {totals.map((player: any, key: any) => (
                 <TableRow key={player.player_id}>
                   <TableCell align="center">{key + 1}</TableCell>
                   <TableCell>
@@ -50,20 +48,9 @@ const Players = memo(({ season, players }: any) => {
                         </Link>
                       </Box>
                     </TableCell>
-                    <TableCell align='center'>{player.season_id - player.birth_year}</TableCell>
-                    <TableCell>
-                        <Link
-                          underline='hover'
-                          component={RouterLink}
-                          to={`/teams/${player.team_id}`}
-                          ml={1}
-                        >
-                          {player.club_name}
-                        </Link>
-                    </TableCell>
-                    <TableCell align='center'>{player.games}</TableCell>
-                    <TableCell align='center'>{player.goals}</TableCell>
-                    <TableCell>{player.postseason}</TableCell>
+                    <TableCell align='center'>{player.games_t}</TableCell>
+                    <TableCell align='center'>{player.goals_t}</TableCell>
+                    <TableCell align='center'>{player.years}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -74,4 +61,4 @@ const Players = memo(({ season, players }: any) => {
   );
 });
 
-export default Players;
+export default StatsTotal;

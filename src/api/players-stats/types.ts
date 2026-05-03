@@ -7,9 +7,12 @@ export type TPlayerStatTotal = {
   player_flag: string;
   games_t: number;
   goals_t: number;
-  start_year: number;
-  end_year: number;
   years: number;
+};
+
+export type TPlayerStatByClub = TPlayerStatTotal & {
+  team_id: number;
+  full_name: string;
 };
 
 export type PlayersStatsTotalParams = {
