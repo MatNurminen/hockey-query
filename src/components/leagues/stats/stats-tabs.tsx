@@ -5,8 +5,26 @@ import StatsDetails from "./stats-details";
 import StatsTotal from "./stats-total";
 import StatsSeason from "./stats-season";
 import StatsTeam from "./stats-team";
+import {
+  TPlayerStatDetail,
+  TPlayerStatTotal,
+  TPlayerStatByClub,
+} from "../../../api/players-stats/types";
 
-const tabs = [
+interface Props {
+  season: string;
+  players: TPlayerStatDetail[];
+  totals: TPlayerStatTotal[];
+  seasons: TPlayerStatDetail[];
+  totalteams: TPlayerStatByClub[];
+}
+
+interface Tab {
+  value: "one" | "two" | "three" | "for";
+  label: string;
+}
+
+const tabs: Tab[] = [
   { value: "one", label: "Season" },
   { value: "two", label: "All-Time" },
   { value: "three", label: "All-Time / Season" },
@@ -14,8 +32,8 @@ const tabs = [
 ];
 
 const StatsTabs = memo(
-  ({ season, players, totals, seasons, totalteams }: any) => {
-    const [value, setValue] = useState("one");
+  ({ season, players, totals, seasons, totalteams }: Props) => {
+    const [value, setValue] = useState<Tab["value"]>("one");
 
     return (
       <Box sx={{ width: "100%" }}>

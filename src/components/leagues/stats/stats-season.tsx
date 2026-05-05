@@ -7,12 +7,17 @@ import HeaderSection from "../../common/Table/headerSection";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@mui/material/Link";
+import { TPlayerStatDetail } from "../../../api/players-stats/types";
 
-const StatsSeason = memo(({ seasons }: any) => {
+interface Props {
+  seasons: TPlayerStatDetail[];
+}
+
+const StatsSeason = memo(({ seasons }: Props) => {
   return (
     <>
       <Paper>
@@ -34,38 +39,42 @@ const StatsSeason = memo(({ seasons }: any) => {
               ]}
             />
             <TableBody>
-              {seasons.map((player: any, key: any) => (
-                <TableRow key={`${player.player_id}-${player.season_id}-${player.team_id}`}>
+              {seasons.map((player, key) => (
+                <TableRow
+                  key={`${player.player_id}-${player.season_id}-${player.team_id}`}
+                >
                   <TableCell align="center">{key + 1}</TableCell>
                   <TableCell>
-                      <Box display='flex' alignItems='center'>
-                        <TableFlag alt='' src={player.player_flag} />
-                        <Link
-                          underline='hover'
-                          component={RouterLink}
-                          to={`/players/${player.player_id}`}
-                          ml={1}
-                        >
-                          {player.first_name} {player.last_name} (
-                          {player.player_position})
-                        </Link>
-                      </Box>
-                    </TableCell>
-                    <TableCell align='center'>{player.name}</TableCell>
-                    <TableCell align='center'>{player.season_id - player.birth_year}</TableCell>
-                    <TableCell>
-                        <Link
-                          underline='hover'
-                          component={RouterLink}
-                          to={`/teams/${player.team_id}`}
-                          ml={1}
-                        >
-                          {player.club_name}
-                        </Link>
-                    </TableCell>
-                    <TableCell align='center'>{player.games}</TableCell>
-                    <TableCell align='center'>{player.goals}</TableCell>
-                    <TableCell>{player.postseason}</TableCell>
+                    <Box display="flex" alignItems="center">
+                      <TableFlag alt="" src={player.player_flag} />
+                      <Link
+                        underline="hover"
+                        component={RouterLink}
+                        to={`/players/${player.player_id}`}
+                        ml={1}
+                      >
+                        {player.first_name} {player.last_name} (
+                        {player.player_position})
+                      </Link>
+                    </Box>
+                  </TableCell>
+                  <TableCell align="center">{player.name}</TableCell>
+                  <TableCell align="center">
+                    {player.season_id - player.birth_year}
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      underline="hover"
+                      component={RouterLink}
+                      to={`/teams/${player.team_id}`}
+                      ml={1}
+                    >
+                      {player.club_name}
+                    </Link>
+                  </TableCell>
+                  <TableCell align="center">{player.games}</TableCell>
+                  <TableCell align="center">{player.goals}</TableCell>
+                  <TableCell>{player.postseason}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

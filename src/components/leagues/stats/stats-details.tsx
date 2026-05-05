@@ -12,8 +12,14 @@ import TableFlag from "../../common/Images/tableFlag";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
 import SelectSeason from "../../common/Selects/selectSeason";
+import { TPlayerStatDetail } from "../../../api/players-stats/types";
 
-const StatsDetails = memo(({ season, players }: any) => {
+interface Props {
+  season: string;
+  players: TPlayerStatDetail[];
+}
+
+const StatsDetails = memo(({ season, players }: Props) => {
   return (
     <>
       <Paper>
@@ -37,7 +43,8 @@ const StatsDetails = memo(({ season, players }: any) => {
               ]}
             />
             <TableBody>
-              {players.map((player: any, key: any) => (
+              {players.map((player, key) => (
+                // may by to do key more...
                 <TableRow key={player.player_id}>
                   <TableCell align="center">{key + 1}</TableCell>
                   <TableCell>

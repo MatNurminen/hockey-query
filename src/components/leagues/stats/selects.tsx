@@ -7,14 +7,36 @@ import MenuItem from "@mui/material/MenuItem";
 import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
 import GreenButton from "../../common/Buttons/greenButton";
+import { TPlayerStatDetail } from "../../../api/players-stats/types";
 
-const positions = [
+interface Props {
+  players: TPlayerStatDetail[];
+}
+
+interface Position {
+  id: number;
+  name: string;
+}
+
+interface Team {
+  id: number;
+  name: string;
+}
+
+interface Nation {
+  nation_id: number;
+  player_nation: string;
+  player_flag: string;
+  count: number;
+}
+
+const positions: Position[] = [
   { id: 3, name: "Forward" },
   { id: 2, name: "Defenseman" },
   { id: 1, name: "Goalie" },
 ];
 
-const Selects = ({ players }: any) => {
+const Selects = ({ players }: Props) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const currentPosition = Number(searchParams.get("playerOrd"));
@@ -22,20 +44,20 @@ const Selects = ({ players }: any) => {
   const currentNation = Number(searchParams.get("nationId"));
   const isAnyFilterActive = currentPosition || currentTeam || currentNation;
 
-  const teams = [
+  const teams: Team[] = [
     ...new Map(
-      players.map((team: any) => [
-        team.team_id,
+      players.map((player) => [
+        player.team_id,
         {
-          id: team.team_id,
-          name: team.full_name,
+          id: player.team_id,
+          name: player.club_name,
         },
       ]),
     ).values(),
-  ].sort((a: any, b: any) => a.name.localeCompare(b.name));
+  ].sort((a, b) => a.name.localeCompare(b.name));
 
-  const nations = Object.values(
-    players.reduce((acc: any, player: any) => {
+  const nations: Nation[] = Object.values(
+    players.reduce((acc: Record<number, Nation>, player) => {
       const { nation_id, player_nation, player_flag } = player;
       if (!acc[nation_id]) {
         acc[nation_id] = { nation_id, player_nation, player_flag, count: 0 };
@@ -43,7 +65,7 @@ const Selects = ({ players }: any) => {
       acc[nation_id].count++;
       return acc;
     }, {}),
-  ).sort((a: any, b: any) => a.player_nation.localeCompare(b.player_nation));
+  ).sort((a, b) => a.player_nation.localeCompare(b.player_nation));
 
   const handlePositionChange = (event: SelectChangeEvent<number>) => {
     const newParams = new URLSearchParams(searchParams);

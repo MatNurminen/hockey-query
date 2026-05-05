@@ -7,12 +7,17 @@ import HeaderSection from "../../common/Table/headerSection";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@mui/material/Link";
+import { TPlayerStatByClub } from "../../../api/players-stats/types";
 
-const StatsTeam = memo(({ totalteams }: any) => {
+interface Props {
+  totalteams: TPlayerStatByClub[];
+}
+
+const StatsTeam = memo(({ totalteams }: Props) => {
   return (
     <>
       <Paper>
@@ -32,36 +37,36 @@ const StatsTeam = memo(({ totalteams }: any) => {
               ]}
             />
             <TableBody>
-              {totalteams.map((player: any, key: any) => (
-                <TableRow key={`${player.player_id}-${player.season_id}-${player.team_id}`}>
+              {totalteams.map((player, key) => (
+                <TableRow key={`${player.player_id}-${player.team_id}`}>
                   <TableCell align="center">{key + 1}</TableCell>
                   <TableCell>
-                      <Box display='flex' alignItems='center'>
-                        <TableFlag alt='' src={player.player_flag} />
-                        <Link
-                          underline='hover'
-                          component={RouterLink}
-                          to={`/players/${player.player_id}`}
-                          ml={1}
-                        >
-                          {player.first_name} {player.last_name} (
-                          {player.player_position})
-                        </Link>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                        <Link
-                          underline='hover'
-                          component={RouterLink}
-                          to={`/teams/${player.team_id}`}
-                          ml={1}
-                        >
-                          {player.full_name}
-                        </Link>
-                    </TableCell>
-                    <TableCell align='center'>{player.games_t}</TableCell>
-                    <TableCell align='center'>{player.goals_t}</TableCell>
-                    <TableCell align='center'>{player.years}</TableCell>
+                    <Box display="flex" alignItems="center">
+                      <TableFlag alt="" src={player.player_flag} />
+                      <Link
+                        underline="hover"
+                        component={RouterLink}
+                        to={`/players/${player.player_id}`}
+                        ml={1}
+                      >
+                        {player.first_name} {player.last_name} (
+                        {player.player_position})
+                      </Link>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      underline="hover"
+                      component={RouterLink}
+                      to={`/teams/${player.team_id}`}
+                      ml={1}
+                    >
+                      {player.full_name}
+                    </Link>
+                  </TableCell>
+                  <TableCell align="center">{player.games_t}</TableCell>
+                  <TableCell align="center">{player.goals_t}</TableCell>
+                  <TableCell align="center">{player.years}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

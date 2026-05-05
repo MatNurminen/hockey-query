@@ -1,12 +1,18 @@
 import { memo } from "react";
 import Grid from "@mui/material/Grid2";
 import SectionHeader from "../../common/Sections/sectionHeader";
-//import SelectSeason from "../../common/Selects/selectSeason";
+//import SelectSeason from '../../common/Selects/selectSeason';
 import SelectLeague from "../../common/Selects/selectLeague";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
 
-const Header = ({ league, leagueId, season }: any) => {
+interface Props {
+  league: string;
+  leagueId: number;
+  season: string;
+}
+
+const Header = memo(({ league, leagueId, season }: Props) => {
   return (
     <>
       <Grid
@@ -41,6 +47,6 @@ const Header = ({ league, leagueId, season }: any) => {
       </Grid>
     </>
   );
-};
+});
 
-export default memo(Header);
+export default Header;

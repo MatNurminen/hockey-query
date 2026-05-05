@@ -7,12 +7,17 @@ import HeaderSection from "../../common/Table/headerSection";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@mui/material/Link";
+import { TPlayerStatTotal } from "../../../api/players-stats/types";
 
-const StatsTotal = memo(({ totals }: any) => {
+interface Props {
+  totals: TPlayerStatTotal[];
+}
+
+const StatsTotal = memo(({ totals }: Props) => {
   return (
     <>
       <Paper>
@@ -31,26 +36,26 @@ const StatsTotal = memo(({ totals }: any) => {
               ]}
             />
             <TableBody>
-              {totals.map((player: any, key: any) => (
+              {totals.map((player, key) => (
                 <TableRow key={player.player_id}>
                   <TableCell align="center">{key + 1}</TableCell>
                   <TableCell>
-                      <Box display='flex' alignItems='center'>
-                        <TableFlag alt='' src={player.player_flag} />
-                        <Link
-                          underline='hover'
-                          component={RouterLink}
-                          to={`/players/${player.player_id}`}
-                          ml={1}
-                        >
-                          {player.first_name} {player.last_name} (
-                          {player.player_position})
-                        </Link>
-                      </Box>
-                    </TableCell>
-                    <TableCell align='center'>{player.games_t}</TableCell>
-                    <TableCell align='center'>{player.goals_t}</TableCell>
-                    <TableCell align='center'>{player.years}</TableCell>
+                    <Box display="flex" alignItems="center">
+                      <TableFlag alt="" src={player.player_flag} />
+                      <Link
+                        underline="hover"
+                        component={RouterLink}
+                        to={`/players/${player.player_id}`}
+                        ml={1}
+                      >
+                        {player.first_name} {player.last_name} (
+                        {player.player_position})
+                      </Link>
+                    </Box>
+                  </TableCell>
+                  <TableCell align="center">{player.games_t}</TableCell>
+                  <TableCell align="center">{player.goals_t}</TableCell>
+                  <TableCell align="center">{player.years}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
