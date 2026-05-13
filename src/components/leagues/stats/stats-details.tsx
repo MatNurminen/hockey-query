@@ -11,25 +11,21 @@ import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
-import SelectSeason from "../../common/Selects/selectSeason";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
 
 interface Props {
-  season: string;
+  seasonId: number;
   players: TPlayerStatDetail[];
 }
 
-const StatsDetails = memo(({ season, players }: Props) => {
+const StatsDetails = memo(({ seasonId, players }: Props) => {
   return (
     <>
       <Paper>
         <TableContainer>
           <Table size="small">
-            <HeaderMain cells={[`${season} Player Stats`]} />
+            <HeaderMain cells={[`${seasonId}-${seasonId + 1} Player Stats`]} />
           </Table>
-          <Box sx={{ p: 2 }}>
-            <SelectSeason />
-          </Box>
           <Table size="small">
             <HeaderSection
               cells={[
@@ -45,7 +41,9 @@ const StatsDetails = memo(({ season, players }: Props) => {
             <TableBody>
               {players.map((player, key) => (
                 // may by to do key more...
-                <TableRow key={player.player_id}>
+                <TableRow
+                  key={`${player.player_id}-${player.season_id}-${player.team_id}`}
+                >
                   <TableCell align="center">{key + 1}</TableCell>
                   <TableCell>
                     <Box display="flex" alignItems="center">

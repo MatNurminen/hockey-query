@@ -9,6 +9,7 @@ import {
   getPlayersStatsTotal,
   getPlayersStatsTotalByTeam,
 } from "../../../api/players-stats/queries";
+import SelectSeason from "../../common/Selects/selectSeason";
 
 const PlayersStats = () => {
   const [searchParams] = useSearchParams();
@@ -51,38 +52,51 @@ const PlayersStats = () => {
     isError: isErrorTotalTeam,
   } = getPlayersStatsTotalByTeam(totalParams);
 
-  if (
-    isLoadingDetail ||
-    isLoadingTotal ||
-    isLoadingSeasons ||
-    isLoadingTotalTeam
-  )
-    return <p>Loading...</p>;
   if (isErrorDetail || isErrorTotal || isErrorSeasons || isErrorTotalTeam)
     return <h3>Error!</h3>;
-  if (!players || !totals || !seasons || !totalteams)
-    return <h3>No data available</h3>;
 
-  const league = players[0].short_name;
-  const season = players[0].name;
+  const hasData =
+    players?.length && totals?.length && seasons?.length && totalteams?.length;
+
+  const league = players?.[0]?.short_name || "";
 
   return (
     <Container sx={{ py: 1, mt: 2, mb: 10 }}>
       <Paper sx={{ px: 2, pb: 1 }}>
-        <Header league={league} leagueId={leagueId} season={season} />
+        <Header league={league} leagueId={leagueId} seasonId={seasonId} />
       </Paper>
-      <Paper sx={{ mt: 2, p: 2 }}>
-        <Selects players={players} />
-      </Paper>
-      <Paper sx={{ mt: 2 }}>
-        <StatsTabs
-          season={season}
-          players={players}
-          totals={totals}
-          seasons={seasons}
-          totalteams={totalteams}
-        />
-      </Paper>
+      {seasonId ? (
+        <Paper sx={{ mt: 2, p: 2 }}>
+          <SelectSeason />
+        </Paper>
+      ) : null}
+      {isLoadingDetail ||
+      isLoadingTotal ||
+      isLoadingSeasons ||
+      isLoadingTotalTeam ? (
+        <Paper sx={{ mt: 2, p: 2 }}>
+          <p>Loading...</p>
+        </Paper>
+      ) : hasData ? (
+        <>
+          <Paper sx={{ mt: 2, p: 2 }}>
+            <Selects players={players} />
+          </Paper>
+          <Paper sx={{ mt: 2 }}>
+            <StatsTabs
+              seasonId={seasonId}
+              players={players}
+              totals={totals}
+              seasons={seasons}
+              totalteams={totalteams}
+            />
+          </Paper>
+        </>
+      ) : (
+        <Paper sx={{ mt: 2, p: 2 }}>
+          <h3>No players stats for this tournament</h3>
+        </Paper>
+      )}
     </Container>
   );
 };

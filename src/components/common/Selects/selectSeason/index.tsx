@@ -1,10 +1,11 @@
-import { memo } from 'react';
-import Stack from '@mui/material/Stack';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useSearchParams } from 'react-router-dom';
-import { getSeasons } from '../../../../api/seasons/queries';
+import { memo } from "react";
+import Stack from "@mui/material/Stack";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { getSeasons } from "../../../../api/seasons/queries";
+import { navigateWithParams } from "../../../utils/urlHelpers";
 
 export interface SelectSeasonProps {
   value?: string;
@@ -12,19 +13,22 @@ export interface SelectSeasonProps {
 }
 
 const SelectSeason = ({ value, onChange }: SelectSeasonProps) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const { data, isLoading, isError } = getSeasons();
 
-  const seasonFromUrl = searchParams.get('season') || '';
+  const seasonFromUrl = searchParams.get("season") || "";
   const currentValue = value ?? seasonFromUrl;
 
   const handleChange = (event: SelectChangeEvent) => {
     const newValue = event.target.value;
+
     if (onChange) {
-      onChange(newValue); // controlled mode
+      onChange(newValue);
     } else {
-      searchParams.set('season', newValue); // uncontrolled mode
-      setSearchParams(searchParams);
+      navigateWithParams(navigate, searchParams, {
+        season: newValue,
+      });
     }
   };
 
@@ -32,12 +36,12 @@ const SelectSeason = ({ value, onChange }: SelectSeasonProps) => {
   if (isError || !data) return <h3>Error loading seasons</h3>;
 
   return (
-    <Stack direction='row' spacing={2}>
-      <FormControl fullWidth size='small'>
+    <Stack direction="row" spacing={2}>
+      <FormControl fullWidth size="small">
         <Select
-          labelId='season-label'
-          id='season-select'
-          value={currentValue || ''}
+          labelId="season-label"
+          id="season-select"
+          value={currentValue || ""}
           onChange={handleChange}
         >
           {data.map((season: any) => (

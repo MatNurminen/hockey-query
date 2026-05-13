@@ -1,7 +1,6 @@
 import { memo } from "react";
 import Grid from "@mui/material/Grid2";
 import SectionHeader from "../../common/Sections/sectionHeader";
-//import SelectSeason from '../../common/Selects/selectSeason';
 import SelectLeague from "../../common/Selects/selectLeague";
 import { Link as RouterLink, useSearchParams } from "react-router-dom";
 import Link from "@mui/material/Link";
@@ -9,10 +8,10 @@ import Link from "@mui/material/Link";
 interface Props {
   league: string;
   leagueId: number;
-  season: string;
+  seasonId: number;
 }
 
-const Header = memo(({ league, leagueId, season }: Props) => {
+const Header = memo(({ league, leagueId, seasonId }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleLeagueChange = (newLeagueId: string) => {
@@ -34,12 +33,9 @@ const Header = memo(({ league, leagueId, season }: Props) => {
         <Grid size={{ xs: 7 }}>
           <SectionHeader
             txtAlign="left"
-            content={league + " " + season + " Stats"}
+            content={`${league} ${seasonId ? `${seasonId}-${seasonId + 1} Stats` : "All time Stats"}`}
           />
         </Grid>
-        {/* <Grid size={{ xs: 2 }}>
-          <SelectSeason />
-        </Grid> */}
         <Grid size={{ xs: 3 }}>
           <SelectLeague onChange={handleLeagueChange} />
         </Grid>

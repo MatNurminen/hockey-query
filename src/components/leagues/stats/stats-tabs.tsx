@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import StatsDetails from "./stats-details";
@@ -10,9 +10,11 @@ import {
   TPlayerStatTotal,
   TPlayerStatByClub,
 } from "../../../api/players-stats/types";
+import { useSearchParams } from "react-router-dom";
+import { updateSearchParams } from "../../utils/urlHelpers";
 
 interface Props {
-  season: string;
+  seasonId: number;
   players: TPlayerStatDetail[];
   totals: TPlayerStatTotal[];
   seasons: TPlayerStatDetail[];
@@ -32,8 +34,35 @@ const tabs: Tab[] = [
 ];
 
 const StatsTabs = memo(
-  ({ season, players, totals, seasons, totalteams }: Props) => {
-    const [value, setValue] = useState<Tab["value"]>("one");
+  ({ seasonId, players, totals, seasons, totalteams }: Props) => {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [value, setValue] = useState<Tab["value"]>(
+      (searchParams.get("tab") as Tab["value"]) || "one",
+    );
+
+    const lastSeasonRef = useRef<string>(seasonId.toString());
+
+    useEffect(() => {
+      if (seasonId > 0) {
+        lastSeasonRef.current = seasonId.toString();
+      }
+    }, [seasonId]);
+
+    const handleTabChange = (tabValue: Tab["value"]) => {
+      let updates: Record<string, string | null> = { tab: tabValue };
+
+      if (tabValue === "one") {
+        updates.season = lastSeasonRef.current;
+      } else {
+        updates.season = null; // удаляем season
+      }
+
+      const newParams = updateSearchParams(searchParams, updates, {
+        keepTab: false,
+      });
+      setSearchParams(newParams);
+      setValue(tabValue);
+    };
 
     return (
       <Box sx={{ width: "100%" }}>
@@ -43,7 +72,7 @@ const StatsTabs = memo(
               key={tab.value}
               variant={value === tab.value ? "contained" : "outlined"}
               color="ocean"
-              onClick={() => setValue(tab.value)}
+              onClick={() => handleTabChange(tab.value)}
               sx={{ borderRadius: "18px" }}
             >
               {tab.label}
@@ -53,7 +82,7 @@ const StatsTabs = memo(
 
         <Box>
           {value === "one" && (
-            <StatsDetails season={season} players={players} />
+            <StatsDetails seasonId={seasonId} players={players} />
           )}
           {value === "two" && <StatsTotal totals={totals} />}
           {value === "three" && <StatsSeason seasons={seasons} />}

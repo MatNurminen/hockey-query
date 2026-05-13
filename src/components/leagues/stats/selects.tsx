@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
 import GreenButton from "../../common/Buttons/greenButton";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
+import { navigateWithParams, deleteParams } from "../../utils/urlHelpers";
 
 interface Props {
   players: TPlayerStatDetail[];
@@ -43,6 +44,8 @@ const Selects = ({ players }: Props) => {
   const currentTeam = Number(searchParams.get("teamId"));
   const currentNation = Number(searchParams.get("nationId"));
   const isAnyFilterActive = currentPosition || currentTeam || currentNation;
+  const currentTab = searchParams.get("tab");
+  const isAllTimeTab = currentTab === "two";
 
   const teams: Team[] = [
     ...new Map(
@@ -68,28 +71,29 @@ const Selects = ({ players }: Props) => {
   ).sort((a, b) => a.player_nation.localeCompare(b.player_nation));
 
   const handlePositionChange = (event: SelectChangeEvent<number>) => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("playerOrd", String(event.target.value));
-    navigate(`?${newParams.toString()}`);
+    navigateWithParams(navigate, searchParams, {
+      playerOrd: event.target.value,
+    });
   };
 
   const handleTeamChange = (event: SelectChangeEvent<number>) => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("teamId", String(event.target.value));
-    navigate(`?${newParams.toString()}`);
+    navigateWithParams(navigate, searchParams, {
+      teamId: event.target.value,
+    });
   };
 
   const handleNationChange = (event: SelectChangeEvent<number>) => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("nationId", String(event.target.value));
-    navigate(`?${newParams.toString()}`);
+    navigateWithParams(navigate, searchParams, {
+      nationId: event.target.value,
+    });
   };
 
   const handleReset = () => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.delete("playerOrd");
-    newParams.delete("teamId");
-    newParams.delete("nationId");
+    const newParams = deleteParams(searchParams, [
+      "playerOrd",
+      "teamId",
+      "nationId",
+    ]);
     navigate(`?${newParams.toString()}`);
   };
 
@@ -122,6 +126,7 @@ const Selects = ({ players }: Props) => {
             label="All teams"
             value={currentTeam || ""}
             onChange={handleTeamChange}
+            disabled={isAllTimeTab}
           >
             {teams.map((team: any) => (
               <MenuItem key={team.id} value={team.id}>
