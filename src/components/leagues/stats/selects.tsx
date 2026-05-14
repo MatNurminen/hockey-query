@@ -47,9 +47,22 @@ const Selects = ({ players }: Props) => {
   const currentTab = searchParams.get("tab");
   const isAllTimeTab = currentTab === "two";
 
+  const normalizedPlayers = players.map((player) => ({
+    player_id: player.player_id,
+    team_id: player.team_id || 0,
+    club_name: player.full_name || "",
+    nation_id: player.nation_id || 0,
+    player_nation: player.player_nation || "",
+    player_flag: player.player_flag || "",
+    player_order: (player as any).player_order,
+  }));
+
+console.log('normalizedPlayers', normalizedPlayers);
+
+
   const teams: Team[] = [
     ...new Map(
-      players.map((player) => [
+      normalizedPlayers.map((player) => [
         player.team_id,
         {
           id: player.team_id,
@@ -60,15 +73,31 @@ const Selects = ({ players }: Props) => {
   ].sort((a, b) => a.name.localeCompare(b.name));
 
   const nations: Nation[] = Object.values(
-    players.reduce((acc: Record<number, Nation>, player) => {
+    Array.from(
+      normalizedPlayers
+        .reduce((accByPlayer: Map<number, any>, player) => {
+          if (!accByPlayer.has(player.player_id)) {
+            accByPlayer.set(player.player_id, player);
+          }
+          return accByPlayer;
+        }, new Map())
+        .values(),
+    ).reduce((accByNation: Record<number, Nation>, player) => {
       const { nation_id, player_nation, player_flag } = player;
-      if (!acc[nation_id]) {
-        acc[nation_id] = { nation_id, player_nation, player_flag, count: 0 };
+      if (nation_id && player_nation) {
+        if (!accByNation[nation_id]) {
+          accByNation[nation_id] = {
+            nation_id,
+            player_nation,
+            player_flag,
+            count: 0,
+          };
+        }
+        accByNation[nation_id].count++;
       }
-      acc[nation_id].count++;
-      return acc;
+      return accByNation;
     }, {}),
-  ).sort((a, b) => a.player_nation.localeCompare(b.player_nation));
+  );
 
   const handlePositionChange = (event: SelectChangeEvent<number>) => {
     navigateWithParams(navigate, searchParams, {

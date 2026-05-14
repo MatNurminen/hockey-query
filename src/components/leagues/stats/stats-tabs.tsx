@@ -19,6 +19,7 @@ interface Props {
   totals: TPlayerStatTotal[];
   seasons: TPlayerStatDetail[];
   totalteams: TPlayerStatByClub[];
+  onDataChange?: (data: any[]) => void;
 }
 
 interface Tab {
@@ -34,7 +35,7 @@ const tabs: Tab[] = [
 ];
 
 const StatsTabs = memo(
-  ({ seasonId, players, totals, seasons, totalteams }: Props) => {
+  ({ seasonId, players, totals, seasons, totalteams, onDataChange }: Props) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [value, setValue] = useState<Tab["value"]>(
       (searchParams.get("tab") as Tab["value"]) || "one",
@@ -48,13 +49,34 @@ const StatsTabs = memo(
       }
     }, [seasonId]);
 
+    useEffect(() => {
+      if (onDataChange) {
+        let currentData: any[] = [];
+        switch (value) {
+          case "one":
+            currentData = players;
+            break;
+          case "two":
+            currentData = totals;
+            break;
+          case "three":
+            currentData = seasons;
+            break;
+          case "for":
+            currentData = totalteams;
+            break;
+        }
+        onDataChange(currentData);
+      }
+    }, [value, players, totals, seasons, totalteams, onDataChange]);
+
     const handleTabChange = (tabValue: Tab["value"]) => {
       let updates: Record<string, string | null> = { tab: tabValue };
 
       if (tabValue === "one") {
         updates.season = lastSeasonRef.current;
       } else {
-        updates.season = null; // удаляем season
+        updates.season = null;
       }
 
       const newParams = updateSearchParams(searchParams, updates, {

@@ -5,6 +5,8 @@ export type TPlayerStatTotal = {
   player_position: string;
   player_order: number;
   player_flag: string;
+  nation_id: number;
+  player_nation: string;
   games_t: number;
   goals_t: number;
   years: number;
@@ -52,7 +54,6 @@ export type TPlayerStatDetail = {
   player_nation: string;
   team_flag: string;
   type_id: number;
-  club_name: string;
 };
 
 export type PlayersStatsDetailParams = {
@@ -102,4 +103,6 @@ export type TPlayerStatTeam = {
   start_year: number;
   end_year: number;
   years: number;
+  nation_id: number;
+  player_nation: string;
 };

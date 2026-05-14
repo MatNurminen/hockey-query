@@ -10,6 +10,7 @@ import {
   getPlayersStatsTotalByTeam,
 } from "../../../api/players-stats/queries";
 import SelectSeason from "../../common/Selects/selectSeason";
+import { useState } from "react";
 
 const PlayersStats = () => {
   const [searchParams] = useSearchParams();
@@ -20,6 +21,8 @@ const PlayersStats = () => {
     : undefined;
   const teamId = Number(searchParams.get("teamId")) || undefined;
   const nationId = Number(searchParams.get("nationId")) || undefined;
+
+  const [selectsData, setSelectsData] = useState<any[]>([]);
 
   const detailParams = {
     leagueId: [leagueId],
@@ -57,15 +60,18 @@ const PlayersStats = () => {
 
   const hasData =
     players?.length && totals?.length && seasons?.length && totalteams?.length;
-
   const league = players?.[0]?.short_name || "";
+
+  const handleDataChange = (data: any[]) => {
+    setSelectsData(data);
+  };
 
   return (
     <Container sx={{ py: 1, mt: 2, mb: 10 }}>
       <Paper sx={{ px: 2, pb: 1 }}>
         <Header league={league} leagueId={leagueId} seasonId={seasonId} />
       </Paper>
-      {seasonId ? (
+      {seasonId && seasonId > 0 ? (
         <Paper sx={{ mt: 2, p: 2 }}>
           <SelectSeason />
         </Paper>
@@ -80,7 +86,7 @@ const PlayersStats = () => {
       ) : hasData ? (
         <>
           <Paper sx={{ mt: 2, p: 2 }}>
-            <Selects players={players} />
+            <Selects players={selectsData} />
           </Paper>
           <Paper sx={{ mt: 2 }}>
             <StatsTabs
@@ -89,6 +95,7 @@ const PlayersStats = () => {
               totals={totals}
               seasons={seasons}
               totalteams={totalteams}
+              onDataChange={handleDataChange}
             />
           </Paper>
         </>
