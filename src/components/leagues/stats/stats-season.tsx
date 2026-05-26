@@ -69,7 +69,7 @@ const StatsSeason = memo(({ seasons }: Props) => {
                       to={`/teams/${player.team_id}`}
                       ml={1}
                     >
-                      {player.club_name}
+                      {player.first_name}
                     </Link>
                   </TableCell>
                   <TableCell align="center">{player.games}</TableCell>
