@@ -30,6 +30,7 @@ const PlayersStats = () => {
     playerOrd,
     teamId,
     nationId,
+    //limit: 10,
   };
   const totalParams = { leagueId, playerOrd, teamId, nationId };
   const seasonParams = { leagueId: [leagueId], playerOrd, teamId, nationId };

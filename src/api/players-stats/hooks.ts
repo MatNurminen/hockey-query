@@ -1,11 +1,11 @@
-import { getPlayersStatsDetail, getPlayersStatsTotal } from './queries';
+import { getPlayersStatsDetail, getPlayersStatsTotal } from "./queries";
 
 export function useMultiplePlayersStatsDetail(
   configs: {
     id: number;
     name: string;
     params: any;
-  }[]
+  }[],
 ) {
   const results = configs.map((config) => getPlayersStatsDetail(config.params));
 
@@ -14,7 +14,9 @@ export function useMultiplePlayersStatsDetail(
   const data = results.map((r, i) => ({
     id: configs[i].id,
     name: configs[i].name,
-    list: r.data ?? [],
+    list: r.data?.data ?? [], // 👈 .data.data
+    limit: r.data?.limit, // 👈
+    offset: r.data?.offset,
   }));
 
   return {
@@ -29,7 +31,7 @@ export function useMultiplePlayersStatsTotal(
     id: number;
     name: string;
     params: any;
-  }[]
+  }[],
 ) {
   const results = configs.map((config) => getPlayersStatsTotal(config.params));
 
@@ -38,7 +40,9 @@ export function useMultiplePlayersStatsTotal(
   const data = results.map((r, i) => ({
     id: configs[i].id,
     name: configs[i].name,
-    list: r.data ?? [],
+    list: r.data?.data ?? [], // 👈 .data.data
+    limit: r.data?.limit, // 👈
+    offset: r.data?.offset,
   }));
 
   return {

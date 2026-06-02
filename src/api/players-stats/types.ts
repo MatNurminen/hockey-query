@@ -1,3 +1,9 @@
+export type TPaginatedResponse<T> = {
+  data: T[];
+  limit: number;
+  offset: number;
+};
+
 export type TPlayerStatTotal = {
   player_id: number;
   first_name: string;
@@ -12,17 +18,18 @@ export type TPlayerStatTotal = {
   years: number;
 };
 
-export type TPlayerStatByClub = TPlayerStatTotal & {
-  team_id: number;
-  full_name: string;
-};
-
 export type PlayersStatsTotalParams = {
   leagueId?: number;
   teamId?: number;
   nationId?: number;
   playerOrd?: number[];
   limit?: number;
+  offset?: number;
+};
+
+export type TPlayerStatByClub = TPlayerStatTotal & {
+  team_id: number;
+  full_name: string;
 };
 
 export type TPlayerStatDetail = {
@@ -66,6 +73,7 @@ export type PlayersStatsDetailParams = {
   typeId?: number;
   playerOrd?: number[];
   limit?: number;
+  offset?: number;
 };
 
 export type TCountPlayerByNation = {
