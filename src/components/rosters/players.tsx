@@ -1,21 +1,21 @@
-import HeaderMain from '../common/Table/headerMain';
-import TableContainer from '@mui/material/TableContainer';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import { Link as RouterLink, useSearchParams } from 'react-router-dom';
-import Link from '@mui/material/Link';
-import TableFlag from '../common/Images/tableFlag';
-import ClubHeader from './clubHeader';
-import { getStandings } from '../../api/teams-stats/queries';
-import { getPlayersStatsDetail } from '../../api/players-stats/queries';
+import HeaderMain from "../common/Table/headerMain";
+import TableContainer from "@mui/material/TableContainer";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import { Link as RouterLink, useSearchParams } from "react-router-dom";
+import Link from "@mui/material/Link";
+import TableFlag from "../common/Images/tableFlag";
+import ClubHeader from "./clubHeader";
+import { getStandings } from "../../api/teams-stats/queries";
+import { getPlayersStatsDetail } from "../../api/players-stats/queries";
 
 const Players = () => {
   const [searchParams] = useSearchParams();
-  const leagueId = [Number(searchParams.get('league'))];
-  const seasonId = Number(searchParams.get('season'));
+  const leagueId = [Number(searchParams.get("league"))];
+  const seasonId = Number(searchParams.get("season"));
 
   const {
     data: teams = [],
@@ -23,7 +23,10 @@ const Players = () => {
     isLoading,
   } = getStandings({ leagueId, seasonId });
 
-  const { data: playersResponse } = getPlayersStatsDetail({ leagueId, seasonId });
+  const { data: playersResponse } = getPlayersStatsDetail({
+    leagueId,
+    seasonId,
+  });
   const players = playersResponse?.data ?? [];
 
   if (isLoading) return <h3>Loading...</h3>;
@@ -38,21 +41,21 @@ const Players = () => {
         .map((team: any) => (
           <div key={team.id}>
             <ClubHeader team={team.full_name} logo={team.logo} />
-            <Table size='small'>
+            <Table size="small">
               <HeaderMain
-                align='center'
+                align="center"
                 cells={[
-                  '#',
-                  'Pos',
-                  'Nat',
-                  'Name',
-                  'GP',
-                  'G',
-                  'Postseason',
-                  'Age',
-                  'Born',
-                  'Height',
-                  'Weight',
+                  "#",
+                  "Pos",
+                  "Nat",
+                  "Name",
+                  "GP",
+                  "G",
+                  "Postseason",
+                  "Age",
+                  "Born",
+                  "Height",
+                  "Weight",
                 ]}
               />
               <TableBody>
@@ -64,11 +67,11 @@ const Players = () => {
                       <TableCell>{player.jersey_number}</TableCell>
                       <TableCell>{player.player_position}</TableCell>
                       <TableCell>
-                        <TableFlag src={player.player_flag} />
+                        <TableFlag src={player.player_flag} alt="" />
                       </TableCell>
                       <TableCell>
                         <Link
-                          underline='hover'
+                          underline="hover"
                           component={RouterLink}
                           to={`/players/${player.player_id}`}
                         >
