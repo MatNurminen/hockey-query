@@ -57,9 +57,6 @@ const Selects = ({ players }: Props) => {
     player_order: (player as any).player_order,
   }));
 
-console.log('normalizedPlayers', normalizedPlayers);
-
-
   const teams: Team[] = [
     ...new Map(
       normalizedPlayers.map((player) => [

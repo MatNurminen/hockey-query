@@ -10,7 +10,9 @@ import {
   getPlayersStatsTotalByTeam,
 } from "../../../api/players-stats/queries";
 import SelectSeason from "../../common/Selects/selectSeason";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+const LIMIT = 20;
 
 const PlayersStats = () => {
   const [searchParams] = useSearchParams();
@@ -22,7 +24,12 @@ const PlayersStats = () => {
   const teamId = Number(searchParams.get("teamId")) || undefined;
   const nationId = Number(searchParams.get("nationId")) || undefined;
 
+  const [offset, setOffset] = useState(0);
   const [selectsData, setSelectsData] = useState<any[]>([]);
+
+  useEffect(() => {
+    setOffset(0);
+  }, [leagueId, seasonId, teamId, nationId]);
 
   const detailParams = {
     leagueId: [leagueId],
@@ -30,38 +37,71 @@ const PlayersStats = () => {
     playerOrd,
     teamId,
     nationId,
-    //limit: 10,
+    limit: LIMIT,
+    offset,
   };
-  const totalParams = { leagueId, playerOrd, teamId, nationId };
-  const seasonParams = { leagueId: [leagueId], playerOrd, teamId, nationId };
+  const totalParams = {
+    leagueId,
+    playerOrd,
+    teamId,
+    nationId,
+    limit: LIMIT,
+    offset,
+  };
+  const seasonParams = {
+    leagueId: [leagueId],
+    playerOrd,
+    teamId,
+    nationId,
+    limit: LIMIT,
+    offset,
+  };
+  const totalByTeamParams = {
+    leagueId,
+    playerOrd,
+    teamId,
+    nationId,
+    limit: LIMIT,
+    offset,
+  };
 
   const {
-    data: players,
+    data: playersResponse,
     isLoading: isLoadingDetail,
     isError: isErrorDetail,
   } = getPlayersStatsDetail(detailParams);
+
   const {
-    data: totals,
+    data: totalsResponse,
     isLoading: isLoadingTotal,
     isError: isErrorTotal,
   } = getPlayersStatsTotal(totalParams);
+
   const {
-    data: seasons,
+    data: seasonsResponse,
     isLoading: isLoadingSeasons,
     isError: isErrorSeasons,
   } = getPlayersStatsDetail(seasonParams);
+
   const {
-    data: totalteams,
+    data: totalteamsResponse,
     isLoading: isLoadingTotalTeam,
     isError: isErrorTotalTeam,
-  } = getPlayersStatsTotalByTeam(totalParams);
+  } = getPlayersStatsTotalByTeam(totalByTeamParams);
+
+  const players = playersResponse?.data ?? [];
+  const totals = totalsResponse?.data ?? [];
+  const seasons = seasonsResponse?.data ?? [];
+  const totalteams = totalteamsResponse?.data ?? [];
+  const total = playersResponse?.total ?? 0;
+
+  const hasMore = offset + LIMIT < total;
+  const hasData =
+    players.length && totals.length && seasons.length && totalteams.length;
+  const league = players[0]?.short_name || "";
 
   if (isErrorDetail || isErrorTotal || isErrorSeasons || isErrorTotalTeam)
     return <h3>Error!</h3>;
-
-  const hasData =
-    players?.length && totals?.length && seasons?.length && totalteams?.length;
-  const league = players?.[0]?.short_name || "";
 
   const handleDataChange = (data: any[]) => {
     setSelectsData(data);
@@ -97,6 +137,11 @@ const PlayersStats = () => {
               seasons={seasons}
               totalteams={totalteams}
               onDataChange={handleDataChange}
+              offset={offset}
+              hasMore={hasMore}
+              onPageChange={setOffset}
+              limit={LIMIT}
+              total={total}
             />
           </Paper>
         </>

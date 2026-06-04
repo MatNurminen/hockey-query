@@ -12,47 +12,47 @@ import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid2';
 import AppButton from '../../common/Buttons/appButton';
 import TableFlag from '../../common/Images/tableFlag';
-import { getPlayersStatsTotal } from '../../../api/players-stats/queries';
+import { useMultiplePlayersStatsTotal } from '../../../api/players-stats/hooks';
 
 const PlayersStatsTotal = ({ leagueId }: any) => {
+  const configs = [
+    {
+      id: 1,
+      name: 'forwards',
+      params: {
+        leagueId,
+        playerOrd: [3],
+        limit: 5,
+      },
+    },
+    {
+      id: 2,
+      name: 'defenders',
+      params: {
+        leagueId,
+        playerOrd: [2],
+        limit: 5,
+      },
+    },
+    {
+      id: 3,
+      name: 'goaltending',
+      params: {
+        leagueId,
+        playerOrd: [1],
+        limit: 5,
+      },
+    },
+  ];
+  
   const {
-    data: players,
+    data: items,
     isLoading,
     isError,
-  } = getPlayersStatsTotal({
-    leagueId,
-  });
+  } = useMultiplePlayersStatsTotal(configs);
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error</p>;
-  if (!players) return <div>No data available</div>;
-
-  const goalkeepers = (players: any) => {
-    return players
-      .filter((f: any) => f.player_order === 1)
-      .sort((b: any, a: any) => a.goals_t - b.goals_t)
-      .slice(0, 5);
-  };
-
-  const defenders = (players: any) => {
-    return players
-      .filter((f: any) => f.player_order === 2)
-      .sort((b: any, a: any) => a.goals_t - b.goals_t)
-      .slice(0, 5);
-  };
-
-  const forwards = (players: any) => {
-    return players
-      .filter((f: any) => f.player_order === 3)
-      .sort((b: any, a: any) => a.goals_t - b.goals_t)
-      .slice(0, 5);
-  };
-
-  const items: { sort: number; list: any; name: string }[] = [
-    { sort: 3, list: forwards, name: 'forwards' },
-    { sort: 2, list: defenders, name: 'defensemen' },
-    { sort: 1, list: goalkeepers, name: 'goaltending' },
-  ];
 
   return (
     <Grid container direction='row' justifyContent='center' spacing={2}>
@@ -72,7 +72,7 @@ const PlayersStatsTotal = ({ leagueId }: any) => {
                 ]}
               />
               <TableBody>
-                {item.list(players).map((player: any, key: any) => (
+                {item.list.map((player: any, key: any) => (
                   <TableRow key={key}>
                     <TableCell align='center'>{key + 1}</TableCell>
                     <TableCell>

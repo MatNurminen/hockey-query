@@ -14,9 +14,10 @@ export function useMultiplePlayersStatsDetail(
   const data = results.map((r, i) => ({
     id: configs[i].id,
     name: configs[i].name,
-    list: r.data?.data ?? [], // 👈 .data.data
-    limit: r.data?.limit, // 👈
-    offset: r.data?.offset,
+    list: r.data?.data ?? [],
+    total: r.data?.total ?? 0,
+    limit: r.data?.limit ?? 0,
+    offset: r.data?.offset ?? 0,
   }));
 
   return {
@@ -40,9 +41,10 @@ export function useMultiplePlayersStatsTotal(
   const data = results.map((r, i) => ({
     id: configs[i].id,
     name: configs[i].name,
-    list: r.data?.data ?? [], // 👈 .data.data
-    limit: r.data?.limit, // 👈
-    offset: r.data?.offset,
+    list: r.data?.data ?? [],
+    total: r.data?.total ?? 0,
+    limit: r.data?.limit ?? 0,
+    offset: r.data?.offset ?? 0,
   }));
 
   return {

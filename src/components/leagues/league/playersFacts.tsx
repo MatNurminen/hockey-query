@@ -15,13 +15,14 @@ import { getPlayersStatsDetail } from "../../../api/players-stats/queries";
 
 const PlayersFacts = ({ leagueId, seasonId }: any) => {
   const {
-    data: players,
+    data: playersResponse,
     isLoading,
     isError,
   } = getPlayersStatsDetail({
     leagueId,
     seasonId,
   });
+  const players = playersResponse?.data ?? [];
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error</p>;
@@ -72,12 +73,12 @@ const PlayersFacts = ({ leagueId, seasonId }: any) => {
   };
 
   const items: { column: string; list: any; name: string; abr: string }[] = [
-    { column: 'age', list: oldest, name: 'Oldest', abr: 'yrs' },
-    { column: 'height', list: tallest, name: 'Tallest', abr: 'cm' },
-    { column: 'weight', list: heaviest, name: 'Heaviest', abr: 'kg' },
-    { column: 'age', list: youngest, name: 'Youngest', abr: 'yrs' },
-    { column: 'height', list: shortest, name: 'Shortest', abr: 'cm' },
-    { column: 'weight', list: lightest, name: 'Lightest', abr: 'kg' },
+    { column: "age", list: oldest, name: "Oldest", abr: "yrs" },
+    { column: "height", list: tallest, name: "Tallest", abr: "cm" },
+    { column: "weight", list: heaviest, name: "Heaviest", abr: "kg" },
+    { column: "age", list: youngest, name: "Youngest", abr: "yrs" },
+    { column: "height", list: shortest, name: "Shortest", abr: "cm" },
+    { column: "weight", list: lightest, name: "Lightest", abr: "kg" },
   ];
 
   return (

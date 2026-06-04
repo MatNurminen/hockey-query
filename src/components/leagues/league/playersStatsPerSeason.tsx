@@ -1,87 +1,86 @@
-import Box from '@mui/material/Box';
-import HeaderMain from '../../common/Table/headerMain';
-import HeaderSection from '../../common/Table/headerSection';
-import TableContainer from '@mui/material/TableContainer';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid2';
-import AppButton from '../../common/Buttons/appButton';
-import TableFlag from '../../common/Images/tableFlag';
-import { getPlayersStatsDetail } from '../../../api/players-stats/queries';
+import Box from "@mui/material/Box";
+import HeaderMain from "../../common/Table/headerMain";
+import HeaderSection from "../../common/Table/headerSection";
+import TableContainer from "@mui/material/TableContainer";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid2";
+import AppButton from "../../common/Buttons/appButton";
+import TableFlag from "../../common/Images/tableFlag";
+import { useMultiplePlayersStatsDetail } from "../../../api/players-stats/hooks";
 
 const PlayersStatsPerSeason = ({ leagueId }: any) => {
+  const configs = [
+    {
+      id: 1,
+      name: 'forwards',
+      params: {
+        leagueId,
+        playerOrd: [3],
+        limit: 5,
+      },
+    },
+    {
+      id: 2,
+      name: 'defenders',
+      params: {
+        leagueId,
+        playerOrd: [2],
+        limit: 5,
+      },
+    },
+  ];
+
   const {
-    data: players,
+    data: items,
     isLoading,
     isError,
-  } = getPlayersStatsDetail({
-    leagueId,
-  });
+  } = useMultiplePlayersStatsDetail(configs);
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error</p>;
-  if (!players) return <div>No data available</div>;
-
-  const defenders = (players: any) => {
-    return players
-      .filter((f: any) => f.player_order === 2)
-      .sort((b: any, a: any) => a.goals - b.goals)
-      .slice(0, 5);
-  };
-
-  const forwards = (players: any) => {
-    return players
-      .filter((f: any) => f.player_order === 3)
-      .sort((b: any, a: any) => a.goals - b.goals)
-      .slice(0, 5);
-  };
-
-  const items: { sort: number; list: any; name: string }[] = [
-    { sort: 3, list: forwards, name: 'forwards' },
-    { sort: 2, list: defenders, name: 'defensemen' },
-  ];
 
   return (
     <Grid
       container
-      direction='row'
-      justifyContent='center'
-      alignItems='stretch'
+      direction="row"
+      justifyContent="center"
+      alignItems="stretch"
       spacing={2}
     >
       {items.map((item: any) => (
         <Grid size={{ sm: 12, md: 6 }} key={item.name}>
           <TableContainer component={Paper}>
-            <Table size='small'>
+            <Table size="small">
               <HeaderMain
                 cells={[`League all-time ${item.name} goals per season`]}
               />
             </Table>
-            <Table size='small'>
+            <Table size="small">
               <HeaderSection
                 cells={[
-                  { align: 'center', text: '#' },
-                  { text: 'Player' },
-                  { text: 'Season' },
-                  { text: 'Team' },
-                  { align: 'center', text: 'gp' },
-                  { align: 'center', text: 'g' },
+                  { align: "center", text: "#" },
+                  { text: "Player" },
+                  { text: "Season" },
+                  { text: "Team" },
+                  { align: "center", text: "gp" },
+                  { align: "center", text: "g" },
                 ]}
               />
               <TableBody>
-                {item.list(players).map((player: any, key: any) => (
+                {item.list.map((player: any, key: any) => (
                   <TableRow key={key}>
-                    <TableCell align='center'>{key + 1}</TableCell>
+                    <TableCell align="center">{key + 1}</TableCell>
                     <TableCell>
-                      <Box display='flex' alignItems='center'>
-                        <TableFlag alt='' src={player.player_flag} />
+                      <Box display="flex" alignItems="center">
+                        <TableFlag alt="" src={player.player_flag} />
                         <Link
-                          underline='hover'
+                          underline="hover"
                           component={RouterLink}
                           to={`/players/${player.player_id}`}
                           ml={1}
@@ -91,10 +90,10 @@ const PlayersStatsPerSeason = ({ leagueId }: any) => {
                         </Link>
                       </Box>
                     </TableCell>
-                    <TableCell align='center'>{player.name}</TableCell>
+                    <TableCell align="center">{player.name}</TableCell>
                     <TableCell>
                       <Link
-                        underline='hover'
+                        underline="hover"
                         component={RouterLink}
                         to={`/teams/${player.team_id}`}
                         ml={1}
@@ -102,15 +101,20 @@ const PlayersStatsPerSeason = ({ leagueId }: any) => {
                         {player.full_name}
                       </Link>
                     </TableCell>
-                    <TableCell align='center'>{player.games}</TableCell>
-                    <TableCell align='center'>{player.goals}</TableCell>
+                    <TableCell align="center">{player.games}</TableCell>
+                    <TableCell align="center">{player.goals}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
           <Box mt={1}>
-            <AppButton color='success' fullWidth={true} text='Show More' to=''/>
+            <AppButton
+              color="success"
+              fullWidth={true}
+              text="Show More"
+              to=""
+            />
           </Box>
         </Grid>
       ))}

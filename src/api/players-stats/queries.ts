@@ -28,10 +28,10 @@ export const getPlayersStatsTotalByTeam = (params: PlayersStatsTotalParams) => {
   const queryString = buildQueryString(params);
   const url = `/api/players-stats/total-by-team${queryString ? `?${queryString}` : ""}`;
 
-  return createQuery<TPlayerStatByClub[], TPlayerStatByClub[]>(
-    ["playersStatsTotalByTeam", params],
-    url,
-  );
+  return createQuery<
+    TPaginatedResponse<TPlayerStatByClub>,
+    TPaginatedResponse<TPlayerStatByClub>
+  >(["playersStatsTotalByTeam", params], url);
 };
 
 export const getPlayersStatsDetail = (params: PlayersStatsDetailParams) => {
