@@ -23,7 +23,8 @@ const Players = () => {
     isLoading,
   } = getStandings({ leagueId, seasonId });
 
-  const { data: players } = getPlayersStatsDetail({ leagueId, seasonId });
+  const { data: playersResponse } = getPlayersStatsDetail({ leagueId, seasonId });
+  const players = playersResponse?.data ?? [];
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
