@@ -15,9 +15,10 @@ import { TPlayerStatTotal } from "../../../api/players-stats/types";
 
 interface Props {
   totals: TPlayerStatTotal[];
+  offset: number;
 }
 
-const StatsTotal = memo(({ totals }: Props) => {
+const StatsTotal = memo(({ totals, offset }: Props) => {
   return (
     <>
       <Paper>
@@ -38,7 +39,7 @@ const StatsTotal = memo(({ totals }: Props) => {
             <TableBody>
               {totals.map((player, key) => (
                 <TableRow key={player.player_id}>
-                  <TableCell align="center">{key + 1}</TableCell>
+                  <TableCell align="center">{offset + key + 1}</TableCell>
                   <TableCell>
                     <Box display="flex" alignItems="center">
                       <TableFlag alt="" src={player.player_flag} />

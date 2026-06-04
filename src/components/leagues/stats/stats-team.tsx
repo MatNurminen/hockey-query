@@ -15,9 +15,10 @@ import { TPlayerStatByClub } from "../../../api/players-stats/types";
 
 interface Props {
   totalteams: TPlayerStatByClub[];
+  offset: number;
 }
 
-const StatsTeam = memo(({ totalteams }: Props) => {
+const StatsTeam = memo(({ totalteams, offset }: Props) => {
   return (
     <>
       <Paper>
@@ -39,7 +40,7 @@ const StatsTeam = memo(({ totalteams }: Props) => {
             <TableBody>
               {totalteams.map((player, key) => (
                 <TableRow key={`${player.player_id}-${player.team_id}`}>
-                  <TableCell align="center">{key + 1}</TableCell>
+                  <TableCell align="center">{offset + key + 1}</TableCell>
                   <TableCell>
                     <Box display="flex" alignItems="center">
                       <TableFlag alt="" src={player.player_flag} />

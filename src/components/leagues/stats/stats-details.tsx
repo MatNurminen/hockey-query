@@ -16,9 +16,10 @@ import { TPlayerStatDetail } from "../../../api/players-stats/types";
 interface Props {
   seasonId: number;
   players: TPlayerStatDetail[];
+  offset: number;
 }
 
-const StatsDetails = memo(({ seasonId, players }: Props) => {
+const StatsDetails = memo(({ seasonId, players, offset }: Props) => {
   return (
     <>
       <Paper>
@@ -44,7 +45,7 @@ const StatsDetails = memo(({ seasonId, players }: Props) => {
                 <TableRow
                   key={`${player.player_id}-${player.season_id}-${player.team_id}`}
                 >
-                  <TableCell align="center">{key + 1}</TableCell>
+                  <TableCell align="center">{offset + key + 1}</TableCell>
                   <TableCell>
                     <Box display="flex" alignItems="center">
                       <TableFlag alt="" src={player.player_flag} />
@@ -69,7 +70,7 @@ const StatsDetails = memo(({ seasonId, players }: Props) => {
                       to={`/teams/${player.team_id}`}
                       ml={1}
                     >
-                      {player.first_name}
+                      {player.full_name}
                     </Link>
                   </TableCell>
                   <TableCell align="center">{player.games}</TableCell>

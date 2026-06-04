@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import StatsDetails from "./stats-details";
@@ -12,6 +12,7 @@ import {
 } from "../../../api/players-stats/types";
 import { useSearchParams } from "react-router-dom";
 import { updateSearchParams } from "../../utils/urlHelpers";
+import Pagination from "../../common/Pagination/pagination";
 
 interface Props {
   seasonId: number;
@@ -20,6 +21,13 @@ interface Props {
   seasons: TPlayerStatDetail[];
   totalteams: TPlayerStatByClub[];
   onDataChange?: (data: any[]) => void;
+  offset: number;
+  limit: number;
+  totalDetail: number;
+  totalStats: number;
+  totalSeasons: number;
+  totalTeams: number;
+  lastSeason: string;
 }
 
 interface Tab {
@@ -35,19 +43,33 @@ const tabs: Tab[] = [
 ];
 
 const StatsTabs = memo(
-  ({ seasonId, players, totals, seasons, totalteams, onDataChange }: Props) => {
+  ({
+    seasonId,
+    players,
+    totals,
+    seasons,
+    totalteams,
+    onDataChange,
+    offset,
+    limit,
+    totalDetail,
+    totalStats,
+    totalSeasons,
+    totalTeams,
+    lastSeason,
+  }: Props) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [value, setValue] = useState<Tab["value"]>(
       (searchParams.get("tab") as Tab["value"]) || "one",
     );
 
-    const lastSeasonRef = useRef<string>(seasonId.toString());
-
-    useEffect(() => {
-      if (seasonId > 0) {
-        lastSeasonRef.current = seasonId.toString();
-      }
-    }, [seasonId]);
+    const currentTotal =
+      {
+        one: totalDetail,
+        two: totalStats,
+        three: totalSeasons,
+        for: totalTeams,
+      }[value] ?? 0;
 
     useEffect(() => {
       if (onDataChange) {
@@ -70,11 +92,21 @@ const StatsTabs = memo(
       }
     }, [value, players, totals, seasons, totalteams, onDataChange]);
 
+    const handlePageChange = (newOffset: number) => {
+      const newParams = updateSearchParams(searchParams, {
+        offset: String(newOffset),
+      });
+      setSearchParams(newParams);
+    };
+
     const handleTabChange = (tabValue: Tab["value"]) => {
-      let updates: Record<string, string | null> = { tab: tabValue };
+      let updates: Record<string, string | null> = {
+        tab: tabValue,
+        offset: "0",
+      };
 
       if (tabValue === "one") {
-        updates.season = lastSeasonRef.current;
+        updates.season = lastSeason || null;
       } else {
         updates.season = null;
       }
@@ -104,12 +136,26 @@ const StatsTabs = memo(
 
         <Box>
           {value === "one" && (
-            <StatsDetails seasonId={seasonId} players={players} />
+            <StatsDetails
+              seasonId={seasonId}
+              players={players}
+              offset={offset}
+            />
           )}
-          {value === "two" && <StatsTotal totals={totals} />}
-          {value === "three" && <StatsSeason seasons={seasons} />}
-          {value === "for" && <StatsTeam totalteams={totalteams} />}
+          {value === "two" && <StatsTotal totals={totals} offset={offset} />}
+          {value === "three" && (
+            <StatsSeason seasons={seasons} offset={offset} />
+          )}
+          {value === "for" && (
+            <StatsTeam totalteams={totalteams} offset={offset} />
+          )}
         </Box>
+        <Pagination
+          offset={offset}
+          limit={limit}
+          total={currentTotal}
+          onPageChange={handlePageChange}
+        />
       </Box>
     );
   },

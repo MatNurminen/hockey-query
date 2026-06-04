@@ -21,7 +21,9 @@ export const getPlayersStatsTotal = (params: PlayersStatsTotalParams) => {
   return createQuery<
     TPaginatedResponse<TPlayerStatTotal>,
     TPaginatedResponse<TPlayerStatTotal>
-  >(["playersStatsTotal", params], url);
+  >(["playersStatsTotal", params], url, undefined, {
+    placeholderData: keepPreviousData,
+  });
 };
 
 export const getPlayersStatsTotalByTeam = (params: PlayersStatsTotalParams) => {
@@ -31,7 +33,9 @@ export const getPlayersStatsTotalByTeam = (params: PlayersStatsTotalParams) => {
   return createQuery<
     TPaginatedResponse<TPlayerStatByClub>,
     TPaginatedResponse<TPlayerStatByClub>
-  >(["playersStatsTotalByTeam", params], url);
+  >(["playersStatsTotalByTeam", params], url, undefined, {
+    placeholderData: keepPreviousData,
+  });
 };
 
 export const getPlayersStatsDetail = (params: PlayersStatsDetailParams) => {

@@ -10,9 +10,9 @@ import {
   getPlayersStatsTotalByTeam,
 } from "../../../api/players-stats/queries";
 import SelectSeason from "../../common/Selects/selectSeason";
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 
-const LIMIT = 20;
+const LIMIT = 50;
 
 const PlayersStats = () => {
   const [searchParams] = useSearchParams();
@@ -23,13 +23,9 @@ const PlayersStats = () => {
     : undefined;
   const teamId = Number(searchParams.get("teamId")) || undefined;
   const nationId = Number(searchParams.get("nationId")) || undefined;
+  const offset = Number(searchParams.get("offset")) || 0;
 
-  const [offset, setOffset] = useState(0);
   const [selectsData, setSelectsData] = useState<any[]>([]);
-
-  useEffect(() => {
-    setOffset(0);
-  }, [leagueId, seasonId, teamId, nationId]);
 
   const detailParams = {
     leagueId: [leagueId],
@@ -68,24 +64,28 @@ const PlayersStats = () => {
   const {
     data: playersResponse,
     isLoading: isLoadingDetail,
+    isFetching: isFetchingDetail,
     isError: isErrorDetail,
   } = getPlayersStatsDetail(detailParams);
 
   const {
     data: totalsResponse,
     isLoading: isLoadingTotal,
+    isFetching: isFetchingTotal,
     isError: isErrorTotal,
   } = getPlayersStatsTotal(totalParams);
 
   const {
     data: seasonsResponse,
     isLoading: isLoadingSeasons,
+    isFetching: isFetchingSeasons,
     isError: isErrorSeasons,
   } = getPlayersStatsDetail(seasonParams);
 
   const {
     data: totalteamsResponse,
     isLoading: isLoadingTotalTeam,
+    isFetching: isFetchingTotalTeam,
     isError: isErrorTotalTeam,
   } = getPlayersStatsTotalByTeam(totalByTeamParams);
 
@@ -93,11 +93,28 @@ const PlayersStats = () => {
   const totals = totalsResponse?.data ?? [];
   const seasons = seasonsResponse?.data ?? [];
   const totalteams = totalteamsResponse?.data ?? [];
-  const total = playersResponse?.total ?? 0;
 
-  const hasMore = offset + LIMIT < total;
+  const totalDetail = playersResponse?.total ?? 0;
+  const totalStats = totalsResponse?.total ?? 0;
+  const totalSeasons = seasonsResponse?.total ?? 0;
+  const totalTeams = totalteamsResponse?.total ?? 0;
+
+  const seasonParam = searchParams.get("season") || "";
+  const lastSeasonRef = useRef(seasonParam);
+
+  if (seasonParam) {
+    lastSeasonRef.current = seasonParam;
+  }
   const hasData =
-    players.length && totals.length && seasons.length && totalteams.length;
+    players.length ||
+    totals.length ||
+    seasons.length ||
+    totalteams.length ||
+    isFetchingDetail ||
+    isFetchingTotal ||
+    isFetchingSeasons ||
+    isFetchingTotalTeam;
+
   const league = players[0]?.short_name || "";
 
   if (isErrorDetail || isErrorTotal || isErrorSeasons || isErrorTotalTeam)
@@ -138,10 +155,12 @@ const PlayersStats = () => {
               totalteams={totalteams}
               onDataChange={handleDataChange}
               offset={offset}
-              hasMore={hasMore}
-              onPageChange={setOffset}
               limit={LIMIT}
-              total={total}
+              totalDetail={totalDetail}
+              totalStats={totalStats}
+              totalSeasons={totalSeasons}
+              totalTeams={totalTeams}
+              lastSeason={lastSeasonRef.current}
             />
           </Paper>
         </>
