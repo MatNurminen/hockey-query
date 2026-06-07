@@ -4,7 +4,7 @@ import SectionExternalLinks from "../../common/Sections/sectionExternalLinks";
 import Teams from "./teams";
 import Standings from "./standings";
 import PlayersStatsSeason from "./playersStatsSeason";
-// import Nations from './nations';
+import NationsChart from './nationsChart';
 import Header from "./header";
 import CompareTeams from "./compareTeams";
 import PlayersFacts from "./playersFacts";
@@ -59,11 +59,11 @@ const League = () => {
         />
       </Paper>
       <Paper sx={{ mt: 2 }}>
+        <NationsChart leagueId={leagueId} seasonId={seasonId} title={title} />
+      </Paper>
+      <Paper sx={{ mt: 2 }}>
         <Nats leagueId={leagueId} seasonId={seasonId} />
       </Paper>
-      {/* <Paper sx={{ mt: 2 }}>
-        <Nations leagueId={leagueId} seasonId={seasonId} />
-      </Paper> */}
       <Paper sx={{ mt: 2 }}>
         <CompareTeams leagueId={leagueId} seasonId={seasonId} title={title} />
       </Paper>
