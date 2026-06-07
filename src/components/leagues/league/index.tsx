@@ -4,7 +4,7 @@ import SectionExternalLinks from "../../common/Sections/sectionExternalLinks";
 import Teams from "./teams";
 import Standings from "./standings";
 import PlayersStatsSeason from "./playersStatsSeason";
-import NationsChart from './nationsChart';
+import NationsChart from "./nationsChart";
 import Header from "./header";
 import CompareTeams from "./compareTeams";
 import PlayersFacts from "./playersFacts";
@@ -71,10 +71,10 @@ const League = () => {
         <PlayersFacts leagueId={leagueId} seasonId={seasonId} />
       </Paper>
       <Paper sx={{ mt: 4, backgroundColor: "transparent", boxShadow: "none" }}>
-        <PlayersStatsTotal leagueId={leagueId} />
+        <PlayersStatsTotal leagueId={leagueId} seasonId={seasonId} />
       </Paper>
       <Paper sx={{ mt: 2, backgroundColor: "transparent", boxShadow: "none" }}>
-        <PlayersStatsPerSeason leagueId={leagueId} />
+        <PlayersStatsPerSeason leagueId={leagueId} seasonId={seasonId} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
         <Champions title={title} />

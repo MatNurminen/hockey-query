@@ -17,12 +17,13 @@ import { TPlayerStatTotal } from "../../../api/players-stats/types";
 
 interface Props {
   leagueId: number;
+  seasonId: number;
 }
 
-const PlayersStatsTotal = ({ leagueId }: Props) => {
+const PlayersStatsTotal = ({ leagueId, seasonId }: Props) => {
   const configs = [
     {
-      id: 1,
+      id: 3,
       name: "forwards",
       params: {
         leagueId,
@@ -40,7 +41,7 @@ const PlayersStatsTotal = ({ leagueId }: Props) => {
       },
     },
     {
-      id: 3,
+      id: 1,
       name: "goaltending",
       params: {
         leagueId,
@@ -61,49 +62,56 @@ const PlayersStatsTotal = ({ leagueId }: Props) => {
 
   return (
     <Grid container direction="row" justifyContent="center" spacing={2}>
-      {items.map((item: { id: number; name: string; list: TPlayerStatTotal[] }) => (
-        <Grid size={{ sm: 12, md: 4 }} key={item.id}>
-          <TableContainer component={Paper}>
-            <Table size="small">
-              <HeaderMain cells={[`League all-time ${item.name} Stats`]} />
-            </Table>
-            <Table size="small">
-              <HeaderSection
-                cells={[
-                  { align: "center", text: "#" },
-                  { text: "Player" },
-                  { align: "center", text: "gp" },
-                  { align: "center", text: "g" },
-                ]}
-              />
-              <TableBody>
-                {item.list.map((player, key) => (
-                  <TableRow key={key}>
-                    <TableCell align="center">{key + 1}</TableCell>
-                    <TableCell>
-                      <Box display="flex" alignItems="center">
-                        <TableFlag alt="" src={player.player_flag} />
-                        <Link
-                          underline="hover"
-                          component={RouterLink}
-                          to={`/players/${player.player_id}`}
-                          ml={1}
-                        >
-                          {player.first_name} {player.last_name} (
-                          {player.player_position})
-                        </Link>
-                      </Box>
-                    </TableCell>
-                    <TableCell align="center">{player.games_t}</TableCell>
-                    <TableCell align="center">{player.goals_t}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <AppButton color="success" fullWidth={true} text="Show More" to="test" />
-        </Grid>
-      ))}
+      {items.map(
+        (item: { id: number; name: string; list: TPlayerStatTotal[] }) => (
+          <Grid size={{ sm: 12, md: 4 }} key={item.id}>
+            <TableContainer component={Paper}>
+              <Table size="small">
+                <HeaderMain cells={[`League all-time ${item.name} Stats`]} />
+              </Table>
+              <Table size="small">
+                <HeaderSection
+                  cells={[
+                    { align: "center", text: "#" },
+                    { text: "Player" },
+                    { align: "center", text: "gp" },
+                    { align: "center", text: "g" },
+                  ]}
+                />
+                <TableBody>
+                  {item.list.map((player, key) => (
+                    <TableRow key={key}>
+                      <TableCell align="center">{key + 1}</TableCell>
+                      <TableCell>
+                        <Box display="flex" alignItems="center">
+                          <TableFlag alt="" src={player.player_flag} />
+                          <Link
+                            underline="hover"
+                            component={RouterLink}
+                            to={`/players/${player.player_id}`}
+                            ml={1}
+                          >
+                            {player.first_name} {player.last_name} (
+                            {player.player_position})
+                          </Link>
+                        </Box>
+                      </TableCell>
+                      <TableCell align="center">{player.games_t}</TableCell>
+                      <TableCell align="center">{player.goals_t}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <AppButton
+              color="success"
+              fullWidth={true}
+              text="Show More"
+              to={`/league-stats?league=${leagueId}&season=${seasonId}&playerOrd=${item.id}&tab=two`}
+            />
+          </Grid>
+        ),
+      )}
     </Grid>
   );
 };

@@ -24,7 +24,7 @@ interface Props {
 const PlayersStatsSeason = ({ leagueId, seasonId, title }: Props) => {
   const configs = [
     {
-      id: 1,
+      id: 3,
       name: "forwards",
       params: {
         leagueId,
@@ -44,7 +44,7 @@ const PlayersStatsSeason = ({ leagueId, seasonId, title }: Props) => {
       },
     },
     {
-      id: 3,
+      id: 1,
       name: "goaltending",
       params: {
         leagueId,
@@ -115,7 +115,7 @@ const PlayersStatsSeason = ({ leagueId, seasonId, title }: Props) => {
               color="success"
               fullWidth={true}
               text="Show More"
-              to={`/league-stats?league=${leagueId}&season=${seasonId}`}
+              to={`/league-stats?league=${leagueId}&season=${seasonId}&playerOrd=${item.id}`}
             />
           </Grid>
         ),

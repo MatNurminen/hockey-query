@@ -17,12 +17,13 @@ import { TPlayerStatDetail } from "../../../api/players-stats/types";
 
 interface Props {
   leagueId: number;
+  seasonId: number;
 }
 
-const PlayersStatsPerSeason = ({ leagueId }: Props) => {
+const PlayersStatsPerSeason = ({ leagueId, seasonId }: Props) => {
   const configs = [
     {
-      id: 1,
+      id: 3,
       name: "forwards",
       params: {
         leagueId,
@@ -63,7 +64,7 @@ const PlayersStatsPerSeason = ({ leagueId }: Props) => {
           <TableContainer component={Paper}>
             <Table size="small">
               <HeaderMain
-                cells={[`League all-time ${item.name} goals per season`]}
+                cells={[`League all-time ${item.name} stats per season`]}
               />
             </Table>
             <Table size="small">
@@ -113,7 +114,7 @@ const PlayersStatsPerSeason = ({ leagueId }: Props) => {
               </TableBody>
             </Table>
           </TableContainer>
-          <AppButton color="success" fullWidth={true} text="Show More" to="test" />
+          <AppButton color="success" fullWidth={true} text="Show More" to={`/league-stats?league=${leagueId}&season=${seasonId}&playerOrd=${item.id}&tab=three`} />
         </Grid>
       ))}
     </Grid>
