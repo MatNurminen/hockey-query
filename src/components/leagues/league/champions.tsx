@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import SectionChapter from '../../common/Sections/sectionChapter';
 
-const Champions = ({ leagueId, title }: any) => {
+const Champions = ({ title }: any) => {
   return (
     <Box my={2}>
       <SectionChapter

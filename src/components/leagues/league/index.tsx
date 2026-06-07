@@ -10,19 +10,21 @@ import CompareTeams from "./compareTeams";
 import PlayersFacts from "./playersFacts";
 import PlayersStatsTotal from "./playersStatsTotal";
 import PlayersStatsPerSeason from "./playersStatsPerSeason";
-import Champions from "./chamions";
+import Champions from "./champions";
 import Awards from "./awards";
 import Paper from "@mui/material/Paper";
 import SelectSeason from "../../common/Selects/selectSeason";
 import { getLeague } from "../../../api/leagues/queries";
 import Nats from "./nats";
+import { useLatestSeason } from "../../../hooks/useLatestSeason";
 
 const League = () => {
   const params = useParams();
   const leagueId = Number(params.id);
 
   const [searchParams] = useSearchParams();
-  const seasonId: string = searchParams.get("season") || "2012";
+  const latestSeason = useLatestSeason();
+  const seasonId = Number(searchParams.get("season") || latestSeason);
 
   const { data: league, isError, isLoading } = getLeague(leagueId);
 
@@ -41,44 +43,44 @@ const League = () => {
         <SectionExternalLinks title={title} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
-        <Teams leagueId={params.id} title={title} />
+        <Teams leagueId={leagueId} title={title} />
       </Paper>
       <Paper sx={{ mt: 2, p: 2 }}>
         <SelectSeason />
       </Paper>
       <Paper sx={{ mt: 2, backgroundColor: "transparent", boxShadow: "none" }}>
-        <Standings leagueId={params.id} seasonId={seasonId} title={title} />
+        <Standings leagueId={leagueId} seasonId={seasonId} title={title} />
       </Paper>
       <Paper sx={{ mt: 2, backgroundColor: "transparent", boxShadow: "none" }}>
         <PlayersStatsSeason
-          leagueId={params.id}
+          leagueId={leagueId}
           seasonId={seasonId}
           title={title}
         />
       </Paper>
       <Paper sx={{ mt: 2 }}>
-        <Nats leagueId={params.id} seasonId={seasonId} />
+        <Nats leagueId={leagueId} seasonId={seasonId} />
       </Paper>
       {/* <Paper sx={{ mt: 2 }}>
-        <Nations leagueId={params.id} seasonId={seasonId} />
+        <Nations leagueId={leagueId} seasonId={seasonId} />
       </Paper> */}
       <Paper sx={{ mt: 2 }}>
-        <CompareTeams leagueId={params.id} seasonId={seasonId} title={title} />
+        <CompareTeams leagueId={leagueId} seasonId={seasonId} title={title} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
-        <PlayersFacts leagueId={params.id} seasonId={seasonId} />
+        <PlayersFacts leagueId={leagueId} seasonId={seasonId} />
       </Paper>
       <Paper sx={{ mt: 4, backgroundColor: "transparent", boxShadow: "none" }}>
-        <PlayersStatsTotal leagueId={params.id} />
+        <PlayersStatsTotal leagueId={leagueId} />
       </Paper>
       <Paper sx={{ mt: 2, backgroundColor: "transparent", boxShadow: "none" }}>
-        <PlayersStatsPerSeason leagueId={params.id} />
+        <PlayersStatsPerSeason leagueId={leagueId} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
-        <Champions leagueId={params.id} title={title} />
+        <Champions title={title} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
-        <Awards leagueId={params.id} title={title} />
+        <Awards title={title} />
       </Paper>
     </Container>
   );

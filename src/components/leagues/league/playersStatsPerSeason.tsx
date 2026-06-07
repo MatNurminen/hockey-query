@@ -13,12 +13,17 @@ import Grid from "@mui/material/Grid2";
 import AppButton from "../../common/Buttons/appButton";
 import TableFlag from "../../common/Images/tableFlag";
 import { useMultiplePlayersStatsDetail } from "../../../api/players-stats/hooks";
+import { TPlayerStatDetail } from "../../../api/players-stats/types";
 
-const PlayersStatsPerSeason = ({ leagueId }: any) => {
+interface Props {
+  leagueId: number;
+}
+
+const PlayersStatsPerSeason = ({ leagueId }: Props) => {
   const configs = [
     {
       id: 1,
-      name: 'forwards',
+      name: "forwards",
       params: {
         leagueId,
         playerOrd: [3],
@@ -27,7 +32,7 @@ const PlayersStatsPerSeason = ({ leagueId }: any) => {
     },
     {
       id: 2,
-      name: 'defenders',
+      name: "defenders",
       params: {
         leagueId,
         playerOrd: [2],
@@ -53,7 +58,7 @@ const PlayersStatsPerSeason = ({ leagueId }: any) => {
       alignItems="stretch"
       spacing={2}
     >
-      {items.map((item: any) => (
+      {items.map((item: { id: number; name: string; list: TPlayerStatDetail[] }) => (
         <Grid size={{ sm: 12, md: 6 }} key={item.name}>
           <TableContainer component={Paper}>
             <Table size="small">
@@ -73,7 +78,7 @@ const PlayersStatsPerSeason = ({ leagueId }: any) => {
                 ]}
               />
               <TableBody>
-                {item.list.map((player: any, key: any) => (
+                {item.list.map((player, key) => (
                   <TableRow key={key}>
                     <TableCell align="center">{key + 1}</TableCell>
                     <TableCell>
@@ -108,14 +113,7 @@ const PlayersStatsPerSeason = ({ leagueId }: any) => {
               </TableBody>
             </Table>
           </TableContainer>
-          <Box mt={1}>
-            <AppButton
-              color="success"
-              fullWidth={true}
-              text="Show More"
-              to=""
-            />
-          </Box>
+          <AppButton color="success" fullWidth={true} text="Show More" to="test" />
         </Grid>
       ))}
     </Grid>

@@ -1,38 +1,43 @@
-import Box from '@mui/material/Box';
-import SectionChapter from '../../common/Sections/sectionChapter';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import TableFlag from '../../common/Images/tableFlag';
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
+import Box from "@mui/material/Box";
+import SectionChapter from "../../common/Sections/sectionChapter";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import TableFlag from "../../common/Images/tableFlag";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@mui/material/Link";
+import { getTeamsByLeague } from "../../../api/teams/queries";
+import { memo } from "react";
+import { TTeamsByLeague } from "../../../api/teams/types";
 
-import { getTeamsByLeague } from '../../../api/teams/queries';
-import { memo } from 'react';
+interface Props {
+  leagueId: number;
+  title: string;
+}
 
-const Teams = ({ leagueId, title }: any) => {
+const Teams = ({ leagueId, title }: Props) => {
   const { data } = getTeamsByLeague(leagueId);
 
   if (!data) return <h3>No data available</h3>;
 
   return (
     <Box my={2}>
-      <SectionChapter txtAlign='left' content={title + ' teams list'} />
+      <SectionChapter txtAlign="left" content={title + " teams list"} />
       <List
         sx={{ columns: { sm: 2, md: 3, lg: 4 }, pb: 1 }}
         dense={true}
         disablePadding={true}
       >
-        {data.map((team: any, key: any) => (
+        {data.map((team: TTeamsByLeague, key) => (
           <ListItem key={key}>
             <ListItemIcon sx={{ mr: -2 }}>
-              <TableFlag alt='' src={team.flag} />
+              <TableFlag alt="" src={team.flag} />
             </ListItemIcon>
             <Link
-              underline='hover'
+              underline="hover"
               component={RouterLink}
-              to={'/teams/' + team.id}
+              to={"/teams/" + team.id}
             >
               <ListItemText primary={team.full_name} />
             </Link>

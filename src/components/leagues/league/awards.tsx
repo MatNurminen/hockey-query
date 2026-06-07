@@ -1,7 +1,11 @@
 import Box from '@mui/material/Box';
 import SectionChapter from '../../common/Sections/sectionChapter';
 
-const Awards = ({ leagueId, title }: any) => {
+interface Props {
+  title: string
+}
+
+const Awards = ({ title }: Props) => {
   return (
     <Box my={3}>
       <SectionChapter txtAlign='left' content={title + ' awards'} />

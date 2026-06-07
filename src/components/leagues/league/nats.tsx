@@ -1,16 +1,22 @@
-import Box from '@mui/material/Box';
-import SectionChapter from '../../common/Sections/sectionChapter';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import TableFlag from '../../common/Images/tableFlag';
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
-import { memo } from 'react';
-import { getCountPlayersByNation } from '../../../api/players-stats/queries';
+import Box from "@mui/material/Box";
+import SectionChapter from "../../common/Sections/sectionChapter";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import TableFlag from "../../common/Images/tableFlag";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@mui/material/Link";
+import { memo } from "react";
+import { getCountPlayersByNation } from "../../../api/players-stats/queries";
+import { TCountPlayerByNation } from "../../../api/players-stats/types";
 
-const Nats = ({ leagueId, seasonId }: any) => {
+interface Props {
+  leagueId: number;
+  seasonId: number;
+}
+
+const Nats = ({ leagueId, seasonId }: Props) => {
   const { data, isLoading, isError } = getCountPlayersByNation({
     leagueId,
     seasonId,
@@ -22,25 +28,25 @@ const Nats = ({ leagueId, seasonId }: any) => {
 
   return (
     <Box my={2}>
-      <SectionChapter txtAlign='left' content='Player Nationalities' />
+      <SectionChapter txtAlign="left" content="Player Nationalities" />
       <List
         sx={{ columns: { sm: 2, md: 3, lg: 4 }, pb: 1 }}
         dense={true}
         disablePadding={true}
       >
-        {data.map((nat: any) => (
+        {data.map((nat: TCountPlayerByNation) => (
           <ListItem key={nat.id}>
             <ListItemIcon sx={{ mr: -2 }}>
-              <TableFlag src={nat.flag} />
+              <TableFlag src={nat.flag} alt="" />
             </ListItemIcon>
             <Link
-              underline='hover'
+              underline="hover"
               component={RouterLink}
-              to={'/teams/' + nat.id}
+              to={"/nations/" + nat.id}
             >
               <ListItemText
                 primary={`${nat.count} ${
-                  nat.count == 1 ? 'player' : 'players'
+                  nat.count == 1 ? "player" : "players"
                 }`}
               />
             </Link>

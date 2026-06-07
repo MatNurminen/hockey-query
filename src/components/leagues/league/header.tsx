@@ -7,8 +7,13 @@ import MainLogo from '../../common/Images/mainLogo';
 import AppButton from '../../common/Buttons/appButton';
 import { memo, useState } from 'react';
 import UpdateLeague from '../../admin/leagues/updateLeague';
+import { TLeagueDto } from '../../../api/leagues/types';
 
-const Header = ({ league }: any) => {
+interface Props{
+  league: TLeagueDto;
+};
+
+const Header = ({ league }: Props) => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -51,7 +56,7 @@ const Header = ({ league }: any) => {
         alignItems='center'
         textAlign='center'
       >
-        {league.logos.map((logo: any, key: any) => (
+        {league.logos.map((logo, key) => (
           <Grid key={key} size={{ xs: 2 }}>
             <MainLogo alt='' src={logo.logo} />
             <Typography variant='body1' gutterBottom>

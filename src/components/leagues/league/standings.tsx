@@ -1,28 +1,34 @@
-import { useEffect, useState, useMemo } from 'react';
-import HeaderMain from '../../common/Table/headerMain';
-import TableContainer from '@mui/material/TableContainer';
-import Table from '@mui/material/Table';
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
+import { useEffect, useState, useMemo } from "react";
+import HeaderMain from "../../common/Table/headerMain";
+import TableContainer from "@mui/material/TableContainer";
+import Table from "@mui/material/Table";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@mui/material/Link";
 import {
   getPrefetchStandings,
   getStandings,
-} from '../../../api/teams-stats/queries';
-import TableFlag from '../../common/Images/tableFlag';
-import Box from '@mui/material/Box';
-import AppButton from '../../common/Buttons/appButton';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useUpdateTeamTournament } from '../../../api/teams-tournaments/mutations';
-import Paper from '@mui/material/Paper';
+} from "../../../api/teams-stats/queries";
+import TableFlag from "../../common/Images/tableFlag";
+import AppButton from "../../common/Buttons/appButton";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { useUpdateTeamTournament } from "../../../api/teams-tournaments/mutations";
+import Paper from "@mui/material/Paper";
+import { TStandings } from "../../../api/teams-stats/types";
 
-const Standings = ({ leagueId, seasonId, title }: any) => {
+interface Props {
+  leagueId: number;
+  seasonId: number;
+  title: string;
+}
+
+const Standings = ({ leagueId, seasonId, title }: Props) => {
   getPrefetchStandings(leagueId, seasonId - 1);
 
   const {
     data: teams = [],
     isError,
     isLoading,
-  } = getStandings({ leagueId, seasonId });
+  } = getStandings({ leagueId: [leagueId], seasonId });
 
   const [teamsState, setTeamsState] = useState(teams);
   const [updatedCells, setUpdatedCells] = useState<Set<string>>(new Set());
@@ -54,8 +60,11 @@ const Standings = ({ leagueId, seasonId, title }: any) => {
   if (isError) return <h3>Error!</h3>;
   if (!teams) return <h3>No data available</h3>;
 
-  const handleProcessRowUpdate = async (newRow: any, oldRow: any) => {
-    const toNumber = (val: any) => Number(val) || 0;
+  const handleProcessRowUpdate = async (
+    newRow: TStandings,
+    oldRow: TStandings,
+  ) => {
+    const toNumber = (val: unknown) => Number(val) || 0;
 
     const updatedRow = {
       ...newRow,
@@ -70,9 +79,9 @@ const Standings = ({ leagueId, seasonId, title }: any) => {
     updatedRow.pts = updatedRow.wins * 2 + updatedRow.ties;
     updatedRow.gd = updatedRow.goals_for - updatedRow.goals_against;
 
-    const changedFields = Object.keys(updatedRow).filter(
-      (key) => key !== 'id' && key !== 'key' && updatedRow[key] !== oldRow[key]
-    );
+    const changedFields = (
+      Object.keys(updatedRow) as (keyof TStandings)[]
+    ).filter((key) => key !== "id" && updatedRow[key] !== oldRow[key]);
 
     if (changedFields.length === 0) return oldRow;
 
@@ -90,7 +99,7 @@ const Standings = ({ leagueId, seasonId, title }: any) => {
     });
 
     setTeamsState((prev) =>
-      prev.map((row) => (row.id === updatedRow.id ? updatedRow : row))
+      prev.map((row) => (row.id === updatedRow.id ? updatedRow : row)),
     );
 
     setUpdatedCells((prev) => {
@@ -106,26 +115,26 @@ const Standings = ({ leagueId, seasonId, title }: any) => {
 
   const columns: GridColDef<(typeof teams)[number]>[] = [
     {
-      headerClassName: 'header-bc',
-      field: 'key',
-      headerName: '#',
+      headerClassName: "header-bc",
+      field: "key",
+      headerName: "#",
       width: 80,
-      align: 'center',
-      headerAlign: 'center',
+      align: "center",
+      headerAlign: "center",
     },
     {
-      headerClassName: 'header-bc',
-      field: 'fullName',
-      headerName: 'TEAM',
+      headerClassName: "header-bc",
+      field: "fullName",
+      headerName: "TEAM",
       flex: 1,
       sortable: false,
       renderCell: (params) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {params.row.logo && <TableFlag alt='' src={params.row.logo} />}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          {params.row.logo && <TableFlag alt="" src={params.row.logo} />}
           <Link
-            underline='hover'
+            underline="hover"
             component={RouterLink}
-            to={`/players/${params.row.team_id}`}
+            to={`/teams/${params.row.team_id}`}
           >
             {params.row.full_name}
           </Link>
@@ -133,80 +142,80 @@ const Standings = ({ leagueId, seasonId, title }: any) => {
       ),
     },
     {
-      headerClassName: 'header-bc',
-      field: 'games',
-      headerName: 'GP',
+      headerClassName: "header-bc",
+      field: "games",
+      headerName: "GP",
       editable: true,
-      align: 'center',
-      headerAlign: 'center',
+      align: "center",
+      headerAlign: "center",
       width: 80,
     },
     {
-      headerClassName: 'header-bc',
-      field: 'wins',
-      headerName: 'W',
+      headerClassName: "header-bc",
+      field: "wins",
+      headerName: "W",
       editable: true,
-      align: 'center',
-      headerAlign: 'center',
+      align: "center",
+      headerAlign: "center",
       width: 80,
     },
     {
-      headerClassName: 'header-bc',
-      field: 'ties',
-      headerName: 'T',
+      headerClassName: "header-bc",
+      field: "ties",
+      headerName: "T",
       editable: true,
-      align: 'center',
-      headerAlign: 'center',
+      align: "center",
+      headerAlign: "center",
       width: 80,
     },
     {
-      headerClassName: 'header-bc',
-      field: 'losts',
-      headerName: 'L',
+      headerClassName: "header-bc",
+      field: "losts",
+      headerName: "L",
       editable: true,
-      align: 'center',
-      headerAlign: 'center',
+      align: "center",
+      headerAlign: "center",
       width: 80,
     },
     {
-      headerClassName: 'header-bc',
-      field: 'goals_for',
-      headerName: 'GF',
+      headerClassName: "header-bc",
+      field: "goals_for",
+      headerName: "GF",
       editable: true,
-      align: 'center',
-      headerAlign: 'center',
+      align: "center",
+      headerAlign: "center",
       width: 80,
     },
     {
-      headerClassName: 'header-bc',
-      field: 'goals_against',
-      headerName: 'GA',
+      headerClassName: "header-bc",
+      field: "goals_against",
+      headerName: "GA",
       editable: true,
-      align: 'center',
-      headerAlign: 'center',
+      align: "center",
+      headerAlign: "center",
       width: 80,
     },
     {
-      headerClassName: 'header-bc',
-      field: 'gd',
-      headerName: '+/-',
+      headerClassName: "header-bc",
+      field: "gd",
+      headerName: "+/-",
       editable: true,
-      align: 'center',
-      headerAlign: 'center',
+      align: "center",
+      headerAlign: "center",
       width: 80,
     },
     {
-      headerClassName: 'header-bc',
-      field: 'pts',
-      headerName: 'PTS',
-      align: 'center',
-      headerAlign: 'center',
+      headerClassName: "header-bc",
+      field: "pts",
+      headerName: "PTS",
+      align: "center",
+      headerAlign: "center",
       width: 80,
     },
     {
-      headerClassName: 'header-bc',
-      field: 'postseason',
-      headerName: 'POSTSEASON',
+      headerClassName: "header-bc",
+      field: "postseason",
+      headerName: "POSTSEASON",
       editable: true,
       flex: 1,
     },
@@ -216,7 +225,7 @@ const Standings = ({ leagueId, seasonId, title }: any) => {
     <>
       <Paper>
         <TableContainer sx={{ mb: -0.5 }}>
-          <Table size='small'>
+          <Table size="small">
             <HeaderMain
               cells={[`${seasonId}-${seasonId - 1999} ${title} Standings`]}
             />
@@ -237,53 +246,51 @@ const Standings = ({ leagueId, seasonId, title }: any) => {
 
             const mismatch =
               row.games !== row.wins + row.ties + row.losts &&
-              params.field === 'games';
+              params.field === "games";
 
-            if (mismatch) return 'error-cell';
-            if (updatedCells.has(key)) return 'updated-cell';
+            if (mismatch) return "error-cell";
+            if (updatedCells.has(key)) return "updated-cell";
 
-            return '';
+            return "";
           }}
           sx={{
-            '& .header-bc': {
-              backgroundColor: '#ca3136',
+            "& .header-bc": {
+              backgroundColor: "#ca3136",
             },
-            '& .MuiDataGrid-columnHeaderTitle': {
-              color: '#fff',
-              fontSize: '16px',
+            "& .MuiDataGrid-columnHeaderTitle": {
+              color: "#fff",
+              fontSize: "16px",
             },
-            '& .MuiDataGrid-columnSeparator': {
-              visibility: 'hidden',
+            "& .MuiDataGrid-columnSeparator": {
+              visibility: "hidden",
             },
-            '& .MuiDataGrid-columnHeader:focus-within .MuiDataGrid-sortIcon, \
-                & .MuiDataGrid-columnHeader:hover .MuiDataGrid-sortIcon': {
-              color: '#fff',
+            "& .MuiDataGrid-columnHeader:focus-within .MuiDataGrid-sortIcon, \
+                & .MuiDataGrid-columnHeader:hover .MuiDataGrid-sortIcon": {
+              color: "#fff",
             },
-            '& .updated-cell': {
-              backgroundColor: '#d0ffd0 !important',
-              fontWeight: 'medium',
-              fontStyle: 'italic',
+            "& .updated-cell": {
+              backgroundColor: "#d0ffd0 !important",
+              fontWeight: "medium",
+              fontStyle: "italic",
             },
-            '& .error-cell': {
-              backgroundColor: '#f96b52 !important',
+            "& .error-cell": {
+              backgroundColor: "#f96b52 !important",
             },
-            '& .MuiDataGrid-cell': {
-              backgroundColor: 'inherit',
+            "& .MuiDataGrid-cell": {
+              backgroundColor: "inherit",
             },
-            '& .MuiDataGrid-row': {
-              backgroundColor: 'inherit',
+            "& .MuiDataGrid-row": {
+              backgroundColor: "inherit",
             },
           }}
         />
       </Paper>
-      <Box mt={1}>
-        <AppButton
-          fullWidth
-          text='Show Rosters'
-          color='success'
-          to={`/rosters?league=${leagueId}&season=${seasonId}`}
-        />
-      </Box>
+      <AppButton
+        fullWidth
+        text="Show Rosters"
+        color="success"
+        to={`/rosters?league=${leagueId}&season=${seasonId}`}
+      />
     </>
   );
 };
