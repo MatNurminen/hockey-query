@@ -1,10 +1,12 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useState } from "react";
 import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import StatsDetails from "./stats-details";
 import StatsTotal from "./stats-total";
 import StatsSeason from "./stats-season";
 import StatsTeam from "./stats-team";
+import Selects from "./selects";
 import {
   TPlayerStatDetail,
   TPlayerStatTotal,
@@ -13,6 +15,7 @@ import {
 import { useSearchParams } from "react-router-dom";
 import { updateSearchParams } from "../../utils/urlHelpers";
 import Pagination from "../../common/Pagination/pagination";
+import Grid from "@mui/material/Grid2";
 
 interface Props {
   seasonId: number;
@@ -20,18 +23,16 @@ interface Props {
   totals: TPlayerStatTotal[];
   seasons: TPlayerStatDetail[];
   totalteams: TPlayerStatByClub[];
-  onDataChange?: (data: any[]) => void;
   offset: number;
   limit: number;
   totalDetail: number;
   totalStats: number;
   totalSeasons: number;
   totalTeams: number;
-  lastSeason: string;
 }
 
 interface Tab {
-  value: "one" | "two" | "three" | "for";
+  value: "one" | "two" | "three" | "four";
   label: string;
 }
 
@@ -39,7 +40,7 @@ const tabs: Tab[] = [
   { value: "one", label: "Season" },
   { value: "two", label: "All-Time" },
   { value: "three", label: "All-Time / Season" },
-  { value: "for", label: "All-Time / Team" },
+  { value: "four", label: "All-Time / Team" },
 ];
 
 const StatsTabs = memo(
@@ -49,48 +50,24 @@ const StatsTabs = memo(
     totals,
     seasons,
     totalteams,
-    onDataChange,
     offset,
     limit,
     totalDetail,
     totalStats,
     totalSeasons,
     totalTeams,
-    lastSeason,
   }: Props) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [value, setValue] = useState<Tab["value"]>(
       (searchParams.get("tab") as Tab["value"]) || "one",
     );
-
     const currentTotal =
       {
         one: totalDetail,
         two: totalStats,
         three: totalSeasons,
-        for: totalTeams,
+        four: totalTeams,
       }[value] ?? 0;
-
-    useEffect(() => {
-      if (onDataChange) {
-        let currentData: any[] = [];
-        switch (value) {
-          case "one":
-            currentData = players;
-            break;
-          case "two":
-            currentData = totals;
-            break;
-          case "three":
-            currentData = seasons;
-            break;
-          case "for":
-            currentData = totalteams;
-            break;
-        }
-        onDataChange(currentData);
-      }
-    }, [value, players, totals, seasons, totalteams, onDataChange]);
 
     const handlePageChange = (newOffset: number) => {
       const newParams = updateSearchParams(searchParams, {
@@ -105,10 +82,8 @@ const StatsTabs = memo(
         offset: "0",
       };
 
-      if (tabValue === "one") {
-        updates.season = lastSeason || null;
-      } else {
-        updates.season = null;
+      if (tabValue === "two") {
+        updates.teamId = null;
       }
 
       const newParams = updateSearchParams(searchParams, updates, {
@@ -118,45 +93,63 @@ const StatsTabs = memo(
       setValue(tabValue);
     };
 
-    return (
-      <Box sx={{ width: "100%" }}>
-        <Box sx={{ display: "flex", gap: 2, mb: 2, px: 2, pt: 2 }}>
-          {tabs.map((tab) => (
-            <Button
-              key={tab.value}
-              variant={value === tab.value ? "contained" : "outlined"}
-              color="ocean"
-              onClick={() => handleTabChange(tab.value)}
-              sx={{ borderRadius: "18px" }}
-            >
-              {tab.label}
-            </Button>
-          ))}
-        </Box>
+    const currentData =
+      {
+        one: players,
+        two: totals,
+        three: seasons,
+        four: totalteams,
+      }[value] ?? [];
 
-        <Box>
-          {value === "one" && (
-            <StatsDetails
-              seasonId={seasonId}
-              players={players}
+    return (
+      <Grid container spacing={2}>
+        <Grid size={12}>
+          <Paper sx={{ mt: 2, p: 2 }}>
+            <Selects players={currentData} />
+          </Paper>
+        </Grid>
+        <Grid size={12}>
+          <Paper>
+            <Box sx={{ display: "flex", gap: 2, mb: 2, px: 2, pt: 2 }}>
+              {tabs.map((tab) => (
+                <Button
+                  key={tab.value}
+                  variant={value === tab.value ? "contained" : "outlined"}
+                  color="ocean"
+                  onClick={() => handleTabChange(tab.value)}
+                  sx={{ borderRadius: "18px" }}
+                >
+                  {tab.label}
+                </Button>
+              ))}
+            </Box>
+            <Box>
+              {value === "one" && (
+                <StatsDetails
+                  seasonId={seasonId}
+                  players={players}
+                  offset={offset}
+                />
+              )}
+              {value === "two" && (
+                <StatsTotal totals={totals} offset={offset} />
+              )}
+              {value === "three" && (
+                <StatsSeason seasons={seasons} offset={offset} />
+              )}
+              {value === "four" && (
+                <StatsTeam totalteams={totalteams} offset={offset} />
+              )}
+            </Box>
+            <Pagination
               offset={offset}
+              limit={limit}
+              total={currentTotal}
+              onPageChange={handlePageChange}
             />
-          )}
-          {value === "two" && <StatsTotal totals={totals} offset={offset} />}
-          {value === "three" && (
-            <StatsSeason seasons={seasons} offset={offset} />
-          )}
-          {value === "for" && (
-            <StatsTeam totalteams={totalteams} offset={offset} />
-          )}
-        </Box>
-        <Pagination
-          offset={offset}
-          limit={limit}
-          total={currentTotal}
-          onPageChange={handlePageChange}
-        />
-      </Box>
+          </Paper>
+        </Grid>
+      </Grid>
     );
   },
 );

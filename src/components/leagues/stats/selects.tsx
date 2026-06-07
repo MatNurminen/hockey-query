@@ -7,11 +7,21 @@ import MenuItem from "@mui/material/MenuItem";
 import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
 import GreenButton from "../../common/Buttons/greenButton";
-import { TPlayerStatDetail } from "../../../api/players-stats/types";
 import { navigateWithParams, deleteParams } from "../../utils/urlHelpers";
+import {
+  TPlayerStatByClub,
+  TPlayerStatDetail,
+  TPlayerStatTotal,
+} from "../../../api/players-stats/types";
+
+type TPlayerSelectData = (
+  | TPlayerStatDetail
+  | TPlayerStatTotal
+  | TPlayerStatByClub
+) & { team_id?: number; full_name?: string };
 
 interface Props {
-  players: TPlayerStatDetail[];
+  players: TPlayerSelectData[];
 }
 
 interface Position {
@@ -28,7 +38,6 @@ interface Nation {
   nation_id: number;
   player_nation: string;
   player_flag: string;
-  count: number;
 }
 
 const positions: Position[] = [
@@ -54,7 +63,7 @@ const Selects = ({ players }: Props) => {
     nation_id: player.nation_id || 0,
     player_nation: player.player_nation || "",
     player_flag: player.player_flag || "",
-    player_order: (player as any).player_order,
+    player_order: player.player_order,
   }));
 
   const teams: Team[] = [
@@ -87,10 +96,8 @@ const Selects = ({ players }: Props) => {
             nation_id,
             player_nation,
             player_flag,
-            count: 0,
           };
         }
-        accByNation[nation_id].count++;
       }
       return accByNation;
     }, {}),
@@ -135,7 +142,7 @@ const Selects = ({ players }: Props) => {
             value={currentPosition || ""}
             onChange={handlePositionChange}
           >
-            {positions.map((position: any) => (
+            {positions.map((position: Position) => (
               <MenuItem key={position.id} value={position.id}>
                 {position.name}
               </MenuItem>
@@ -154,7 +161,7 @@ const Selects = ({ players }: Props) => {
             onChange={handleTeamChange}
             disabled={isAllTimeTab}
           >
-            {teams.map((team: any) => (
+            {teams.map((team: Team) => (
               <MenuItem key={team.id} value={team.id}>
                 {team.name}
               </MenuItem>
@@ -172,13 +179,13 @@ const Selects = ({ players }: Props) => {
             value={currentNation || ""}
             onChange={handleNationChange}
           >
-            {nations.map((nation: any) => (
+            {nations.map((nation: Nation) => (
               <MenuItem key={nation.nation_id} value={nation.nation_id}>
                 <Box display="flex" alignItems="center">
                   <Box display="flex" sx={{ mr: 1 }}>
                     <TableFlag alt="" src={nation.player_flag} />
                   </Box>
-                  {nation.player_nation} ({nation.count})
+                  {nation.player_nation}
                 </Box>
               </MenuItem>
             ))}

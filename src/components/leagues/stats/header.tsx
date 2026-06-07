@@ -44,7 +44,7 @@ const Header = memo(({ league, leagueId, seasonId }: Props) => {
             variant="subtitle2"
             underline="hover"
             component={RouterLink}
-            to={`/leagues/${leagueId}`}
+            to={`/leagues/${leagueId}?season=${seasonId}`}
           >
             {"League Information and Facts"}
           </Link>

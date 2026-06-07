@@ -1,7 +1,6 @@
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Header from "./header";
-import Selects from "./selects";
 import { useSearchParams } from "react-router-dom";
 import StatsTabs from "./stats-tabs";
 import {
@@ -10,7 +9,6 @@ import {
   getPlayersStatsTotalByTeam,
 } from "../../../api/players-stats/queries";
 import SelectSeason from "../../common/Selects/selectSeason";
-import { useRef, useState } from "react";
 
 const LIMIT = 50;
 
@@ -24,8 +22,6 @@ const PlayersStats = () => {
   const teamId = Number(searchParams.get("teamId")) || undefined;
   const nationId = Number(searchParams.get("nationId")) || undefined;
   const offset = Number(searchParams.get("offset")) || 0;
-
-  const [selectsData, setSelectsData] = useState<any[]>([]);
 
   const detailParams = {
     leagueId: [leagueId],
@@ -99,12 +95,6 @@ const PlayersStats = () => {
   const totalSeasons = seasonsResponse?.total ?? 0;
   const totalTeams = totalteamsResponse?.total ?? 0;
 
-  const seasonParam = searchParams.get("season") || "";
-  const lastSeasonRef = useRef(seasonParam);
-
-  if (seasonParam) {
-    lastSeasonRef.current = seasonParam;
-  }
   const hasData =
     players.length ||
     totals.length ||
@@ -119,10 +109,6 @@ const PlayersStats = () => {
 
   if (isErrorDetail || isErrorTotal || isErrorSeasons || isErrorTotalTeam)
     return <h3>Error!</h3>;
-
-  const handleDataChange = (data: any[]) => {
-    setSelectsData(data);
-  };
 
   return (
     <Container sx={{ py: 1, mt: 2, mb: 10 }}>
@@ -142,28 +128,19 @@ const PlayersStats = () => {
           <p>Loading...</p>
         </Paper>
       ) : hasData ? (
-        <>
-          <Paper sx={{ mt: 2, p: 2 }}>
-            <Selects players={selectsData} />
-          </Paper>
-          <Paper sx={{ mt: 2 }}>
-            <StatsTabs
-              seasonId={seasonId}
-              players={players}
-              totals={totals}
-              seasons={seasons}
-              totalteams={totalteams}
-              onDataChange={handleDataChange}
-              offset={offset}
-              limit={LIMIT}
-              totalDetail={totalDetail}
-              totalStats={totalStats}
-              totalSeasons={totalSeasons}
-              totalTeams={totalTeams}
-              lastSeason={lastSeasonRef.current}
-            />
-          </Paper>
-        </>
+          <StatsTabs
+            seasonId={seasonId}
+            players={players}
+            totals={totals}
+            seasons={seasons}
+            totalteams={totalteams}
+            offset={offset}
+            limit={LIMIT}
+            totalDetail={totalDetail}
+            totalStats={totalStats}
+            totalSeasons={totalSeasons}
+            totalTeams={totalTeams}
+          />
       ) : (
         <Paper sx={{ mt: 2, p: 2 }}>
           <h3>No players stats for this tournament</h3>
