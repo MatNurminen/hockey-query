@@ -32,7 +32,7 @@ const NationsChart = ({ leagueId, seasonId, title }: Props) => {
   const total = chartData.reduce((sum, d) => sum + d.value, 0);
   const RADIAN = Math.PI / 180;
   const cx = 350;
-  const cy = 220;
+  const cy = 230;
 
   const renderShape = (props: any, index: number) => {
     const {

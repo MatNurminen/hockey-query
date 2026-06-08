@@ -87,9 +87,9 @@ const PlayersStatsSeason = ({ leagueId, seasonId, title }: Props) => {
                   ]}
                 />
                 <TableBody>
-                  {item.list.map((player, key) => (
-                    <TableRow key={key}>
-                      <TableCell align="center">{key + 1}</TableCell>
+                  {item.list.map((player, index) => (
+                    <TableRow key={player.id}>
+                      <TableCell align="center">{index + 1}</TableCell>
                       <TableCell>
                         <Box display="flex" alignItems="center">
                           <TableFlag alt="" src={player.player_flag} />

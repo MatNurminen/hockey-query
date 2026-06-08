@@ -30,16 +30,13 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
     isLoading,
   } = getStandings({ leagueId: [leagueId], seasonId });
 
-  const [teamsState, setTeamsState] = useState(teams);
+  const [teamsState, setTeamsState] = useState<TStandings[]>([]);
   const [updatedCells, setUpdatedCells] = useState<Set<string>>(new Set());
 
   const { mutateAsync: updateTeamTournament } = useUpdateTeamTournament();
 
   useEffect(() => {
-    if (
-      teams.length !== teamsState.length ||
-      teams.some((team, i) => team.id !== teamsState[i]?.id)
-    ) {
+    if (teams.length > 0) {
       setTeamsState(teams);
       setUpdatedCells(new Set());
     }
@@ -58,7 +55,7 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
-  if (!teams) return <h3>No data available</h3>;
+  if (teams.length === 0) return <h3>No data available</h3>;
 
   const handleProcessRowUpdate = async (
     newRow: TStandings,

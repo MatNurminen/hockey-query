@@ -56,8 +56,8 @@ const Header = ({ league }: Props) => {
         alignItems='center'
         textAlign='center'
       >
-        {league.logos.map((logo, key) => (
-          <Grid key={key} size={{ xs: 2 }}>
+        {league.logos.map((logo) => (
+          <Grid key={logo.id} size={{ xs: 2 }}>
             <MainLogo alt='' src={logo.logo} />
             <Typography variant='body1' gutterBottom>
               {logo.start_year} - {logo.end_year}

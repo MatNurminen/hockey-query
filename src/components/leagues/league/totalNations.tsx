@@ -16,11 +16,8 @@ interface Props {
   seasonId: number;
 }
 
-const Nats = ({ leagueId, seasonId }: Props) => {
-  const { data, isLoading, isError } = getCountPlayersByNation({
-    leagueId,
-    seasonId,
-  });
+const TotalNations = ({ leagueId, seasonId }: Props) => {
+  const { data, isLoading, isError } = getCountPlayersByNation({ leagueId });
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
@@ -28,7 +25,7 @@ const Nats = ({ leagueId, seasonId }: Props) => {
 
   return (
     <Box my={2}>
-      <SectionChapter txtAlign="left" content="Player Nationalities" />
+      <SectionChapter txtAlign="left" content="Player Nationalities Throughout History" />
       <List
         sx={{ columns: { sm: 2, md: 3, lg: 4 }, pb: 1 }}
         dense={true}
@@ -42,11 +39,11 @@ const Nats = ({ leagueId, seasonId }: Props) => {
             <Link
               underline="hover"
               component={RouterLink}
-              to={"/nations/" + nat.id}
+              to={`/league-stats?league=${leagueId}&season=${seasonId}&tab=two&nationId=${nat.id}`}
             >
               <ListItemText
                 primary={`${nat.count} ${
-                  nat.count == 1 ? "player" : "players"
+                  nat.count === 1 ? "player" : "players"
                 }`}
               />
             </Link>
@@ -57,4 +54,4 @@ const Nats = ({ leagueId, seasonId }: Props) => {
   );
 };
 
-export default memo(Nats);
+export default memo(TotalNations);

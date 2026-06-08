@@ -15,7 +15,7 @@ import Awards from "./awards";
 import Paper from "@mui/material/Paper";
 import SelectSeason from "../../common/Selects/selectSeason";
 import { getLeague } from "../../../api/leagues/queries";
-import Nats from "./nats";
+import TotalNations from "./totalNations";
 import { useLatestSeason } from "../../../hooks/useLatestSeason";
 
 const League = () => {
@@ -62,7 +62,7 @@ const League = () => {
         <NationsChart leagueId={leagueId} seasonId={seasonId} title={title} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
-        <Nats leagueId={leagueId} seasonId={seasonId} />
+        <TotalNations leagueId={leagueId} seasonId={seasonId} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
         <CompareTeams leagueId={leagueId} seasonId={seasonId} title={title} />

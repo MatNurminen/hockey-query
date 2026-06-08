@@ -48,8 +48,8 @@ const PlayersStatsPerSeason = ({ leagueId, seasonId }: Props) => {
     isError,
   } = useMultiplePlayersStatsDetail(configs);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Error</p>;
+  if (isLoading) return <h3>Loading...</h3>;
+  if (isError) return <h3>Error!</h3>;
 
   return (
     <Grid
@@ -79,9 +79,9 @@ const PlayersStatsPerSeason = ({ leagueId, seasonId }: Props) => {
                 ]}
               />
               <TableBody>
-                {item.list.map((player, key) => (
-                  <TableRow key={key}>
-                    <TableCell align="center">{key + 1}</TableCell>
+                {item.list.map((player, index) => (
+                  <TableRow key={player.player_id}>
+                    <TableCell align="center">{index + 1}</TableCell>
                     <TableCell>
                       <Box display="flex" alignItems="center">
                         <TableFlag alt="" src={player.player_flag} />

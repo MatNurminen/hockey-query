@@ -30,8 +30,8 @@ const PlayersFacts = ({ leagueId, seasonId }: Props) => {
   });
   const players = playersResponse?.data ?? [];
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Error</p>;
+  if (isLoading) return <h3>Loading...</h3>;
+  if (isError) return <h3>Error!</h3>;
   if (!players) return <div>No data available</div>;
 
   const oldest = (players: TPlayerStatDetail[]) => {
@@ -106,9 +106,9 @@ const PlayersFacts = ({ leagueId, seasonId }: Props) => {
                   ]}
                 />
                 <TableBody>
-                  {item.list(players).map((player, key) => (
+                  {item.list(players).map((player, index) => (
                     <TableRow key={player.player_id}>
-                      <TableCell align="center">{key + 1}</TableCell>
+                      <TableCell align="center">{index + 1}</TableCell>
                       <TableCell>
                         <Box display="flex" alignItems="center">
                           <TableFlag alt="" src={player.player_flag} />

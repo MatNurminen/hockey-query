@@ -46,9 +46,9 @@ const CompareTeams = ({ leagueId, seasonId, title }: Props) => {
           ]}
         />
         <TableBody>
-          {data.map((team: TTeamFact, key) => (
+          {data.map((team: TTeamFact, index) => (
             <TableRow key={team.team_id}>
-              <TableCell align="center">{key + 1}</TableCell>
+              <TableCell align="center">{index + 1}</TableCell>
               <TableCell>
                 <Stack direction="row" alignItems="center" spacing={2}>
                   <Box width={40} display="flex" justifyContent="center">

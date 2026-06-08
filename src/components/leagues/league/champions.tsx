@@ -1,7 +1,11 @@
 import Box from '@mui/material/Box';
 import SectionChapter from '../../common/Sections/sectionChapter';
 
-const Champions = ({ title }: any) => {
+interface Props {
+  title: string
+}
+
+const Champions = ({ title }: Props) => {
   return (
     <Box my={2}>
       <SectionChapter
