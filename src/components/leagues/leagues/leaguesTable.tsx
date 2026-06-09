@@ -1,45 +1,50 @@
-import TableContainer from '@mui/material/TableContainer';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
-import AppButton from '../../common/Buttons/appButton';
-import HeaderTable from './headerTable';
-import Stack from '@mui/material/Stack';
+import TableContainer from "@mui/material/TableContainer";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@mui/material/Link";
+import AppButton from "../../common/Buttons/appButton";
+import HeaderTable from "./headerTable";
+import Stack from "@mui/material/Stack";
+import { useDeleteLeague } from "../../../api/leagues/mutations";
+import { memo, useState } from "react";
+import DeleteDialog from "../../common/Dialogs/deleteDialog";
+import { TLeagueDto } from "../../../api/leagues/types";
 
-import { useDeleteLeague } from '../../../api/leagues/mutations';
-import { memo, useState } from 'react';
-import DeleteDialog from '../../common/Dialogs/deleteDialog';
+interface Props {
+  leagues: TLeagueDto[];
+  seasonId: number;
+}
 
 const leagueModes = [
   {
-    title: 'Europe',
-    condition: (league: any) =>
+    title: "Europe",
+    condition: (league: TLeagueDto) =>
       league.type_id === 1 &&
-      league.short_name !== 'NHL' &&
-      league.short_name !== 'AHL',
+      league.short_name !== "NHL" &&
+      league.short_name !== "AHL",
   },
   {
-    title: 'North America',
-    condition: (league: any) =>
-      league.short_name === 'NHL' || league.short_name === 'AHL',
+    title: "North America",
+    condition: (league: TLeagueDto) =>
+      league.short_name === "NHL" || league.short_name === "AHL",
   },
   {
-    title: 'International',
-    condition: (league: any) => league.type_id === 2,
+    title: "International",
+    condition: (league: TLeagueDto) => league.type_id === 2,
   },
   {
-    title: 'Tournaments',
-    condition: (league: any) => league.type_id === 3,
+    title: "Tournaments",
+    condition: (league: TLeagueDto) => league.type_id === 3,
   },
 ];
 
-const LeaguesTable = ({ leagues, seasonId }: any) => {
-  const [selectedLeague, setSelectedLeague] = useState<any | null>(null);
-  const [name, setName] = useState('');
+const LeaguesTable = ({ leagues, seasonId }: Props) => {
+  const [selectedLeague, setSelectedLeague] = useState<number | null>(null);
+  const [name, setName] = useState("");
 
   const { mutate: deleteLeague } = useDeleteLeague();
 
@@ -57,7 +62,7 @@ const LeaguesTable = ({ leagues, seasonId }: any) => {
         { id: selectedLeague },
         {
           onSuccess: () => setSelectedLeague(null),
-        }
+        },
       );
     }
   };
@@ -70,47 +75,49 @@ const LeaguesTable = ({ leagues, seasonId }: any) => {
         name={name}
         onConfirm={handleDelete}
       />
-      {leagueModes.map((mode: any, key: any) => (
-        <TableContainer component={Paper} key={key}>
-          <Table size='small'>
+      {leagueModes.map((mode, index) => (
+        <TableContainer component={Paper} key={index}>
+          <Table size="small">
             <HeaderTable title={mode.title} />
             <TableBody>
-              {leagues.map((league: any) => (
-                <TableRow key={league.id}>
-                  {mode.condition(league) ? (
-                    <>
-                      <TableCell align='center'>
-                        <img
-                          height={30}
-                          alt=''
-                          src={league.logos.at(-1)?.logo}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Link
-                          underline='hover'
-                          component={RouterLink}
-                          to={`/leagues/${league.id}?season=${seasonId}`}
-                        >
-                          {league.name}
-                        </Link>
-                      </TableCell>
-                      <TableCell>{league.short_name}</TableCell>
-                      <TableCell align='right'>
-                        <AppButton
-                          text='Delete'
-                          size='small'
-                          color='error'
-                          iconName='delete'
-                          onClick={() => {
-                            handleOpen(league.id), setName(league.name);
-                          }}
-                        />
-                      </TableCell>
-                    </>
-                  ) : null}
-                </TableRow>
-              ))}
+              {leagues
+                .filter(mode.condition)
+                .map((league) => (
+                  <TableRow key={league.id}>
+                    <TableCell align="center">
+                      <img
+                        height={30}
+                        alt=""
+                        src={league.logos.at(-1)?.logo}
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = "none";
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Link
+                        underline="hover"
+                        component={RouterLink}
+                        to={`/leagues/${league.id}?season=${seasonId}`}
+                      >
+                        {league.name}
+                      </Link>
+                    </TableCell>
+                    <TableCell>{league.short_name}</TableCell>
+                    <TableCell align="right">
+                      <AppButton
+                        text="Delete"
+                        size="small"
+                        color="error"
+                        iconName="delete"
+                        onClick={() => {
+                          handleOpen(league.id);
+                          setName(league.name);
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>

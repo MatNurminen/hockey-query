@@ -2,7 +2,11 @@ import { memo } from 'react';
 import HeaderMain from '../../common/Table/headerMain';
 import HeaderSection from '../../common/Table/headerSection';
 
-const HeaderTable = ({ title }: any) => {
+interface Props {
+  title: string
+}
+
+const HeaderTable = ({ title }: Props) => {
   return (
     <>
       <HeaderMain cells={[title, '', '', '']} />
