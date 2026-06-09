@@ -1,9 +1,5 @@
 import { useState } from "react";
 import Tab from "@mui/material/Tab";
-//import styles from './styles';
-import PublicIcon from "@mui/icons-material/Public";
-import AllInboxIcon from "@mui/icons-material/AllInbox";
-import GroupIcon from "@mui/icons-material/Group";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
@@ -11,24 +7,24 @@ import PostAddIcon from "@mui/icons-material/PostAdd";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import LinkRoute from "../../../common/LinkRoute";
-//import AddPlayer from '../../../admin/players/addPlayer';
-//import AddNation from '../../../admin/nations/addNation';
-import Typography from "@mui/material/Typography";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
 import AddTeam from "../../../admin/teams/addTeam";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import AddNation from "../../../admin/nations/addNation";
 import AddPlayer from "../../../admin/players/addPlayer";
+import AddLeague from "../../../admin/leagues/addLeague";
 
-//function MenuTabs({ classes }: any) {
 function MenuTabs() {
   const [openPlayer, setOpenPlayer] = useState(false);
   const [openNation, setOpenNation] = useState(false);
   const [openTeam, setOpenTeam] = useState(false);
+  const [openLeague, setOpenLeague] = useState(false);
 
   const handleOpenNation = () => {
     setOpenNation(true);
+  };
+
+  const handleOpenLeague = () => {
+    setOpenLeague(true);
   };
 
   const handleOpenTeam = () => {
@@ -43,11 +39,7 @@ function MenuTabs() {
     setOpenPlayer(false);
     setOpenNation(false);
     setOpenTeam(false);
-  };
-
-  const ButtonInTabs = () => {
-    //return <Button className={classes.tab}>ewdewdew</Button>;
-    return <Button>ewdewdew</Button>;
+    setOpenLeague(false);
   };
 
   const tabItems = [
@@ -56,7 +48,7 @@ function MenuTabs() {
       icon: <AddLocationAltIcon />,
       onclick: handleOpenNation,
     },
-    { label: "Rosters", path: "/rosters", icon: <AllInboxIcon /> },
+    { label: "Add League", icon: <PostAddIcon />, onclick: handleOpenLeague },
     { label: "Add Team", icon: <GroupAddIcon />, onclick: handleOpenTeam },
     {
       label: "Add Player",
@@ -65,17 +57,14 @@ function MenuTabs() {
     },
     { label: "Edit Player", path: "/players", icon: <HowToRegIcon /> },
     { label: "Add Roster", path: "", icon: <GroupAddIcon /> },
-    { label: "Add Championship", path: "/champ", icon: <PostAddIcon /> },
+    { label: "Tournaments", path: "/tournaments", icon: <PostAddIcon /> },
   ];
 
   return (
     <>
       <Stack
         width={"100%"}
-        divider={
-          // <Divider orientation='vertical' flexItem className={classes.dv} />
-          <Divider orientation="vertical" flexItem />
-        }
+        divider={<Divider orientation="vertical" flexItem />}
         direction="row"
         justifyContent="space-between"
         alignItems="center"
@@ -87,27 +76,18 @@ function MenuTabs() {
             value={false}
             icon={tab.icon}
             label={tab.label}
-            sx={
-              {
-                //opacity: '1',
-              }
-            }
-            //deal with links
-            // component={LinkRoute}
-            // to={tab.path}
             {...(tab.path
               ? { component: LinkRoute, to: tab.path }
               : { onClick: tab.onclick })}
           />
         ))}
-        <ButtonInTabs />
       </Stack>
       <AddPlayer open={openPlayer} onClose={handleClose} />
       <AddNation open={openNation} onClose={handleClose} />
       <AddTeam open={openTeam} onClose={handleClose} />
+      <AddLeague open={openLeague} onClose={handleClose} />
     </>
   );
 }
 
-//export default styles(MenuTabs);
 export default MenuTabs;
