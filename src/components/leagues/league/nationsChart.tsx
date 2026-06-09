@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Box from "@mui/material/Box";
-import { PieChart, Pie, Sector } from "recharts";
+import { PieChart, Pie, Sector, type PieLabelRenderProps, type PieSectorShapeProps, type PieSectorDataItem } from "recharts";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import { getCountPlayersByNation } from "../../../api/players-stats/queries";
 import { formatSeason } from "../../utils/formatSeason";
@@ -35,7 +35,7 @@ const NationsChart = ({ leagueId, seasonId, title }: Props) => {
   const cx = 350;
   const cy = 230;
 
-  const renderShape = (props: any, index: number) => {
+  const renderShape = (props: PieSectorShapeProps, index: number) => {
     const {
       cx,
       cy,
@@ -79,10 +79,10 @@ const NationsChart = ({ leagueId, seasonId, title }: Props) => {
     );
   };
 
-  const renderCustomLabel = (props: any) => {
+  const renderCustomLabel = (props: PieLabelRenderProps) => {
     const { cx, cy, midAngle, outerRadius, name, fill, percent, index } = props;
 
-    if (percent < 0.01) return null;
+    if (percent == null || midAngle == null || percent < 0.01) return null;
 
     const isDimmed = activeIndex !== undefined && index !== activeIndex;
     const opacity = isDimmed ? 0.2 : 1;
@@ -123,7 +123,7 @@ const NationsChart = ({ leagueId, seasonId, title }: Props) => {
     );
   };
 
-  const onPieEnter = (_: any, index: number) => {
+  const onPieEnter = (_data: PieSectorDataItem, index: number) => {
     setActiveIndex(index);
   };
 
