@@ -1,47 +1,54 @@
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import SectionHeader from '../../common/Sections/sectionHeader';
-import LinkRoute from '../../common/LinkRoute';
-import Box from '@mui/material/Box';
-import { getLeaguesCurLogo } from '../../../api/leagues/queries';
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Divider from "@mui/material/Divider";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Avatar from "@mui/material/Avatar";
+import SectionHeader from "../../common/Sections/sectionHeader";
+import LinkRoute from "../../common/LinkRoute";
+import { getLeaguesCurLogo } from "../../../api/leagues/queries";
+import { formatSeason } from "../../utils/formatSeason";
+import { TLeagueDto } from "../../../api/leagues/types";
+import Link from "@mui/material/Link";
 
-const Leagues = ({ curSeason }: { curSeason: number }) => {
-  const { data } = getLeaguesCurLogo();
+interface Props {
+  curSeason: number;
+}
 
+const Leagues = ({ curSeason }: Props) => {
+  const { data, isLoading, isError } = getLeaguesCurLogo();
+
+  if (isLoading) return <h3>Loading...</h3>;
+  if (isError) return <h3>Error!</h3>;
   if (!data) return <h3>No data available</h3>;
 
   return (
     <>
       <SectionHeader
-        txtAlign='center'
-        content={`Leagues Rosters ${curSeason}-${curSeason - 1999}`}
+        txtAlign="center"
+        content={`Leagues Rosters ${formatSeason(curSeason)}`}
       />
       <List>
         <Divider />
-        {data.map((league: any, key: number) => (
-          <Box
+        {data.map((league: TLeagueDto) => (
+          <Link
+            underline="none"
             component={LinkRoute}
             to={`/rosters?league=${league.id}&season=${curSeason}`}
-            key={key}
+            key={league.id}
           >
             <ListItem sx={{ my: 1 }}>
               <ListItemAvatar sx={{ mr: 2 }}>
                 <Avatar
-                  alt=''
+                  alt=""
                   sx={{ width: 56, height: 56 }}
                   src={league.logos.at(-1)?.logo}
                 />
               </ListItemAvatar>
-              <h4>{league.logos.logo}</h4>
-              <ListItemText primary={<Typography>{league.name}</Typography>} />
+              <ListItemText primary={league.name} />
             </ListItem>
             <Divider />
-          </Box>
+          </Link>
         ))}
       </List>
     </>
