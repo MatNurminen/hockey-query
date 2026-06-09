@@ -13,6 +13,7 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
 import { TTeamFact } from "../../../api/teams-stats/types";
+import { formatSeason } from "../../utils/formatSeason";
 
 interface Props {
   leagueId: number;
@@ -31,7 +32,7 @@ const CompareTeams = ({ leagueId, seasonId, title }: Props) => {
     <TableContainer component={Paper}>
       <Table size="small">
         <HeaderMain
-          cells={[`${seasonId}-${seasonId - 1999} ${title} Team Comparison`]}
+          cells={[`${formatSeason(seasonId)} ${title} Team Comparison`]}
         />
       </Table>
       <Table size="small">

@@ -13,6 +13,7 @@ import Grid from "@mui/material/Grid2";
 import TableFlag from "../../common/Images/tableFlag";
 import { getPlayersStatsDetail } from "../../../api/players-stats/queries";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
+import { formatSeason } from "../../utils/formatSeason";
 
 interface Props {
   leagueId: number;
@@ -90,7 +91,7 @@ const PlayersFacts = ({ leagueId, seasonId }: Props) => {
     <>
       <Table size="small">
         <HeaderMain
-          cells={[`${seasonId}-${seasonId - 1999} Interesting Facts`]}
+          cells={[`${formatSeason(seasonId)} Interesting Facts`]}
         />
       </Table>
       <Grid container>

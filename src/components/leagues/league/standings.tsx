@@ -1,4 +1,5 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { formatSeason } from "../../utils/formatSeason";
 import HeaderMain from "../../common/Table/headerMain";
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
@@ -32,15 +33,18 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
 
   const [teamsState, setTeamsState] = useState<TStandings[]>([]);
   const [updatedCells, setUpdatedCells] = useState<Set<string>>(new Set());
+  const prevParamsRef = useRef<string | null>(null);
 
   const { mutateAsync: updateTeamTournament } = useUpdateTeamTournament();
 
   useEffect(() => {
-    if (teams.length > 0) {
+    const currentKey = `${leagueId}-${seasonId}`;
+    if (currentKey !== prevParamsRef.current && teams.length > 0) {
+      prevParamsRef.current = currentKey;
       setTeamsState(teams);
       setUpdatedCells(new Set());
     }
-  }, [teams]);
+  }, [teams, leagueId, seasonId]);
 
   const rowsWithRank = useMemo(() => {
     const sortedTeams = [...teamsState].sort((a, b) => {
@@ -224,7 +228,7 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
         <TableContainer sx={{ mb: -0.5 }}>
           <Table size="small">
             <HeaderMain
-              cells={[`${seasonId}-${seasonId - 1999} ${title} Standings`]}
+              cells={[`${formatSeason(seasonId)} ${title} Standings`]}
             />
           </Table>
         </TableContainer>

@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import { PieChart, Pie, Sector } from "recharts";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import { getCountPlayersByNation } from "../../../api/players-stats/queries";
+import { formatSeason } from "../../utils/formatSeason";
 
 interface Props {
   leagueId: number;
@@ -138,7 +139,7 @@ const NationsChart = ({ leagueId, seasonId, title }: Props) => {
       <SectionChapter
         txtAlign="left"
         content={
-          seasonId + "-" + (seasonId - 1999) + " " + title + " Demographics"
+          `${formatSeason(seasonId)} ${title} Demographics`
         }
       />
       <Box display="flex" justifyContent="center">

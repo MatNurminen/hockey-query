@@ -16,6 +16,7 @@ import Link from "@mui/material/Link";
 import AppButton from "../../common/Buttons/appButton";
 import Container from "@mui/material/Container";
 import { useMultiplePlayersStatsDetail } from "../../../api/players-stats/hooks";
+import { formatSeason } from "../../utils/formatSeason";
 
 const PlrsStatsSeason = ({ nationId, natName }: any) => {
   const [searchParams] = useSearchParams();
@@ -67,7 +68,7 @@ const PlrsStatsSeason = ({ nationId, natName }: any) => {
             <Table size="small">
               <HeaderMain
                 cells={[
-                  `${seasonId}-${seasonId - 1999} Players From ${natName} In ${
+                  `${formatSeason(seasonId)} Players From ${natName} In ${
                     item.name
                   }`,
                 ]}

@@ -1,6 +1,7 @@
 import { useMultiplePlayersStatsDetail } from "../../../api/players-stats/hooks";
 import type { TPlayerStatDetail } from "../../../api/players-stats/types";
 import PlayersStatsTable from "./playersStatsTable";
+import { formatSeason } from "../../utils/formatSeason";
 
 interface Props {
   leagueId: number;
@@ -36,7 +37,7 @@ const PlayersStatsSeason = ({ leagueId, seasonId, title }: Props) => {
     <PlayersStatsTable<TPlayerStatDetail>
       items={items}
       getHeaderText={(item) =>
-        `${seasonId}-${seasonId - 1999} ${title} ${item.name} Stats`
+        `${formatSeason(seasonId)} ${title} ${item.name} Stats`
       }
       columns={[
         { label: "gp", align: "center", renderCell: (p) => p.games },

@@ -11,6 +11,7 @@ import TableFlag from '../../common/Images/tableFlag';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
 import FooterSection from '../../common/Table/footerSection';
+import { formatSeason } from '../../utils/formatSeason';
 
 const Roster = ({ teamId, seasonId, title }: any) => {
   const {
@@ -70,7 +71,7 @@ const Roster = ({ teamId, seasonId, title }: any) => {
     <TableContainer>
       <Table size='small'>
         <HeaderMain
-          cells={[`${seasonId}-${seasonId - 1999} ${title} Roster`]}
+          cells={[`${formatSeason(seasonId)} ${title} Roster`]}
         />
       </Table>
       <Table size='small'>
