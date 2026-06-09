@@ -1,4 +1,5 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
+import type {} from '@mui/x-data-grid/themeAugmentation';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -28,6 +29,24 @@ const theme = createTheme({
     MuiInputBase: {
       defaultProps: {
         disableInjectingGlobalStyles: true,
+      },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          '&:nth-of-type(even)': {
+            backgroundColor: '#eceef3',
+          },
+        },
+      },
+    },
+    MuiDataGrid: {
+      styleOverrides: {
+        row: {
+          '&:nth-of-type(even)': {
+            backgroundColor: '#eceef3',
+          },
+        },
       },
     },
   },

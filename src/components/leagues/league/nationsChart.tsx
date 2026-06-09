@@ -1,6 +1,7 @@
 import { useState } from "react";
+import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { PieChart, Pie, Sector, type PieLabelRenderProps, type PieSectorShapeProps, type PieSectorDataItem } from "recharts";
+import { PieChart, Pie, Sector, ResponsiveContainer, type PieLabelRenderProps, type PieSectorShapeProps, type PieSectorDataItem } from "recharts";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import { getCountPlayersByNation } from "../../../api/players-stats/queries";
 import { formatSeason } from "../../utils/formatSeason";
@@ -32,8 +33,6 @@ const NationsChart = ({ leagueId, seasonId, title }: Props) => {
 
   const total = chartData.reduce((sum, d) => sum + d.value, 0);
   const RADIAN = Math.PI / 180;
-  const cx = 350;
-  const cy = 230;
 
   const renderShape = (props: PieSectorShapeProps, index: number) => {
     const {
@@ -142,12 +141,13 @@ const NationsChart = ({ leagueId, seasonId, title }: Props) => {
           `${formatSeason(seasonId)} ${title} Demographics`
         }
       />
-      <Box display="flex" justifyContent="center">
-        <PieChart width={800} height={460}>
+      <Box display="flex" justifyContent="center" sx={{ width: "100%", maxWidth: 800, mx: "auto", position: "relative" }}>
+        <ResponsiveContainer width="100%" height={460}>
+          <PieChart>
           <Pie
             data={chartData}
-            cx={cx}
-            cy={cy}
+            cx={"50%"}
+            cy={"50%"}
             innerRadius={100}
             outerRadius={150}
             dataKey="value"
@@ -159,67 +159,43 @@ const NationsChart = ({ leagueId, seasonId, title }: Props) => {
             onMouseEnter={onPieEnter}
             onMouseLeave={onPieLeave}
           />
+          </PieChart>
+        </ResponsiveContainer>
 
-          {activeEntry && (
-            <g transform={`translate(${cx}, ${cy})`}>
-              <rect
-                x={-48}
-                y={-50}
-                width={100}
-                height={100}
-                rx={8}
-                fill="white"
-                stroke="#e0e0e0"
-                strokeWidth={1}
-              />
-              <text
-                x={-2}
-                y={-32}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fill="#333"
-                fontSize={12}
-                fontFamily="Exo, sans-serif"
-                fontWeight={700}
-              >
-                {activeEntry.name}
-              </text>
-              {activeEntry.flag && (
-                <image
-                  href={activeEntry.flag}
-                  x={-18}
-                  y={-22}
-                  width={35}
-                  height={25}
-                />
-              )}
-              <text
-                x={0}
-                y={18}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fill="#555"
-                fontSize={18}
-                fontFamily="Exo, sans-serif"
-                fontWeight={600}
-              >
-                {((activeEntry.value / total) * 100).toFixed(1)}%
-              </text>
-              <text
-                x={0}
-                y={36}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fill="#333"
-                fontSize={12}
-                fontFamily="Exo, sans-serif"
-                fontWeight={700}
-              >
-                {activeEntry.value} players
-              </text>
-            </g>
-          )}
-        </PieChart>
+        {activeEntry && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              bgcolor: "white",
+              border: "1px solid #e0e0e0",
+              borderRadius: "8px",
+              zIndex: 1,
+              width: 100,
+              height: 100,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 0.5,
+            }}
+          >
+            <Typography fontWeight={700} fontSize={12} color="#333">
+              {activeEntry.name}
+            </Typography>
+            {activeEntry.flag && (
+              <Box component="img" src={activeEntry.flag} alt="" width={35} height={25} />
+            )}
+            <Typography fontWeight={600} fontSize={18} color="#555">
+              {((activeEntry.value / total) * 100).toFixed(1)}%
+            </Typography>
+            <Typography fontWeight={700} fontSize={12} color="#333">
+              {activeEntry.value} players
+            </Typography>
+          </Box>
+        )}
       </Box>
     </Box>
   );
