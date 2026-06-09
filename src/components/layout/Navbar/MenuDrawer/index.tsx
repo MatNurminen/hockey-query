@@ -1,33 +1,34 @@
-import React, { useState } from 'react';
-import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
+import { useState } from "react";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import LinkRoute from "../../../common/LinkRoute";
 
-const pages = ['Stats', 'Teams', 'Leagues', 'Nations', 'Free Agents', 'Drafts'];
+interface Props {
+  pages: { label: string; to: string }[];
+}
 
-const MenuDrawer = () => {
+const MenuDrawer = ({ pages }: Props) => {
   const [openDrawer, setOpenDrawer] = useState(false);
+
   return (
-    <React.Fragment>
+    <>
       <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
         <List>
           {pages.map((page, key) => (
-            <ListItemButton key={key}>
-              <ListItemIcon>
-                <ListItemText>{page}</ListItemText>
-              </ListItemIcon>
+            <ListItemButton key={key} component={LinkRoute} to={page.to}>
+              <ListItemText primary={page.label} />
             </ListItemButton>
           ))}
         </List>
       </Drawer>
-      <IconButton color='inherit' onClick={() => setOpenDrawer(!openDrawer)}>
+      <IconButton color="inherit" onClick={() => setOpenDrawer(prev => !prev)}>
         <MenuIcon />
       </IconButton>
-    </React.Fragment>
+    </>
   );
 };
 
