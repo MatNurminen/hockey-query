@@ -44,6 +44,7 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const [saving, setSaving] = useState(false);
   const { startYear, isLoading: seasonsLoading } = useLatestSeason();
+  const noImage = import.meta.env.VITE_CG_NO_IMAGE;
 
   const getKeyFromLogo = (logo: string): string => {
     try {
@@ -64,8 +65,8 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
     const tasks = logos
       .filter((l) => l.logo && l.start_year !== null)
       .map(async (l) => {
-        const rawKey = getKeyFromLogo(l.logo);
-        if (rawKey.includes("/tmp/")) {
+        const rawKey = l.logo === noImage ? l.logo : getKeyFromLogo(l.logo);
+        if (l.logo !== noImage && rawKey.includes("/tmp/")) {
           const toKey = rawKey.replace("/tmp/", "/leagues/");
           await moveCfFile({ fromKey: rawKey, toKey });
           return {
@@ -87,7 +88,7 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
     initialValues: {
       name: "",
       short_name: "",
-      color: "",
+      color: null,
       start_year: startYear,
       end_year: null,
       type_id: 1,
@@ -95,7 +96,7 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
         {
           start_year: startYear,
           end_year: null,
-          logo: "",
+          logo: noImage,
         },
       ] as FormLogo[],
     },
@@ -139,9 +140,9 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
     const next = [
       ...formik.values.logos,
       {
-        start_year: formik.values.start_year || startYear,
+        start_year: formik.values.start_year ?? startYear,
         end_year: null,
-        logo: "",
+        logo: noImage,
       },
     ];
     formik.setFieldValue("logos", next);
@@ -210,143 +211,145 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
               autoComplete="off"
               onSubmit={formik.handleSubmit}
             >
-            <Grid container spacing={2}>
-              <Grid size={{ xs: 6 }}>
-                <TextField
-                  fullWidth
-                  required
-                  name="name"
-                  label="Name"
-                  variant="outlined"
-                  size="small"
-                  value={formik.values.name}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={formik.touched.name && Boolean(formik.errors.name)}
-                  helperText={formik.touched.name && formik.errors.name}
-                  disabled={saving}
-                />
-              </Grid>
-              <Grid size={{ xs: 6 }}>
-                <TextField
-                  fullWidth
-                  required
-                  name="short_name"
-                  label="Short Name"
-                  variant="outlined"
-                  size="small"
-                  value={formik.values.short_name}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.short_name &&
-                    Boolean(formik.errors.short_name)
-                  }
-                  helperText={
-                    formik.touched.short_name && formik.errors.short_name
-                  }
-                  disabled={saving}
-                />
-              </Grid>
-              <Grid size={{ xs: 12 }}>
-                <BorderedBox title="League Logos">
-                  <Grid container spacing={2} direction="row" sx={{ mt: 1 }}>
-                    {formik.values.logos?.map((logo, key) => (
-                      <Grid key={key} size={{ xs: 6 }}>
-                        <BorderedBox title={`Logo ${key + 1}`}>
-                          <Logos
-                            logo={logo.logo}
-                            start_year={logo.start_year}
-                            end_year={logo.end_year}
-                            index={key}
-                            onUpdate={handleUpdateLogo}
-                          />
-                          <Box sx={{ mt: 1 }}>
-                            <AppButton
-                              text="Remove Logo"
-                              color="error"
-                              size="small"
-                              onClick={() => handleRemoveLogo(key)}
-                              hidden={key === 0}
-                              disabled={saving}
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 6 }}>
+                  <TextField
+                    fullWidth
+                    required
+                    name="name"
+                    label="Name"
+                    variant="outlined"
+                    size="small"
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.name && Boolean(formik.errors.name)}
+                    helperText={formik.touched.name && formik.errors.name}
+                    disabled={saving}
+                  />
+                </Grid>
+                <Grid size={{ xs: 6 }}>
+                  <TextField
+                    fullWidth
+                    required
+                    name="short_name"
+                    label="Short Name"
+                    variant="outlined"
+                    size="small"
+                    value={formik.values.short_name}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={
+                      formik.touched.short_name &&
+                      Boolean(formik.errors.short_name)
+                    }
+                    helperText={
+                      formik.touched.short_name && formik.errors.short_name
+                    }
+                    disabled={saving}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12 }}>
+                  <BorderedBox title="League Logos">
+                    <Grid container spacing={2} direction="row" sx={{ mt: 1 }}>
+                      {formik.values.logos?.map((logo, key) => (
+                        <Grid key={key} size={{ xs: 6 }}>
+                          <BorderedBox title={`Logo ${key + 1}`}>
+                            <Logos
+                              logo={logo.logo}
+                              start_year={logo.start_year}
+                              end_year={logo.end_year}
+                              index={key}
+                              onUpdate={handleUpdateLogo}
                             />
-                          </Box>
-                        </BorderedBox>
-                      </Grid>
-                    ))}
-                  </Grid>
-                  <Box sx={{ mt: 1 }}>
-                    <GreenButton
-                      text="Add logo"
-                      size="small"
-                      onClick={handleAddLogo}
-                      iconIndex={3}
-                      disabled={saving}
-                    />
-                  </Box>
-                </BorderedBox>
-              </Grid>
+                            <Box sx={{ mt: 1 }}>
+                              <AppButton
+                                text="Remove Logo"
+                                color="error"
+                                size="small"
+                                onClick={() => handleRemoveLogo(key)}
+                                hidden={key === 0}
+                                disabled={saving}
+                              />
+                            </Box>
+                          </BorderedBox>
+                        </Grid>
+                      ))}
+                    </Grid>
+                    <Box sx={{ mt: 1 }}>
+                      <GreenButton
+                        text="Add logo"
+                        size="small"
+                        onClick={handleAddLogo}
+                        iconIndex={3}
+                        disabled={saving}
+                      />
+                    </Box>
+                  </BorderedBox>
+                </Grid>
 
-              <Grid size={{ xs: 6 }}>
-                <SelectLeagueType
-                  id="type_id"
-                  name="type_id"
-                  label="League Type"
-                  value={formik.values.type_id}
-                  onChange={(value: number) => {
-                    formik.setFieldValue("type_id", value);
-                  }}
-                  onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.type_id && Boolean(formik.errors.type_id)
-                  }
-                  helperText={formik.touched.type_id && formik.errors.type_id}
-                  disabled={saving}
-                />
+                <Grid size={{ xs: 6 }}>
+                  <SelectLeagueType
+                    id="type_id"
+                    name="type_id"
+                    label="League Type"
+                    value={formik.values.type_id}
+                    onChange={(value: number) => {
+                      formik.setFieldValue("type_id", value);
+                    }}
+                    onBlur={formik.handleBlur}
+                    error={
+                      formik.touched.type_id && Boolean(formik.errors.type_id)
+                    }
+                    helperText={formik.touched.type_id && formik.errors.type_id}
+                    disabled={saving}
+                  />
+                </Grid>
+                <Grid size={{ xs: 6 }}>
+                  <SelectNumber
+                    value={formik.values.start_year}
+                    label="Start Year *"
+                    id="start_year"
+                    name="start_year"
+                    min={1980}
+                    max={startYear}
+                    onChange={(value: number) => {
+                      formik.setFieldValue("start_year", value);
+                    }}
+                    onBlur={formik.handleBlur}
+                    error={
+                      formik.touched.start_year &&
+                      Boolean(formik.errors.start_year)
+                    }
+                    helperText={
+                      formik.touched.start_year && formik.errors.start_year
+                    }
+                    disabled={saving}
+                  />
+                </Grid>
+                <Grid size={{ xs: 6 }}>
+                  <SelectNumber
+                    value={formik.values.end_year}
+                    label="End Year"
+                    id="end_year"
+                    name="end_year"
+                    min={1980}
+                    onChange={(value: number) => {
+                      formik.setFieldValue("end_year", value);
+                    }}
+                    onBlur={formik.handleBlur}
+                    error={
+                      formik.touched.end_year && Boolean(formik.errors.end_year)
+                    }
+                    helperText={
+                      formik.touched.end_year && formik.errors.end_year
+                    }
+                    disabled={saving}
+                  />
+                </Grid>
               </Grid>
-              <Grid size={{ xs: 6 }}>
-                <SelectNumber
-                  value={formik.values.start_year}
-                  label="Start Year *"
-                  id="start_year"
-                  name="start_year"
-                  min={1980}
-                  max={startYear}
-                  onChange={(value: number) => {
-                    formik.setFieldValue("start_year", value);
-                  }}
-                  onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.start_year &&
-                    Boolean(formik.errors.start_year)
-                  }
-                  helperText={
-                    formik.touched.start_year && formik.errors.start_year
-                  }
-                  disabled={saving}
-                />
-              </Grid>
-              <Grid size={{ xs: 6 }}>
-                <SelectNumber
-                  value={formik.values.end_year}
-                  label="End Year"
-                  id="end_year"
-                  name="end_year"
-                  min={1980}
-                  onChange={(value: number) => {
-                    formik.setFieldValue("end_year", value);
-                  }}
-                  onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.end_year && Boolean(formik.errors.end_year)
-                  }
-                  helperText={formik.touched.end_year && formik.errors.end_year}
-                  disabled={saving}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        )}
+            </Box>
+          )}
         </Box>
       </DialogContent>
       <DialogActions sx={{ mb: 2, mr: 5 }}>
@@ -354,7 +357,11 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
           <GreenButton
             text="Save"
             size="small"
-            onClick={formik.submitForm}
+            onClick={() => {
+              console.log("Errors before submit:", formik.errors);
+              console.log("Values before submit:", formik.values);
+              //formik.submitForm();
+            }}
             iconIndex={1}
             disabled={saving}
           />

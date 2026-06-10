@@ -6,13 +6,9 @@ import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 type BlueButtonProps = {
   text: string;
-  size?: 'small' | 'medium' | 'large';
-  fullWidth?: boolean;
-  onClick?: () => void;
   iconIndex?: number;
-  disabled?: boolean;
   children?: React.ReactNode;
-};
+} & ButtonProps;
 
 const icons = [
   <CreateNewFolderIcon />,
@@ -29,21 +25,22 @@ const BlueButton = ({
   onClick,
   iconIndex,
   children,
+  ...rest
 }: BlueButtonProps) => {
   const icon = iconIndex !== undefined ? icons[iconIndex] : undefined;
 
-  const props: ButtonProps = {
-    fullWidth,
-    size,
-    variant: 'contained',
-    color: 'primary',
-    sx: { textTransform: 'uppercase' },
-    startIcon: icon,
-    disabled,
-    onClick: onClick,
-  };
   return (
-    <Button {...props}>
+    <Button
+      fullWidth={fullWidth}
+      size={size}
+      variant='contained'
+      color='primary'
+      sx={{ textTransform: 'uppercase' }}
+      startIcon={icon}
+      disabled={disabled}
+      onClick={onClick}
+      {...rest}
+    >
       {text} {children}
     </Button>
   );

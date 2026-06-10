@@ -106,7 +106,12 @@ const Logos = ({
 
   const getImageSrc = () => {
     if (logo_id) return logo;
-    if (tmpLogoPath) return `${bucketPath}${tmpLogoPath}`;
+    if (tmpLogoPath) {
+      if (tmpLogoPath.startsWith("http://") || tmpLogoPath.startsWith("https://")) {
+        return tmpLogoPath;
+      }
+      return `${bucketPath}${tmpLogoPath}`;
+    }
     return noImage;
   };
 
