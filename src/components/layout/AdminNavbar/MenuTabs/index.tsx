@@ -12,6 +12,21 @@ import AddTeam from "../../../admin/teams/addTeam";
 import AddNation from "../../../admin/nations/addNation";
 import AddPlayer from "../../../admin/players/addPlayer";
 import AddLeague from "../../../admin/leagues/addLeague";
+import type { ReactElement } from "react";
+
+interface ActionTabItem {
+  label: string;
+  icon: ReactElement;
+  onClick: () => void;
+}
+
+interface LinkTabItem {
+  label: string;
+  icon: ReactElement;
+  path: string;
+}
+
+type TabItem = ActionTabItem | LinkTabItem;
 
 function MenuTabs() {
   const [openPlayer, setOpenPlayer] = useState(false);
@@ -42,21 +57,37 @@ function MenuTabs() {
     setOpenLeague(false);
   };
 
-  const tabItems = [
+  const getTabProps = (tab: TabItem) => {
+    if ("path" in tab) {
+      return {
+        component: LinkRoute,
+        to: tab.path,
+        sx: {
+          textDecoration: "none",
+          "&:hover": {
+            backgroundColor: "transparent",
+            textDecoration: "none",
+          },
+        },
+      };
+    }
+    return { onClick: tab.onClick };
+  };
+
+  const tabItems: TabItem[] = [
     {
       label: "Add Nation",
       icon: <AddLocationAltIcon />,
-      onclick: handleOpenNation,
+      onClick: handleOpenNation,
     },
-    { label: "Add League", icon: <PostAddIcon />, onclick: handleOpenLeague },
-    { label: "Add Team", icon: <GroupAddIcon />, onclick: handleOpenTeam },
+    { label: "Add League", icon: <PostAddIcon />, onClick: handleOpenLeague },
+    { label: "Add Team", icon: <GroupAddIcon />, onClick: handleOpenTeam },
     {
       label: "Add Player",
       icon: <PersonAddIcon />,
-      onclick: handleOpenPlayer,
+      onClick: handleOpenPlayer,
     },
     { label: "Edit Player", path: "/players", icon: <HowToRegIcon /> },
-    { label: "Add Roster", path: "", icon: <GroupAddIcon /> },
     { label: "Tournaments", path: "/tournaments", icon: <PostAddIcon /> },
   ];
 
@@ -76,9 +107,7 @@ function MenuTabs() {
             value={false}
             icon={tab.icon}
             label={tab.label}
-            {...(tab.path
-              ? { component: LinkRoute, to: tab.path }
-              : { onClick: tab.onclick })}
+            {...getTabProps(tab)}
           />
         ))}
       </Stack>
