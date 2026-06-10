@@ -7,7 +7,7 @@ import { useLatestSeason } from "../../../hooks/useLatestSeason";
 const Leagues = () => {
   const { data, isLoading, isError } = getLeaguesCurLogo();
 
-  const latestSeason = useLatestSeason();
+  const { startYear: latestSeason } = useLatestSeason();
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;

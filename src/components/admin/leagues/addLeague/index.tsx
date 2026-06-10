@@ -1,36 +1,35 @@
-import { useState } from 'react';
-import { useSnackbar } from 'notistack';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import SectionHeader from '../../../common/Sections/sectionHeader';
-import DialogActions from '@mui/material/DialogActions';
-import GreenButton from '../../../common/Buttons/greenButton';
-import { useFormik } from 'formik';
-import leagueSchema from '../../validations/leagueSchema';
-import GrayButton from '../../../common/Buttons/grayButton';
-import Stack from '@mui/material/Stack';
-import { useAddLeague } from '../../../../api/leagues/mutations';
-import SelectNumber from '../../../common/Selects/selectNumber';
-import Grid from '@mui/material/Grid2';
-import BorderedBox from '../../../common/Boxes/borderedBox';
+import { useState } from "react";
+import { useSnackbar } from "notistack";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import SectionHeader from "../../../common/Sections/sectionHeader";
+import DialogActions from "@mui/material/DialogActions";
+import GreenButton from "../../../common/Buttons/greenButton";
+import { useFormik } from "formik";
+import leagueSchema from "../../validations/leagueSchema";
+import GrayButton from "../../../common/Buttons/grayButton";
+import Stack from "@mui/material/Stack";
+import { useAddLeague } from "../../../../api/leagues/mutations";
+import SelectNumber from "../../../common/Selects/selectNumber";
+import Grid from "@mui/material/Grid2";
+import BorderedBox from "../../../common/Boxes/borderedBox";
 import {
   useDeleteAllFromTmp,
   useMoveCfFile,
-} from '../../../../api/cloudflare/mutations';
-import SelectLeagueType from '../../../common/Selects/selectLeagueType';
-import { TCreateLeagueLogoDto } from '../../../../api/league-logos/types';
-import AppButton from '../../../common/Buttons/appButton';
-import Logos from '../../../common/Images/logos';
-import CircularProgress from '@mui/material/CircularProgress';
+} from "../../../../api/cloudflare/mutations";
+import SelectLeagueType from "../../../common/Selects/selectLeagueType";
+import { TCreateLeagueLogoDto } from "../../../../api/league-logos/types";
+import AppButton from "../../../common/Buttons/appButton";
+import Logos from "../../../common/Images/logos";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useLatestSeason } from "../../../../hooks/useLatestSeason";
 
 export interface AddLeagueDialogProps {
   open: boolean;
   onClose: () => void;
 }
-
-const DEFAULT_START_YEAR = new Date().getFullYear() + 1;
 
 interface FormLogo {
   start_year: number | null;
@@ -44,29 +43,30 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
   const { mutate: deleteAllFromTmp } = useDeleteAllFromTmp();
   const { enqueueSnackbar } = useSnackbar();
   const [saving, setSaving] = useState(false);
+  const { startYear, isLoading: seasonsLoading } = useLatestSeason();
 
   const getKeyFromLogo = (logo: string): string => {
     try {
-      if (logo.startsWith('http://') || logo.startsWith('https://')) {
+      if (logo.startsWith("http://") || logo.startsWith("https://")) {
         const u = new URL(logo);
-        const p = u.pathname.startsWith('/') ? u.pathname.slice(1) : u.pathname;
+        const p = u.pathname.startsWith("/") ? u.pathname.slice(1) : u.pathname;
         return p;
       }
-      return logo.startsWith('/') ? logo.slice(1) : logo;
+      return logo.startsWith("/") ? logo.slice(1) : logo;
     } catch (e) {
-      return logo.replace(/^\//, '');
+      return logo.replace(/^\//, "");
     }
   };
 
   const prepareLogosForSave = async (
-    logos: FormLogo[]
+    logos: FormLogo[],
   ): Promise<TCreateLeagueLogoDto[]> => {
     const tasks = logos
       .filter((l) => l.logo && l.start_year !== null)
       .map(async (l) => {
         const rawKey = getKeyFromLogo(l.logo);
-        if (rawKey.includes('/tmp/')) {
-          const toKey = rawKey.replace('/tmp/', '/leagues/');
+        if (rawKey.includes("/tmp/")) {
+          const toKey = rawKey.replace("/tmp/", "/leagues/");
           await moveCfFile({ fromKey: rawKey, toKey });
           return {
             logo: toKey,
@@ -74,34 +74,32 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
             ...(l.end_year ? { end_year: l.end_year } : {}),
           };
         }
-        // This case should ideally not happen in "Add" form, but good for safety
         return {
           logo: rawKey,
           start_year: l.start_year as number,
           ...(l.end_year ? { end_year: l.end_year } : {}),
         };
       });
-
-    // This will throw an error if any moveCfFile fails, stopping the submission.
     return Promise.all(tasks);
   };
 
   const formik = useFormik({
     initialValues: {
-      name: '',
-      short_name: '',
-      color: '',
-      start_year: DEFAULT_START_YEAR,
+      name: "",
+      short_name: "",
+      color: "",
+      start_year: startYear,
       end_year: null,
       type_id: 1,
       logos: [
         {
-          start_year: DEFAULT_START_YEAR,
+          start_year: startYear,
           end_year: null,
-          logo: '',
+          logo: "",
         },
       ] as FormLogo[],
     },
+    enableReinitialize: true,
     validationSchema: leagueSchema,
     onSubmit: async (values, helpers) => {
       setSaving(true);
@@ -120,16 +118,16 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
         if (result.id) {
           enqueueSnackbar(
             `League added successfully with name: ${result.name}`,
-            { variant: 'success' }
+            { variant: "success" },
           );
-          deleteAllFromTmp(); // Clean up on success
+          deleteAllFromTmp();
           helpers.resetForm();
           onClose();
         }
       } catch (error) {
-        console.error('Failed to add league:', error);
-        enqueueSnackbar('Failed to add league. Check console for details.', {
-          variant: 'error',
+        console.error("Failed to add league:", error);
+        enqueueSnackbar("Failed to add league. Check console for details.", {
+          variant: "error",
         });
       } finally {
         setSaving(false);
@@ -141,32 +139,32 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
     const next = [
       ...formik.values.logos,
       {
-        start_year: formik.values.start_year || DEFAULT_START_YEAR,
+        start_year: formik.values.start_year || startYear,
         end_year: null,
-        logo: '',
+        logo: "",
       },
     ];
-    formik.setFieldValue('logos', next);
+    formik.setFieldValue("logos", next);
   };
 
   const handleRemoveLogo = (index: number) => {
     const next = formik.values.logos.filter((_, i) => i !== index);
-    formik.setFieldValue('logos', next);
+    formik.setFieldValue("logos", next);
   };
 
   const handleUpdateLogo = (
     index: number,
-    updatedData: Partial<Pick<FormLogo, 'logo' | 'start_year' | 'end_year'>>
+    updatedData: Partial<Pick<FormLogo, "logo" | "start_year" | "end_year">>,
   ) => {
     const next = formik.values.logos.map((logo, i) =>
-      i === index ? { ...logo, ...updatedData } : logo
+      i === index ? { ...logo, ...updatedData } : logo,
     );
-    formik.setFieldValue('logos', next);
+    formik.setFieldValue("logos", next);
   };
 
   const handleCancel = () => {
-    deleteAllFromTmp(); // Clean up on cancel
-    enqueueSnackbar("The changes haven't been saved.", { variant: 'info' });
+    deleteAllFromTmp();
+    enqueueSnackbar("The changes haven't been saved.", { variant: "info" });
     formik.resetForm();
     onClose();
   };
@@ -175,52 +173,52 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
     <Dialog
       open={open}
       onClose={(_event, reason) => {
-        if (reason !== 'backdropClick') {
-          // Обрабатываем закрытие только по нажатию ESC или программно
+        if (reason !== "backdropClick") {
           handleCancel();
         }
       }}
-      // onClose={(_, reason) => {
-      //   if (reason === 'backdropClick' && saving) return; // Prevent closing during save
-      //   handleCancel();
-      // }}
     >
       <DialogContent>
-        <SectionHeader txtAlign='left' content='Add League' />
-        <Box position='relative'>
+        <SectionHeader txtAlign="left" content="Add League" />
+        <Box position="relative">
           {saving && (
             <Box
               sx={{
-                position: 'absolute',
+                position: "absolute",
                 top: 0,
                 left: 0,
-                width: '100%',
-                height: '100%',
-                bgcolor: 'rgba(255, 255, 255, 0.7)',
+                width: "100%",
+                height: "100%",
+                bgcolor: "rgba(255, 255, 255, 0.7)",
                 zIndex: 2,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
               <CircularProgress />
             </Box>
           )}
-          <Box
-            component='form'
-            noValidate
-            autoComplete='off'
-            onSubmit={formik.handleSubmit}
-          >
+          {seasonsLoading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Box
+              component="form"
+              noValidate
+              autoComplete="off"
+              onSubmit={formik.handleSubmit}
+            >
             <Grid container spacing={2}>
               <Grid size={{ xs: 6 }}>
                 <TextField
                   fullWidth
                   required
-                  name='name'
-                  label='Name'
-                  variant='outlined'
-                  size='small'
+                  name="name"
+                  label="Name"
+                  variant="outlined"
+                  size="small"
                   value={formik.values.name}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -233,10 +231,10 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
                 <TextField
                   fullWidth
                   required
-                  name='short_name'
-                  label='Short Name'
-                  variant='outlined'
-                  size='small'
+                  name="short_name"
+                  label="Short Name"
+                  variant="outlined"
+                  size="small"
                   value={formik.values.short_name}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -251,8 +249,8 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
                 />
               </Grid>
               <Grid size={{ xs: 12 }}>
-                <BorderedBox title='League Logos'>
-                  <Grid container spacing={2} direction='row' sx={{ mt: 1 }}>
+                <BorderedBox title="League Logos">
+                  <Grid container spacing={2} direction="row" sx={{ mt: 1 }}>
                     {formik.values.logos?.map((logo, key) => (
                       <Grid key={key} size={{ xs: 6 }}>
                         <BorderedBox title={`Logo ${key + 1}`}>
@@ -265,9 +263,9 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
                           />
                           <Box sx={{ mt: 1 }}>
                             <AppButton
-                              text='Remove Logo'
-                              color='error'
-                              size='small'
+                              text="Remove Logo"
+                              color="error"
+                              size="small"
                               onClick={() => handleRemoveLogo(key)}
                               hidden={key === 0}
                               disabled={saving}
@@ -279,8 +277,8 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
                   </Grid>
                   <Box sx={{ mt: 1 }}>
                     <GreenButton
-                      text='Add logo'
-                      size='small'
+                      text="Add logo"
+                      size="small"
                       onClick={handleAddLogo}
                       iconIndex={3}
                       disabled={saving}
@@ -291,12 +289,12 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
 
               <Grid size={{ xs: 6 }}>
                 <SelectLeagueType
-                  id='type_id'
-                  name='type_id'
-                  label='League Type'
+                  id="type_id"
+                  name="type_id"
+                  label="League Type"
                   value={formik.values.type_id}
                   onChange={(value: number) => {
-                    formik.setFieldValue('type_id', value);
+                    formik.setFieldValue("type_id", value);
                   }}
                   onBlur={formik.handleBlur}
                   error={
@@ -309,12 +307,13 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
               <Grid size={{ xs: 6 }}>
                 <SelectNumber
                   value={formik.values.start_year}
-                  label='Start Year *'
-                  id='start_year'
-                  name='start_year'
+                  label="Start Year *"
+                  id="start_year"
+                  name="start_year"
                   min={1980}
+                  max={startYear}
                   onChange={(value: number) => {
-                    formik.setFieldValue('start_year', value);
+                    formik.setFieldValue("start_year", value);
                   }}
                   onBlur={formik.handleBlur}
                   error={
@@ -330,12 +329,12 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
               <Grid size={{ xs: 6 }}>
                 <SelectNumber
                   value={formik.values.end_year}
-                  label='End Year'
-                  id='end_year'
-                  name='end_year'
+                  label="End Year"
+                  id="end_year"
+                  name="end_year"
                   min={1980}
                   onChange={(value: number) => {
-                    formik.setFieldValue('end_year', value);
+                    formik.setFieldValue("end_year", value);
                   }}
                   onBlur={formik.handleBlur}
                   error={
@@ -347,20 +346,21 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
               </Grid>
             </Grid>
           </Box>
+        )}
         </Box>
       </DialogContent>
       <DialogActions sx={{ mb: 2, mr: 5 }}>
-        <Stack direction='row' spacing={2}>
+        <Stack direction="row" spacing={2}>
           <GreenButton
-            text='Save'
-            size='small'
+            text="Save"
+            size="small"
             onClick={formik.submitForm}
             iconIndex={1}
             disabled={saving}
           />
           <GrayButton
-            text='Cancel'
-            size='small'
+            text="Cancel"
+            size="small"
             onClick={handleCancel}
             disabled={saving}
           />

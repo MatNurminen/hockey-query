@@ -16,7 +16,7 @@ const NavBar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
 
-  const lastSeason = useLatestSeason();
+  const { startYear: lastSeason } = useLatestSeason();
 
   const pages = [
     { label: "Tournaments", to: "/tournaments" },

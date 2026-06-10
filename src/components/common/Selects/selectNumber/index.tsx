@@ -16,10 +16,10 @@ const SelectNumber = ({
   helperText,
   onChange,
 }: any) => {
-  const [internalValue, setInternalValue] = useState(value || '');
+  const [internalValue, setInternalValue] = useState(value ?? '');
 
   useEffect(() => {
-    setInternalValue(value || '');
+    setInternalValue(value ?? '');
   }, [value]);
 
   const handleChange = (event: SelectChangeEvent) => {

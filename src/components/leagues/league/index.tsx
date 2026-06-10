@@ -23,7 +23,7 @@ const League = () => {
   const leagueId = Number(params.id);
 
   const [searchParams] = useSearchParams();
-  const latestSeason = useLatestSeason();
+  const { startYear: latestSeason } = useLatestSeason();
   const seasonId = Number(searchParams.get("season") || latestSeason);
 
   const { data: league, isError, isLoading } = getLeague(leagueId);

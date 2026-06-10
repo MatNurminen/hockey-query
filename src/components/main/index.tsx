@@ -5,7 +5,7 @@ import Leagues from './Leagues';
 import { useLatestSeason } from '../../hooks/useLatestSeason';
 
 const Main = () => {
-  const latestSeason = useLatestSeason();
+  const { startYear: latestSeason } = useLatestSeason();
 
   return (
     <Container sx={{ pt: 4, background: '#fff' }}>
