@@ -26,6 +26,9 @@ import { TCreateLeagueLogoDto } from '../../../../api/league-logos/types';
 import CircularProgress from '@mui/material/CircularProgress';
 import Logos from '../../../common/Images/logos';
 
+const bucketPath = import.meta.env.VITE_CF_BUCKET_PATH;
+const noImage = import.meta.env.VITE_CG_NO_IMAGE;
+
 export interface UpdateLeagueDialogProps {
   open: boolean;
   onClose: () => void;
@@ -88,7 +91,6 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
           try {
             await moveCfFile({ fromKey: rawKey, toKey });
           } catch (e) {
-            // If move fails, still proceed with replaced key to keep consistency
             console.error(
               `Failed to move CF file from ${rawKey} to ${toKey}`,
               e
@@ -96,14 +98,14 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
           }
           return {
             ...(typeof l.id === 'number' ? { id: l.id } : {}),
-            logo: toKey,
+            logo: `${bucketPath}${toKey}`,
             start_year: l.start_year as number,
             ...(l.end_year ? { end_year: l.end_year } : {}),
           } as TCreateLeagueLogoDto;
         }
         return {
           ...(typeof l.id === 'number' ? { id: l.id } : {}),
-          logo: rawKey,
+          logo: `${bucketPath}${rawKey}`,
           start_year: l.start_year as number,
           ...(l.end_year ? { end_year: l.end_year } : {}),
         } as TCreateLeagueLogoDto;
@@ -160,7 +162,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
         id: undefined,
         start_year: formik.values.start_year || currentYear,
         end_year: null,
-        logo: '',
+        logo: noImage,
         league_id: league.id,
       },
     ];

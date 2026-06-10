@@ -46,6 +46,8 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
   const { startYear, isLoading: seasonsLoading } = useLatestSeason();
   const noImage = import.meta.env.VITE_CG_NO_IMAGE;
 
+  const bucketPath = import.meta.env.VITE_CF_BUCKET_PATH;
+
   const getKeyFromLogo = (logo: string): string => {
     try {
       if (logo.startsWith("http://") || logo.startsWith("https://")) {
@@ -70,13 +72,13 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
           const toKey = rawKey.replace("/tmp/", "/leagues/");
           await moveCfFile({ fromKey: rawKey, toKey });
           return {
-            logo: toKey,
+            logo: `${bucketPath}${toKey}`,
             start_year: l.start_year as number,
             ...(l.end_year ? { end_year: l.end_year } : {}),
           };
         }
         return {
-          logo: rawKey,
+          logo: l.logo === noImage ? rawKey : `${bucketPath}${rawKey}`,
           start_year: l.start_year as number,
           ...(l.end_year ? { end_year: l.end_year } : {}),
         };
@@ -360,7 +362,7 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
             onClick={() => {
               console.log("Errors before submit:", formik.errors);
               console.log("Values before submit:", formik.values);
-              //formik.submitForm();
+              formik.submitForm();
             }}
             iconIndex={1}
             disabled={saving}
