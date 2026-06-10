@@ -104,7 +104,6 @@ function MenuTabs() {
         {tabItems.map((tab, key) => (
           <Tab
             key={key}
-            value={false}
             icon={tab.icon}
             label={tab.label}
             {...getTabProps(tab)}
