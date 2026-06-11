@@ -163,6 +163,25 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
       i === index ? { ...logo, ...updatedData } : logo
     );
     formik.setFieldValue('logos', next);
+    const updatedLogo = next[index];
+    Object.keys(updatedData).forEach((field) => {
+      formik.setFieldTouched(`logos.${index}.${field}`, true);
+    });
+    setTimeout(() => {
+      if (
+        updatedLogo.start_year !== null &&
+        updatedLogo.end_year !== null &&
+        updatedLogo.end_year < updatedLogo.start_year
+      ) {
+        formik.setFieldError(`logos.${index}.end_year`, 'End year must be after start year');
+      } else {
+        formik.setFieldError(`logos.${index}.end_year`, undefined);
+      }
+    }, 0);
+  };
+
+  const handleLogoFieldBlur = (field: string) => {
+    formik.setFieldTouched(field, true);
   };
 
   const handleCancel = () => {
@@ -176,9 +195,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
     <Dialog
       open={open}
       disableRestoreFocus
-      onClose={() => {
-        // Dialog only closes via Cancel button
-      }}
+      onClose={() => {}}
     >
       <DialogContent>
         <SectionHeader txtAlign='left' content='Edit League' />
@@ -257,6 +274,19 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
                             end_year={logo.end_year}
                             index={key}
                             onUpdate={handleUpdateLogo}
+                            onFieldBlur={handleLogoFieldBlur}
+                            startYearError={
+                              (formik.errors.logos as any)?.[key]?.start_year
+                            }
+                            startYearTouched={
+                              (formik.touched.logos as any)?.[key]?.start_year
+                            }
+                            endYearError={
+                              (formik.errors.logos as any)?.[key]?.end_year
+                            }
+                            endYearTouched={
+                              (formik.touched.logos as any)?.[key]?.end_year
+                            }
                           />
                           <Box sx={{ mt: 1 }}>
                             <AppButton
@@ -333,6 +363,14 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
                   nullable
                   onChange={(value: number | null) => {
                     formik.setFieldValue('end_year', value);
+                    formik.setFieldTouched('end_year', true);
+                    setTimeout(() => {
+                      if (value !== null && value < formik.values.start_year) {
+                        formik.setFieldError('end_year', 'End year must be after start year');
+                      } else {
+                        formik.setFieldError('end_year', undefined);
+                      }
+                    }, 0);
                   }}
                   onBlur={formik.handleBlur}
                   error={

@@ -28,25 +28,12 @@ interface LogosProps {
       end_year?: number | null;
     }
   ) => void;
+  startYearError?: string;
+  startYearTouched?: boolean;
+  endYearError?: string;
+  endYearTouched?: boolean;
+  onFieldBlur?: (field: string) => void;
 }
-
-const validateYears = (startYear: number | null, endYear: number | null) => {
-  const errors: { start_year?: string; end_year?: string } = {};
-
-  if (startYear && (startYear < MIN_YEAR || startYear > MAX_YEAR)) {
-    errors.start_year = `Year must be between ${MIN_YEAR} and ${MAX_YEAR}`;
-  }
-
-  if (endYear && (endYear < MIN_YEAR || endYear > MAX_YEAR)) {
-    errors.end_year = `Year must be between ${MIN_YEAR} and ${MAX_YEAR}`;
-  }
-
-  if (startYear && endYear && startYear > endYear) {
-    errors.end_year = 'End year must be after start year';
-  }
-
-  return errors;
-};
 
 const Logos = ({
   logo_id,
@@ -55,6 +42,11 @@ const Logos = ({
   end_year,
   index,
   onUpdate,
+  startYearError,
+  startYearTouched,
+  endYearError,
+  endYearTouched,
+  onFieldBlur,
 }: LogosProps) => {
   const [loadingLogo, setLoadingLogo] = useState(false);
   const [tmpLogoPath, setTmpLogoPath] = useState(logo || '');
@@ -82,21 +74,19 @@ const Logos = ({
   };
 
   const handleStartYearChange = (value: number) => {
-    const errors = validateYears(value, end_year);
-    if (errors.start_year) {
-      enqueueSnackbar(errors.start_year, { variant: 'error' });
-      return;
-    }
     onUpdate(index, { start_year: value });
   };
 
   const handleEndYearChange = (value: number | null) => {
-    const errors = validateYears(start_year, value);
-    if (errors.end_year) {
-      enqueueSnackbar(errors.end_year, { variant: 'error' });
-      return;
-    }
     onUpdate(index, { end_year: value });
+  };
+
+  const handleStartYearBlur = () => {
+    onFieldBlur?.(`logos.${index}.start_year`);
+  };
+
+  const handleEndYearBlur = () => {
+    onFieldBlur?.(`logos.${index}.end_year`);
   };
 
   const handleImageError = () => {
@@ -155,6 +145,9 @@ const Logos = ({
           min={MIN_YEAR}
           max={MAX_YEAR}
           onChange={handleStartYearChange}
+          onBlur={handleStartYearBlur}
+          error={startYearTouched && Boolean(startYearError)}
+          helperText={startYearTouched && startYearError}
         />
       </Grid>
       <Grid size={{ xs: 6 }}>
@@ -167,6 +160,9 @@ const Logos = ({
           max={MAX_YEAR}
           nullable
           onChange={handleEndYearChange}
+          onBlur={handleEndYearBlur}
+          error={endYearTouched && Boolean(endYearError)}
+          helperText={endYearTouched && endYearError}
         />
       </Grid>
     </Grid>
