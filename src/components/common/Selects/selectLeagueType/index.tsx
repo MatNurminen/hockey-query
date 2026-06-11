@@ -15,6 +15,7 @@ export interface SelectLeagueTypeProps {
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   error?: boolean;
   helperText?: string | false;
+  disabled?: boolean;
 }
 
 const SelectLeagueType = (props: SelectLeagueTypeProps) => {
@@ -27,6 +28,7 @@ const SelectLeagueType = (props: SelectLeagueTypeProps) => {
     onBlur,
     error,
     helperText,
+    disabled,
   } = props;
 
   const { data, isLoading, isError } = getLeagueTypes();
@@ -50,6 +52,7 @@ const SelectLeagueType = (props: SelectLeagueTypeProps) => {
         label={label}
         onChange={handleChange}
         onBlur={onBlur}
+        disabled={disabled}
       >
         {data.map((type) => (
           <MenuItem key={type.id} value={type.id}>

@@ -56,7 +56,7 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
         return p;
       }
       return logo.startsWith("/") ? logo.slice(1) : logo;
-    } catch (e) {
+    } catch {
       return logo.replace(/^\//, "");
     }
   };
@@ -118,15 +118,13 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
           logos: preparedLogos,
         });
 
-        if (result.id) {
-          enqueueSnackbar(
-            `League added successfully with name: ${result.name}`,
-            { variant: "success" },
-          );
-          deleteAllFromTmp();
-          helpers.resetForm();
-          onClose();
-        }
+        enqueueSnackbar(
+          `League added successfully with name: ${result.name}`,
+          { variant: "success" },
+        );
+        deleteAllFromTmp();
+        onClose();
+        helpers.resetForm();
       } catch (error) {
         console.error("Failed to add league:", error);
         enqueueSnackbar("Failed to add league. Check console for details.", {
@@ -175,6 +173,7 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
   return (
     <Dialog
       open={open}
+      disableRestoreFocus
       onClose={(_event, reason) => {
         if (reason !== "backdropClick") {
           handleCancel();
@@ -359,11 +358,7 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
           <GreenButton
             text="Save"
             size="small"
-            onClick={() => {
-              console.log("Errors before submit:", formik.errors);
-              console.log("Values before submit:", formik.values);
-              formik.submitForm();
-            }}
+            onClick={formik.submitForm}
             iconIndex={1}
             disabled={saving}
           />

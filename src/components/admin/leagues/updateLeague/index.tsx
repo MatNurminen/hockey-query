@@ -65,7 +65,6 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
   if (isError) return <div>Error loading league data</div>;
   if (!league) return <div>No data available</div>;
 
-  // Helpers to prepare logo keys and move temporary files
   const getKeyFromLogo = (logo: string): string => {
     try {
       if (logo.startsWith('http://') || logo.startsWith('https://')) {
@@ -88,14 +87,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
         const rawKey = getKeyFromLogo(l.logo);
         if (rawKey.includes('/tmp/')) {
           const toKey = rawKey.replace('/tmp/', '/leagues/');
-          try {
-            await moveCfFile({ fromKey: rawKey, toKey });
-          } catch (e) {
-            console.error(
-              `Failed to move CF file from ${rawKey} to ${toKey}`,
-              e
-            );
-          }
+          await moveCfFile({ fromKey: rawKey, toKey });
           return {
             ...(typeof l.id === 'number' ? { id: l.id } : {}),
             logo: `${bucketPath}${toKey}`,
@@ -144,8 +136,8 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
 
         enqueueSnackbar('League saved successfully.', { variant: 'success' });
         deleteAllFromTmp();
-        helpers.resetForm({ values });
         onClose();
+        helpers.resetForm({ values });
       } catch {
         enqueueSnackbar('Failed to save league.', { variant: 'error' });
       } finally {
@@ -160,7 +152,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
       ...formik.values.logos,
       {
         id: undefined,
-        start_year: formik.values.start_year || currentYear,
+        start_year: formik.values.start_year ?? currentYear,
         end_year: null,
         logo: noImage,
         league_id: league.id,
@@ -187,16 +179,19 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
   const handleCancel = () => {
     formik.resetForm();
     deleteAllFromTmp();
-    onClose();
     enqueueSnackbar("The changes haven't been saved.", { variant: 'info' });
+    onClose();
   };
 
   return (
     <Dialog
       open={open}
-      onClose={(_, reason) => {
-        if (saving) return; // prevent closing during save
-        handleCancel();
+      disableRestoreFocus
+      onClose={(_event, reason) => {
+        if (saving) return;
+        if (reason !== "backdropClick") {
+          handleCancel();
+        }
       }}
     >
       <DialogContent>
@@ -271,7 +266,6 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
                       <Grid key={key} size={{ xs: 6 }}>
                         <BorderedBox title={`Logo ${key + 1}`}>
                           <Logos
-                            //logo_id={logo.id}
                             logo={logo.logo}
                             start_year={logo.start_year}
                             end_year={logo.end_year}
@@ -297,7 +291,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
                       text='Add logo'
                       size='small'
                       onClick={handleAddLogo}
-                      icon='photo'
+                      iconIndex={3}
                       disabled={saving}
                     />
                   </Box>
@@ -317,7 +311,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
                     formik.touched.type_id && Boolean(formik.errors.type_id)
                   }
                   helperText={formik.touched.type_id && formik.errors.type_id}
-                  //disabled={saving}
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 6 }}>
@@ -371,7 +365,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
             text='Save'
             size='small'
             onClick={formik.submitForm}
-            icon='save'
+            iconIndex={1}
             disabled={saving}
           />
           <GrayButton

@@ -34,12 +34,12 @@ export default function DeleteDialog({
   onConfirm,
   loading = false,
 }: DeleteDialogProps) {
-  return (
-    <Dialog
+  return (      <Dialog
       open={open}
       slots={{ transition: Transition }}
       keepMounted
       onClose={onClose}
+      disableRestoreFocus
       role='alertdialog'
       aria-labelledby='delete-dialog-title'
       aria-describedby='delete-dialog-description'
