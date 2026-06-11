@@ -16,6 +16,7 @@ import {
   useMoveCfFile,
 } from "../../../../api/cloudflare/mutations";
 import { TCreateLeagueLogoDto } from "../../../../api/league-logos/types";
+import { getKeyFromLogo } from "../../../utils/urlHelpers";
 import leagueSchema from "../../validations/leagueSchema";
 import AppButton from "../../../common/Buttons/appButton";
 import BorderedBox from "../../../common/Boxes/borderedBox";
@@ -57,19 +58,6 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
   const noImage = import.meta.env.VITE_CG_NO_IMAGE;
 
   const bucketPath = import.meta.env.VITE_CF_BUCKET_PATH;
-
-  const getKeyFromLogo = (logo: string): string => {
-    try {
-      if (logo.startsWith("http://") || logo.startsWith("https://")) {
-        const u = new URL(logo);
-        const p = u.pathname.startsWith("/") ? u.pathname.slice(1) : u.pathname;
-        return p;
-      }
-      return logo.startsWith("/") ? logo.slice(1) : logo;
-    } catch {
-      return logo.replace(/^\//, "");
-    }
-  };
 
   const prepareLogosForSave = async (
     logos: FormLogo[],
@@ -183,10 +171,8 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
     <Dialog
       open={open}
       disableRestoreFocus
-      onClose={(_event, reason) => {
-        if (reason !== "backdropClick") {
-          handleCancel();
-        }
+      onClose={() => {
+        // Dialog only closes via Cancel button
       }}
     >
       <DialogContent>

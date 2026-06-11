@@ -17,6 +17,7 @@ import {
 } from '../../../../api/cloudflare/mutations';
 import { useUpdateLeague } from '../../../../api/leagues/mutations';
 import { TCreateLeagueLogoDto } from '../../../../api/league-logos/types';
+import { getKeyFromLogo } from '../../../utils/urlHelpers';
 import leagueSchema from '../../validations/leagueSchema';
 import AppButton from '../../../common/Buttons/appButton';
 import BorderedBox from '../../../common/Boxes/borderedBox';
@@ -66,19 +67,6 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading league data</div>;
   if (!league) return <div>No data available</div>;
-
-  const getKeyFromLogo = (logo: string): string => {
-    try {
-      if (logo.startsWith('http://') || logo.startsWith('https://')) {
-        const u = new URL(logo);
-        const p = u.pathname.startsWith('/') ? u.pathname.slice(1) : u.pathname;
-        return p;
-      }
-      return logo.startsWith('/') ? logo.slice(1) : logo;
-    } catch {
-      return logo.replace(/^\//, '');
-    }
-  };
 
   const prepareLogosForSave = async (
     logos: FormLogo[]
@@ -188,11 +176,8 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
     <Dialog
       open={open}
       disableRestoreFocus
-      onClose={(_event, reason) => {
-        if (saving) return;
-        if (reason !== "backdropClick") {
-          handleCancel();
-        }
+      onClose={() => {
+        // Dialog only closes via Cancel button
       }}
     >
       <DialogContent>

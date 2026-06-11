@@ -42,6 +42,19 @@ export const navigateWithParams = (
   navigate(`?${newParams.toString()}`);
 };
 
+export const getKeyFromLogo = (logo: string): string => {
+  try {
+    if (logo.startsWith("http://") || logo.startsWith("https://")) {
+      const u = new URL(logo);
+      const p = u.pathname.startsWith("/") ? u.pathname.slice(1) : u.pathname;
+      return p;
+    }
+    return logo.startsWith("/") ? logo.slice(1) : logo;
+  } catch {
+    return logo.replace(/^\//, "");
+  }
+};
+
 export const deleteParams = (
   searchParams: URLSearchParams,
   keys: string[],
