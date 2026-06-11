@@ -25,7 +25,7 @@ interface LogosProps {
     updatedData: {
       logo?: string;
       start_year?: number;
-      end_year?: number;
+      end_year?: number | null;
     }
   ) => void;
 }
@@ -90,7 +90,7 @@ const Logos = ({
     onUpdate(index, { start_year: value });
   };
 
-  const handleEndYearChange = (value: number) => {
+  const handleEndYearChange = (value: number | null) => {
     const errors = validateYears(start_year, value);
     if (errors.end_year) {
       enqueueSnackbar(errors.end_year, { variant: 'error' });
@@ -165,6 +165,7 @@ const Logos = ({
           name='end_year'
           min={MIN_YEAR}
           max={MAX_YEAR}
+          nullable
           onChange={handleEndYearChange}
         />
       </Grid>

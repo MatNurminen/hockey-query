@@ -16,16 +16,24 @@ const SelectNumber = ({
   helperText,
   onChange,
 }: any) => {
-  const [internalValue, setInternalValue] = useState(value ?? '');
+  const [internalValue, setInternalValue] = useState(
+    nullable && (value === null || value === undefined) ? 'NONE' : value ?? ''
+  );
 
   useEffect(() => {
-    setInternalValue(value ?? '');
-  }, [value]);
+    setInternalValue(
+      nullable && (value === null || value === undefined) ? 'NONE' : value ?? ''
+    );
+  }, [value, nullable]);
 
   const handleChange = (event: SelectChangeEvent) => {
     const newValue = event.target.value;
     setInternalValue(newValue);
-    onChange(newValue);
+    if (nullable && newValue === 'NONE') {
+      onChange(null);
+    } else {
+      onChange(newValue);
+    }
   };
 
   const items = [];

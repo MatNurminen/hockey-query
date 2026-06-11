@@ -1,30 +1,31 @@
-import SectionHeader from '../../../common/Sections/sectionHeader';
-import Stack from '@mui/material/Stack';
-import GreenButton from '../../../common/Buttons/greenButton';
-import AppButton from '../../../common/Buttons/appButton';
 import { useState } from 'react';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import { useLatestSeason } from '../../../../hooks/useLatestSeason';
 import { useFormik } from 'formik';
-import leagueSchema from '../../validations/leagueSchema';
 import { useSnackbar } from 'notistack';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import Grid from '@mui/material/Grid2';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import { getLeague } from '../../../../api/leagues/queries';
 import {
   useDeleteAllFromTmp,
   useMoveCfFile,
 } from '../../../../api/cloudflare/mutations';
 import { useUpdateLeague } from '../../../../api/leagues/mutations';
-import { getLeague } from '../../../../api/leagues/queries';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import Grid from '@mui/material/Grid2';
+import { TCreateLeagueLogoDto } from '../../../../api/league-logos/types';
+import leagueSchema from '../../validations/leagueSchema';
+import AppButton from '../../../common/Buttons/appButton';
 import BorderedBox from '../../../common/Boxes/borderedBox';
+import GrayButton from '../../../common/Buttons/grayButton';
+import GreenButton from '../../../common/Buttons/greenButton';
+import Logos from '../../../common/Images/logos';
+import SectionHeader from '../../../common/Sections/sectionHeader';
 import SelectLeagueType from '../../../common/Selects/selectLeagueType';
 import SelectNumber from '../../../common/Selects/selectNumber';
-import DialogActions from '@mui/material/DialogActions';
-import GrayButton from '../../../common/Buttons/grayButton';
-import { TCreateLeagueLogoDto } from '../../../../api/league-logos/types';
-import CircularProgress from '@mui/material/CircularProgress';
-import Logos from '../../../common/Images/logos';
 
 const bucketPath = import.meta.env.VITE_CF_BUCKET_PATH;
 const noImage = import.meta.env.VITE_CG_NO_IMAGE;
@@ -59,6 +60,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
   const [saving, setSaving] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync: updateLeague } = useUpdateLeague();
+  const { startYear } = useLatestSeason();
   const { data: league, isError, isLoading } = getLeague(leagueId);
 
   if (isLoading) return <div>Loading...</div>;
@@ -84,22 +86,22 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
     const tasks = logos
       .filter((l) => l.logo && l.start_year !== null)
       .map(async (l) => {
-        const rawKey = getKeyFromLogo(l.logo);
-        if (rawKey.includes('/tmp/')) {
+        const rawKey = l.logo === noImage ? l.logo : getKeyFromLogo(l.logo);
+        if (l.logo !== noImage && rawKey.includes('/tmp/')) {
           const toKey = rawKey.replace('/tmp/', '/leagues/');
           await moveCfFile({ fromKey: rawKey, toKey });
           return {
             ...(typeof l.id === 'number' ? { id: l.id } : {}),
             logo: `${bucketPath}${toKey}`,
             start_year: l.start_year as number,
-            ...(l.end_year ? { end_year: l.end_year } : {}),
+            ...(l.end_year !== undefined ? { end_year: l.end_year } : {}),
           } as TCreateLeagueLogoDto;
         }
         return {
           ...(typeof l.id === 'number' ? { id: l.id } : {}),
-          logo: `${bucketPath}${rawKey}`,
+          logo: l.logo === noImage ? rawKey : `${bucketPath}${rawKey}`,
           start_year: l.start_year as number,
-          ...(l.end_year ? { end_year: l.end_year } : {}),
+          ...(l.end_year !== undefined ? { end_year: l.end_year } : {}),
         } as TCreateLeagueLogoDto;
       });
 
@@ -147,12 +149,11 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
   });
 
   const handleAddLogo = () => {
-    const currentYear = new Date().getFullYear();
     const next = [
       ...formik.values.logos,
       {
         id: undefined,
-        start_year: formik.values.start_year ?? currentYear,
+        start_year: formik.values.start_year ?? startYear,
         end_year: null,
         logo: noImage,
         league_id: league.id,
@@ -179,8 +180,8 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
   const handleCancel = () => {
     formik.resetForm();
     deleteAllFromTmp();
-    enqueueSnackbar("The changes haven't been saved.", { variant: 'info' });
     onClose();
+    enqueueSnackbar("The changes haven't been saved.", { variant: 'info' });
   };
 
   return (
@@ -321,7 +322,7 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
                   id='start_year'
                   name='start_year'
                   min={1980}
-                  max={new Date().getFullYear()}
+                  max={startYear}
                   onChange={(value: number) => {
                     formik.setFieldValue('start_year', value);
                   }}
@@ -343,8 +344,9 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
                   id='end_year'
                   name='end_year'
                   min={1980}
-                  max={new Date().getFullYear()}
-                  onChange={(value: number) => {
+                  max={startYear}
+                  nullable
+                  onChange={(value: number | null) => {
                     formik.setFieldValue('end_year', value);
                   }}
                   onBlur={formik.handleBlur}

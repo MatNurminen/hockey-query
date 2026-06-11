@@ -1,30 +1,30 @@
 import { useState } from "react";
-import { useSnackbar } from "notistack";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import SectionHeader from "../../../common/Sections/sectionHeader";
-import DialogActions from "@mui/material/DialogActions";
-import GreenButton from "../../../common/Buttons/greenButton";
+import { useLatestSeason } from "../../../../hooks/useLatestSeason";
 import { useFormik } from "formik";
-import leagueSchema from "../../validations/leagueSchema";
-import GrayButton from "../../../common/Buttons/grayButton";
-import Stack from "@mui/material/Stack";
-import { useAddLeague } from "../../../../api/leagues/mutations";
-import SelectNumber from "../../../common/Selects/selectNumber";
+import { useSnackbar } from "notistack";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
 import Grid from "@mui/material/Grid2";
-import BorderedBox from "../../../common/Boxes/borderedBox";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import { useAddLeague } from "../../../../api/leagues/mutations";
 import {
   useDeleteAllFromTmp,
   useMoveCfFile,
 } from "../../../../api/cloudflare/mutations";
-import SelectLeagueType from "../../../common/Selects/selectLeagueType";
 import { TCreateLeagueLogoDto } from "../../../../api/league-logos/types";
+import leagueSchema from "../../validations/leagueSchema";
 import AppButton from "../../../common/Buttons/appButton";
+import BorderedBox from "../../../common/Boxes/borderedBox";
+import GrayButton from "../../../common/Buttons/grayButton";
+import GreenButton from "../../../common/Buttons/greenButton";
 import Logos from "../../../common/Images/logos";
-import CircularProgress from "@mui/material/CircularProgress";
-import { useLatestSeason } from "../../../../hooks/useLatestSeason";
+import SectionHeader from "../../../common/Sections/sectionHeader";
+import SelectLeagueType from "../../../common/Selects/selectLeagueType";
+import SelectNumber from "../../../common/Selects/selectNumber";
 
 export interface AddLeagueDialogProps {
   open: boolean;
@@ -35,6 +35,16 @@ interface FormLogo {
   start_year: number | null;
   end_year: number | null;
   logo: string;
+}
+
+interface FormValues {
+  name: string;
+  short_name: string;
+  start_year: number;
+  end_year: number | null;
+  color: string | null;
+  type_id: number;
+  logos: FormLogo[];
 }
 
 const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
@@ -74,19 +84,19 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
           return {
             logo: `${bucketPath}${toKey}`,
             start_year: l.start_year as number,
-            ...(l.end_year ? { end_year: l.end_year } : {}),
+            ...(l.end_year !== undefined ? { end_year: l.end_year } : {}),
           };
         }
         return {
           logo: l.logo === noImage ? rawKey : `${bucketPath}${rawKey}`,
           start_year: l.start_year as number,
-          ...(l.end_year ? { end_year: l.end_year } : {}),
+          ...(l.end_year !== undefined ? { end_year: l.end_year } : {}),
         };
       });
     return Promise.all(tasks);
   };
 
-  const formik = useFormik({
+  const formik = useFormik<FormValues>({
     initialValues: {
       name: "",
       short_name: "",
@@ -100,7 +110,7 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
           end_year: null,
           logo: noImage,
         },
-      ] as FormLogo[],
+      ],
     },
     enableReinitialize: true,
     validationSchema: leagueSchema,
@@ -118,10 +128,9 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
           logos: preparedLogos,
         });
 
-        enqueueSnackbar(
-          `League added successfully with name: ${result.name}`,
-          { variant: "success" },
-        );
+        enqueueSnackbar(`League added successfully with name: ${result.name}`, {
+          variant: "success",
+        });
         deleteAllFromTmp();
         onClose();
         helpers.resetForm();
@@ -335,7 +344,9 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
                     id="end_year"
                     name="end_year"
                     min={1980}
-                    onChange={(value: number) => {
+                    max={startYear}
+                    nullable
+                    onChange={(value: number | null) => {
                       formik.setFieldValue("end_year", value);
                     }}
                     onBlur={formik.handleBlur}
