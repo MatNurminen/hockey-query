@@ -38,7 +38,7 @@ const StatsTotal = memo(({ totals, offset }: Props) => {
             />
             <TableBody>
               {totals.map((player, key) => (
-                <TableRow key={player.player_id}>
+                <TableRow key={`${player.player_id}-${key}`}>
                   <TableCell align="center">{offset + key + 1}</TableCell>
                   <TableCell>
                     <Box display="flex" alignItems="center">

@@ -108,7 +108,7 @@ const PlayersFacts = ({ leagueId, seasonId }: Props) => {
                 />
                 <TableBody>
                   {item.list(players).map((player, index) => (
-                    <TableRow key={player.player_id}>
+                    <TableRow key={`${player.player_id}-${index}`}>
                       <TableCell align="center">{index + 1}</TableCell>
                       <TableCell>
                         <Box display="flex" alignItems="center">

@@ -56,7 +56,17 @@ const Selects = ({ players }: Props) => {
   const currentTab = searchParams.get("tab");
   const isAllTimeTab = currentTab === "two";
 
-  const normalizedPlayers = players.map((player) => ({
+  type NormalizedPlayer = {
+    player_id: number;
+    team_id: number;
+    club_name: string;
+    nation_id: number;
+    player_nation: string;
+    player_flag: string;
+    player_order: number;
+  };
+
+  const normalizedPlayers: NormalizedPlayer[] = players.map((player) => ({
     player_id: player.player_id,
     team_id: player.team_id || 0,
     club_name: player.full_name || "",
@@ -81,7 +91,7 @@ const Selects = ({ players }: Props) => {
   const nations: Nation[] = Object.values(
     Array.from(
       normalizedPlayers
-        .reduce((accByPlayer: Map<number, any>, player) => {
+        .reduce((accByPlayer: Map<number, NormalizedPlayer>, player) => {
           if (!accByPlayer.has(player.player_id)) {
             accByPlayer.set(player.player_id, player);
           }
