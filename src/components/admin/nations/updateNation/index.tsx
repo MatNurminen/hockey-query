@@ -21,6 +21,7 @@ import {
   useDeleteAllFromTmp,
   useMoveCfFile,
 } from '../../../../api/cloudflare/mutations';
+import { waitForImageAvailable } from '../../../utils/waitForImageAvailable';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export interface UpdateNationDialogProps {
@@ -48,10 +49,6 @@ const UpdateNation = ({ onClose, open, nationId }: UpdateNationDialogProps) => {
   const handleOpenColor = () => setOpenColor(true);
   const handleCloseColor = () => setOpenColor(false);
 
-  const handleColorChange = (color: string) => {
-    formik.setFieldValue('color', color);
-  };
-
   const formik = useFormik({
     initialValues: {
       name: nation?.name || '',
@@ -63,8 +60,6 @@ const UpdateNation = ({ onClose, open, nationId }: UpdateNationDialogProps) => {
     enableReinitialize: true,
     validationSchema: nationSchema,
     onSubmit: async (values) => {
-      console.log('test');
-      
       setSaving(true);
       try {
         let finalFlagPath = values.flag;
@@ -117,11 +112,17 @@ const UpdateNation = ({ onClose, open, nationId }: UpdateNationDialogProps) => {
     },
   });
 
-  const handleFlagUpload = (filePath: string) => {
+  const handleColorChange = (color: string) => {
+    formik.setFieldValue('color', color);
+  };
+
+  const handleFlagUpload = async (filePath: string) => {
+    const url = `${bucketPath}${filePath}`;
     setLoadingFlag(true);
     try {
+      await waitForImageAvailable(url);
       setTmpFlagPath(filePath);
-      formik.setFieldValue('flag', `${bucketPath}${filePath}`);
+      formik.setFieldValue('flag', url);
     } catch (e) {
       enqueueSnackbar('Failed to load image from storage.', {
         variant: 'error',
@@ -131,11 +132,13 @@ const UpdateNation = ({ onClose, open, nationId }: UpdateNationDialogProps) => {
     }
   };
 
-  const handleLogoUpload = (filePath: string) => {
+  const handleLogoUpload = async (filePath: string) => {
+    const url = `${bucketPath}${filePath}`;
     setLoadingLogo(true);
     try {
+      await waitForImageAvailable(url);
       setTmpLogoPath(filePath);
-      formik.setFieldValue('logo', `${bucketPath}${filePath}`);
+      formik.setFieldValue('logo', url);
     } catch (e) {
       enqueueSnackbar('Failed to load image from storage.', {
         variant: 'error',
@@ -151,7 +154,7 @@ const UpdateNation = ({ onClose, open, nationId }: UpdateNationDialogProps) => {
     setTmpLogoPath('');
     deleteAllFromTmp();
     onClose();
-    enqueueSnackbar("The changes haven't been saved.", { variant: 'error' });
+    enqueueSnackbar("The changes haven't been saved.", { variant: 'info' });
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -181,7 +184,12 @@ const UpdateNation = ({ onClose, open, nationId }: UpdateNationDialogProps) => {
               <CircularProgress />
             </Box>
           )}
-          <Box component='form' noValidate autoComplete='off'>
+          <Box
+            component='form'
+            noValidate
+            autoComplete='off'
+            onSubmit={formik.handleSubmit}
+          >
             <Grid container spacing={2}>
               <Grid size={{ xs: 6 }}>
                 <TextField
@@ -339,7 +347,7 @@ const UpdateNation = ({ onClose, open, nationId }: UpdateNationDialogProps) => {
           <AppButton
             text='Save'
             size='small'
-            onClick={() => formik.handleSubmit}
+            onClick={formik.submitForm as any}
             color='success'
             iconName='save'
             disabled={saving}

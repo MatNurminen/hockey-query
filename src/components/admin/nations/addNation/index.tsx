@@ -47,13 +47,6 @@ const AddNation = (props: AddNationDialogProps) => {
   const handleOpenColor = () => setOpenColor(true);
   const handleCloseColor = () => setOpenColor(false);
 
-  const handleColorChange = (color: string) => {
-    formik.setFieldValue('color', color);
-  };
-  const handleColorCancel = () => {
-    formik.setFieldValue('color', '#ffffff'); // или initialColor
-  };
-
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -107,7 +100,6 @@ const AddNation = (props: AddNationDialogProps) => {
           setTmpLogoPath('');
           formik.resetForm();
           deleteAllFromTmp();
-          setSaving(false);
           onClose();
         }
       } catch (e) {
@@ -117,6 +109,13 @@ const AddNation = (props: AddNationDialogProps) => {
       }
     },
   });
+
+  const handleColorChange = (color: string) => {
+    formik.setFieldValue('color', color);
+  };
+  const handleColorCancel = () => {
+    formik.setFieldValue('color', '#ffffff');
+  };
 
   const handleFlagUpload = async (filePath: string) => {
     const url = `${bucketPath}${filePath}`;
@@ -151,7 +150,7 @@ const AddNation = (props: AddNationDialogProps) => {
   };
 
   const showCancelSnackbar = () => {
-    enqueueSnackbar("Nation didn't add.", { variant: 'error' });
+    enqueueSnackbar("Nation didn't add.", { variant: 'info' });
   };
 
   const handleClose = () => {
@@ -164,7 +163,7 @@ const AddNation = (props: AddNationDialogProps) => {
   };
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onClose={() => {}}>
       <DialogContent>
         <SectionHeader txtAlign='left' content='Add Nation' />
         <Box position='relative'>
@@ -186,7 +185,12 @@ const AddNation = (props: AddNationDialogProps) => {
               <CircularProgress />
             </Box>
           )}
-          <Box component='form' noValidate autoComplete='off'>
+          <Box
+            component='form'
+            noValidate
+            autoComplete='off'
+            onSubmit={formik.handleSubmit}
+          >
             <Grid container spacing={2}>
               <Grid size={{ xs: 6 }}>
                 <TextField
@@ -251,7 +255,6 @@ const AddNation = (props: AddNationDialogProps) => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.flag && Boolean(formik.errors.flag)}
-                      //helperText={formik.touched.flag && formik.errors.flag}
                     />
                     <SbUploadFile onFileUpload={handleFlagUpload} />
                   </Stack>
@@ -285,7 +288,6 @@ const AddNation = (props: AddNationDialogProps) => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.logo && Boolean(formik.errors.logo)}
-                      //helperText={formik.touched.logo && formik.errors.logo}
                     />
                     <SbUploadFile onFileUpload={handleLogoUpload} />
                   </Stack>
