@@ -168,7 +168,10 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
         updatedLogo.end_year !== null &&
         updatedLogo.end_year < updatedLogo.start_year
       ) {
-        formik.setFieldError(`logos.${index}.end_year`, "End year must be after start year");
+        formik.setFieldError(
+          `logos.${index}.end_year`,
+          "End year must be after start year",
+        );
       } else {
         formik.setFieldError(`logos.${index}.end_year`, undefined);
       }
@@ -187,11 +190,7 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
   };
 
   return (
-    <Dialog
-      open={open}
-      disableRestoreFocus
-      onClose={() => {}}
-    >
+    <Dialog open={open} disableRestoreFocus onClose={() => {}}>
       <DialogContent>
         <SectionHeader txtAlign="left" content="Add League" />
         <Box position="relative">
@@ -366,8 +365,14 @@ const AddLeague = ({ open, onClose }: AddLeagueDialogProps) => {
                       formik.setFieldValue("end_year", value);
                       formik.setFieldTouched("end_year", true);
                       setTimeout(() => {
-                        if (value !== null && value < formik.values.start_year) {
-                          formik.setFieldError("end_year", "End year must be after start year");
+                        if (
+                          value !== null &&
+                          value < formik.values.start_year
+                        ) {
+                          formik.setFieldError(
+                            "end_year",
+                            "End year must be after start year",
+                          );
                         } else {
                           formik.setFieldError("end_year", undefined);
                         }

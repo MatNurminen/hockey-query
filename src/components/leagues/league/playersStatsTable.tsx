@@ -80,7 +80,7 @@ const PlayersStatsTable = <T extends WithPlayerInfo>({
               />
               <TableBody>
                 {item.list.map((player, index) => (
-                  <TableRow key={player.player_id}>
+                  <TableRow key={`${player.player_id}-${index}`}>
                     <TableCell align="center">{index + 1}</TableCell>
                     <TableCell>
                       <Box display="flex" alignItems="center">
