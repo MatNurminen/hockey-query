@@ -15,7 +15,7 @@ import { formatSeason } from '../../utils/formatSeason';
 
 const Roster = ({ teamId, seasonId, title }: any) => {
   const {
-    data: players,
+    data,
     isLoading,
     isError,
   } = getPlayersStatsDetail({
@@ -25,6 +25,7 @@ const Roster = ({ teamId, seasonId, title }: any) => {
     //leagueId: [23],
   });
 
+  const players = data?.data
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error</p>;
   if (!players) return <div>No data available</div>;
@@ -104,7 +105,7 @@ const Roster = ({ teamId, seasonId, title }: any) => {
                       {player.jersey_number}
                     </TableCell>
                     <TableCell align='center' width={'8%'}>
-                      <TableFlag src={player.player_flag} />
+                      <TableFlag src={player.player_flag} alt=''/>
                     </TableCell>
                     <TableCell width={'20%'}>
                       <Link

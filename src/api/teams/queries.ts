@@ -1,4 +1,4 @@
-import { UseQueryResult } from '@tanstack/react-query';
+import { QueryKey, UseQueryResult } from '@tanstack/react-query';
 import { createQuery } from '../factories/queryFactory';
 import { TTeamDto, TTeamsByLeague } from './types';
 
@@ -8,7 +8,9 @@ export const getTeams = (filter?: string, enabled = true) => {
     ? `/api/teams?filter=${encodeURIComponent(trimmedFilter)}`
     : '/api/teams';
 
-  return createQuery<TTeamDto[]>(['teams', filter], url, undefined, {
+  const queryKey: QueryKey = trimmedFilter ? ['teams', trimmedFilter] : ['teams'];
+
+  return createQuery<TTeamDto[]>(queryKey, url, undefined, {
     enabled,
     staleTime: 60000,
   });

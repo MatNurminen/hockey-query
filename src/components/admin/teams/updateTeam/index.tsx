@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -21,16 +21,38 @@ import AppButton from '../../../common/Buttons/appButton';
 import Logos from '../../../common/Images/logos';
 import SelectNation from '../../../common/Selects/selectNation';
 import { TCreateTeamLogoDto } from '../../../../api/team-logos/types';
+import { getKeyFromLogo } from '../../../utils/urlHelpers';
 import teamSchema from '../../validations/teamSchema';
 import CircularProgress from '@mui/material/CircularProgress';
 import SelectCfSubfolder from '../../../common/Selects/selectCfSubfolder';
 import { useUpdateTeam } from '../../../../api/teams/mutations';
 import { getTeam } from '../../../../api/teams/queries';
 
+const bucketPath = import.meta.env.VITE_CF_BUCKET_PATH;
+const noImage = import.meta.env.VITE_CG_NO_IMAGE;
+
 export interface UpdateTeamDialogProps {
   open: boolean;
   onClose: () => void;
   teamId: number;
+}
+
+interface FormLogo {
+  id?: number | null;
+  start_year: number | null;
+  end_year: number | null;
+  logo: string;
+  team_id: number;
+}
+
+interface FormValues {
+  full_name: string;
+  name: string;
+  short_name: string;
+  start_year: number;
+  end_year: number | null;
+  nation_id: number;
+  logos: FormLogo[];
 }
 
 const UpdateTeam = ({ open, onClose, teamId }: UpdateTeamDialogProps) => {
@@ -43,171 +65,148 @@ const UpdateTeam = ({ open, onClose, teamId }: UpdateTeamDialogProps) => {
   const { data: team, isError, isLoading } = getTeam(teamId);
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading nation data</div>;
+  if (isError) return <div>Error loading team data</div>;
   if (!team) return <div>No data available</div>;
 
-  interface LocalTeamLogo {
-    id?: number | null;
-    start_year: number | null;
-    end_year: number | null;
-    logo: string;
-    team_id: number;
-  }
-
-  const [logos, setLogos] = useState<LocalTeamLogo[]>(team.logos);
-
-  const validLogos = useMemo(
-    () => logos.filter((logo) => logo.logo && logo.start_year !== null),
-    [logos]
-  );
-
-  const preparedLogos = useMemo<TCreateTeamLogoDto[]>(
-    () =>
-      validLogos.map(({ id, logo, start_year, end_year }) => {
-        if (typeof id === 'number') {
+  const prepareLogosForSave = async (
+    logos: FormLogo[],
+  ): Promise<TCreateTeamLogoDto[]> => {
+    const tasks = logos
+      .filter((l) => l.logo && l.start_year !== null)
+      .map(async (l) => {
+        const rawKey = l.logo === noImage ? l.logo : getKeyFromLogo(l.logo);
+        if (l.logo !== noImage && rawKey.includes('/tmp/')) {
+          const toKey = rawKey.replace('/tmp/', `/teams/${selectedFolder}/`);
+          await moveCfFile({ fromKey: rawKey, toKey });
           return {
-            id,
-            logo,
-            start_year: start_year as number,
-            end_year: end_year ?? undefined,
-          };
-        } else {
-          return {
-            logo,
-            start_year: start_year as number,
-            end_year: end_year ?? undefined,
+            ...(typeof l.id === 'number' ? { id: l.id } : {}),
+            logo: `${bucketPath}${toKey}`,
+            start_year: l.start_year as number,
+            ...(l.end_year !== undefined ? { end_year: l.end_year } : {}),
           };
         }
-      }),
-    [validLogos]
-  );
+        return {
+          ...(typeof l.id === 'number' ? { id: l.id } : {}),
+          logo: l.logo === noImage ? rawKey : `${bucketPath}${rawKey}`,
+          start_year: l.start_year as number,
+          ...(l.end_year !== undefined ? { end_year: l.end_year } : {}),
+        };
+      });
 
-  const handleAddLogo = () => {
-    setLogos((prevLogos) => [
-      ...prevLogos,
-      {
-        start_year: 2025,
-        end_year: null,
-        logo: '',
-        team_id: team.id,
-      },
-    ]);
+    return Promise.all(tasks);
   };
 
-  const handleRemoveLogo = (index: number) => {
-    setLogos((prevLogos) => prevLogos.filter((_, i) => i !== index));
-  };
-
-  const handleUpdateLogo = (
-    index: number,
-    updatedData: {
-      logo?: string;
-      start_year?: number | null;
-      end_year?: number | null;
-    }
-  ) => {
-    setLogos((prevLogos) =>
-      prevLogos.map((logo, i) =>
-        i === index ? { ...logo, ...updatedData } : logo
-      )
-    );
-  };
-
-  const processLogos = async (originalLogos: any) => {
-    const movePromises = originalLogos.map(
-      async (originalItem: { logo: any }) => {
-        const url = new URL(originalItem.logo);
-        const path = url.pathname.substring(1);
-        const fromKey = path;
-        const toKey = fromKey.replace('/tmp/', `/teams/${selectedFolder}/`);
-
-        try {
-          await moveCfFile({ fromKey, toKey });
-          return {
-            ...originalItem,
-            logo: toKey,
-          };
-        } catch (error) {
-          console.error(`Failed to move file ${fromKey} to ${toKey}:`, error);
-          return originalItem;
-        }
-      }
-    );
-    return Promise.all(movePromises);
-  };
-
-  const formik = useFormik({
+  const formik = useFormik<FormValues>({
     initialValues: {
       full_name: team.full_name,
       name: team.name,
       short_name: team.short_name,
       start_year: team.start_year,
-      end_year: team?.end_year || null,
+      end_year: team?.end_year ?? null,
       nation_id: team.nation_id,
-      logos,
+      logos: team.logos as FormLogo[],
     },
     enableReinitialize: true,
     validationSchema: teamSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (values, helpers) => {
+      if (!selectedFolder) {
+        enqueueSnackbar('Please select a folder.', { variant: 'warning' });
+        return;
+      }
       setSaving(true);
       try {
-        processLogos(preparedLogos);
+        const preparedLogos = await prepareLogosForSave(values.logos);
 
-        const modifiedArray = preparedLogos.map((item) => {
-          const cleaned = {
-            ...item,
-            logo: item.logo.replace('/tmp/', `/teams/${selectedFolder}/`),
-          };
-          if (!cleaned.id) {
-            delete cleaned.id;
-          }
-          return cleaned;
+        await updateTeam({
+          id: teamId,
+          full_name: values.full_name,
+          name: values.name,
+          short_name: values.short_name,
+          start_year: values.start_year,
+          end_year: values.end_year,
+          nation_id: values.nation_id,
+          logos: preparedLogos,
         });
 
-        await updateTeam(
-          {
-            id: teamId,
-            full_name: values.full_name,
-            name: values.name,
-            short_name: values.short_name,
-            start_year: values.start_year,
-            end_year: values.end_year,
-            nation_id: values.nation_id,
-            logos: modifiedArray,
-          },
-          {
-            onSuccess: () => {
-              formik.resetForm();
-              deleteAllFromTmp();
-              onClose();
-            },
-          }
-        );
-      } catch (e) {
-        enqueueSnackbar('Failed to save team', { variant: 'error' });
+        enqueueSnackbar('Team saved successfully.', { variant: 'success' });
+        deleteAllFromTmp();
+        onClose();
+        helpers.resetForm({ values });
+      } catch {
+        enqueueSnackbar('Failed to save team.', { variant: 'error' });
       } finally {
         setSaving(false);
       }
-      onClose();
     },
   });
 
-  const handleClose = () => {
+  const handleAddLogo = () => {
+    const next = [
+      ...formik.values.logos,
+      {
+        id: undefined,
+        start_year: formik.values.start_year,
+        end_year: null,
+        logo: noImage,
+        team_id: team.id,
+      },
+    ];
+    formik.setFieldValue('logos', next);
+  };
+
+  const handleRemoveLogo = (index: number) => {
+    const next = formik.values.logos.filter((_, i) => i !== index);
+    formik.setFieldValue('logos', next);
+  };
+
+  const handleUpdateLogo = (
+    index: number,
+    updatedData: Partial<Pick<FormLogo, 'logo' | 'start_year' | 'end_year'>>,
+  ) => {
+    const next = formik.values.logos.map((logo, i) =>
+      i === index ? { ...logo, ...updatedData } : logo,
+    );
+    formik.setFieldValue('logos', next);
+    const updatedLogo = next[index];
+    Object.keys(updatedData).forEach((field) => {
+      formik.setFieldTouched(`logos.${index}.${field}`, true);
+    });
+    setTimeout(() => {
+      if (
+        updatedLogo.start_year !== null &&
+        updatedLogo.end_year !== null &&
+        updatedLogo.end_year < updatedLogo.start_year
+      ) {
+        formik.setFieldError(
+          `logos.${index}.end_year`,
+          'End year must be after start year',
+        );
+      } else {
+        formik.setFieldError(`logos.${index}.end_year`, undefined);
+      }
+    }, 0);
+  };
+
+  const handleLogoFieldBlur = (field: string) => {
+    formik.setFieldTouched(field, true);
+  };
+
+  const handleCancel = () => {
     formik.resetForm();
     deleteAllFromTmp();
     onClose();
-    enqueueSnackbar("The changes haven't been saved.", { variant: 'error' });
+    enqueueSnackbar("The changes haven't been saved.", { variant: 'info' });
   };
 
   const handleNationChange = useCallback(
     (value: number) => {
       formik.setFieldValue('nation_id', value);
     },
-    [formik]
+    [formik],
   );
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} disableRestoreFocus onClose={() => {}}>
       <DialogContent>
         <SectionHeader txtAlign='left' content='Edit Team' />
         <Box position='relative'>
@@ -229,7 +228,12 @@ const UpdateTeam = ({ open, onClose, teamId }: UpdateTeamDialogProps) => {
               <CircularProgress />
             </Box>
           )}
-          <Box component='form' noValidate autoComplete='off'>
+          <Box
+            component='form'
+            noValidate
+            autoComplete='off'
+            onSubmit={formik.handleSubmit}
+          >
             <Grid container spacing={2}>
               <Grid size={{ xs: 12 }}>
                 <TextField
@@ -248,6 +252,7 @@ const UpdateTeam = ({ open, onClose, teamId }: UpdateTeamDialogProps) => {
                   helperText={
                     formik.touched.full_name && formik.errors.full_name
                   }
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 8 }}>
@@ -263,6 +268,7 @@ const UpdateTeam = ({ open, onClose, teamId }: UpdateTeamDialogProps) => {
                   onBlur={formik.handleBlur}
                   error={formik.touched.name && Boolean(formik.errors.name)}
                   helperText={formik.touched.name && formik.errors.name}
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 4 }}>
@@ -283,40 +289,49 @@ const UpdateTeam = ({ open, onClose, teamId }: UpdateTeamDialogProps) => {
                   helperText={
                     formik.touched.short_name && formik.errors.short_name
                   }
+                  disabled={saving}
                 />
               </Grid>
-              <SelectCfSubfolder
-                value={selectedFolder}
-                onChange={setSelectedFolder}
-              />
-              <Grid
-                size={{ xs: 12 }}
-                sx={
-                  selectedFolder === ''
-                    ? { opacity: 0.7, pointerEvents: 'none' }
-                    : {}
-                }
-              >
+              <Grid size={{ xs: 12 }}>
+                <SelectCfSubfolder
+                  value={selectedFolder}
+                  onChange={setSelectedFolder}
+                />
+              </Grid>
+              <Grid size={{ xs: 12 }}>
                 <BorderedBox title='Team Logos'>
                   <Grid container spacing={2} direction='row' sx={{ mt: 1 }}>
-                    {logos?.map((logo: any, key: any) => (
+                    {formik.values.logos?.map((logo, key) => (
                       <Grid key={key} size={{ xs: 6 }}>
                         <BorderedBox title={`Logo ${key + 1}`}>
                           <Logos
-                            logo_id={logo.id}
                             logo={logo.logo}
                             start_year={logo.start_year}
                             end_year={logo.end_year}
                             index={key}
                             onUpdate={handleUpdateLogo}
+                            onFieldBlur={handleLogoFieldBlur}
+                            startYearError={
+                              (formik.errors.logos as any)?.[key]?.start_year
+                            }
+                            startYearTouched={
+                              (formik.touched.logos as any)?.[key]?.start_year
+                            }
+                            endYearError={
+                              (formik.errors.logos as any)?.[key]?.end_year
+                            }
+                            endYearTouched={
+                              (formik.touched.logos as any)?.[key]?.end_year
+                            }
                           />
                           <Box sx={{ mt: 1 }}>
                             <AppButton
                               text='Remove Logo'
-                              size='small'
                               color='error'
+                              size='small'
                               onClick={() => handleRemoveLogo(key)}
                               hidden={key === 0}
+                              disabled={saving}
                             />
                           </Box>
                         </BorderedBox>
@@ -329,6 +344,7 @@ const UpdateTeam = ({ open, onClose, teamId }: UpdateTeamDialogProps) => {
                       size='small'
                       onClick={handleAddLogo}
                       iconIndex={3}
+                      disabled={saving}
                     />
                   </Box>
                 </BorderedBox>
@@ -344,6 +360,7 @@ const UpdateTeam = ({ open, onClose, teamId }: UpdateTeamDialogProps) => {
                   errorId={
                     formik.touched.nation_id && Boolean(formik.errors.nation_id)
                   }
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 6 }}>
@@ -365,6 +382,7 @@ const UpdateTeam = ({ open, onClose, teamId }: UpdateTeamDialogProps) => {
                   helperText={
                     formik.touched.start_year && formik.errors.start_year
                   }
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 6 }}>
@@ -375,14 +393,27 @@ const UpdateTeam = ({ open, onClose, teamId }: UpdateTeamDialogProps) => {
                   name='end_year'
                   min={1980}
                   max={new Date().getFullYear()}
-                  onChange={(value: number) => {
+                  nullable
+                  onChange={(value: number | null) => {
                     formik.setFieldValue('end_year', value);
+                    formik.setFieldTouched('end_year', true);
+                    setTimeout(() => {
+                      if (value !== null && value < formik.values.start_year) {
+                        formik.setFieldError(
+                          'end_year',
+                          'End year must be after start year',
+                        );
+                      } else {
+                        formik.setFieldError('end_year', undefined);
+                      }
+                    }, 0);
                   }}
                   onBlur={formik.handleBlur}
                   error={
                     formik.touched.end_year && Boolean(formik.errors.end_year)
                   }
                   helperText={formik.touched.end_year && formik.errors.end_year}
+                  disabled={saving}
                 />
               </Grid>
             </Grid>
@@ -394,13 +425,15 @@ const UpdateTeam = ({ open, onClose, teamId }: UpdateTeamDialogProps) => {
           <GreenButton
             text='Save'
             size='small'
-            onClick={formik.handleSubmit}
+            onClick={formik.submitForm}
             iconIndex={1}
+            disabled={saving}
           />
           <GrayButton
             text='Cancel'
             size='small'
-            onClick={() => handleClose()}
+            onClick={handleCancel}
+            disabled={saving}
           />
         </Stack>
       </DialogActions>

@@ -13,33 +13,33 @@ export function useAddTeam() {
     { previousData?: TTeamDto[]; hasShowError?: boolean }
   >('/api/teams', 'POST', {
     //onMutate: async (newTeam) => {
-    onMutate: async () => {
+    onMutate: async (newTeam) => {
       await queryClient.cancelQueries({ queryKey: ['teams'] });
       const previousData = queryClient.getQueryData<TTeamDto[]>(['teams']);
 
-      //   const isFullNameDuplicate = previousData?.some(
-      //     (team) =>
-      //       team.full_name.toLowerCase() === newTeam.full_name.toLowerCase()
-      //   );
+        const isFullNameDuplicate = previousData?.some(
+          (team) =>
+            team.full_name.toLowerCase() === newTeam.full_name.toLowerCase()
+        );
 
-      //   const isNameDuplicate = previousData?.some(
-      //     (team) => team.name.toLowerCase() === newTeam.name.toLowerCase()
-      //   );
+        const isNameDuplicate = previousData?.some(
+          (team) => team.name.toLowerCase() === newTeam.name.toLowerCase()
+        );
 
-      //   const isShortNameDuplicate = previousData?.some(
-      //     (team) =>
-      //       team.short_name.toLowerCase() === newTeam.short_name.toLowerCase()
-      //   );
+        const isShortNameDuplicate = previousData?.some(
+          (team) =>
+            team.short_name.toLowerCase() === newTeam.short_name.toLowerCase()
+        );
 
-      //   if (isFullNameDuplicate) {
-      //     throw new Error('Team with this full name already exists');
-      //   }
-      //   if (isNameDuplicate) {
-      //     throw new Error('Team with this name already exists');
-      //   }
-      //   if (isShortNameDuplicate) {
-      //     throw new Error('Team with this short name already exists');
-      //   }
+        if (isFullNameDuplicate) {
+          throw new Error('Team with this full name already exists');
+        }
+        if (isNameDuplicate) {
+          throw new Error('Team with this name already exists');
+        }
+        if (isShortNameDuplicate) {
+          throw new Error('Team with this short name already exists');
+        }
 
       return { previousData, hasShowError: false };
     },

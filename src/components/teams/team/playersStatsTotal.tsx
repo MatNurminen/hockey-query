@@ -1,27 +1,25 @@
-import Box from '@mui/material/Box';
-import HeaderMain from '../../common/Table/headerMain';
-import HeaderSection from '../../common/Table/headerSection';
-import TableContainer from '@mui/material/TableContainer';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid2';
-import GreenButton from '../../common/Buttons/greenButton';
-import TableFlag from '../../common/Images/tableFlag';
-import { getPlayersStatsTotal } from '../../../api/players-stats/queries';
+import Box from "@mui/material/Box";
+import HeaderMain from "../../common/Table/headerMain";
+import HeaderSection from "../../common/Table/headerSection";
+import TableContainer from "@mui/material/TableContainer";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid2";
+import GreenButton from "../../common/Buttons/greenButton";
+import TableFlag from "../../common/Images/tableFlag";
+import { getPlayersStatsTotal } from "../../../api/players-stats/queries";
 
 const PlayersStatsTotal = ({ teamId, title }: any) => {
-  const {
-    data: players,
-    isLoading,
-    isError,
-  } = getPlayersStatsTotal({
+  const { data, isLoading, isError } = getPlayersStatsTotal({
     teamId,
   });
+
+  const players = data?.data;
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error</p>;
@@ -49,37 +47,37 @@ const PlayersStatsTotal = ({ teamId, title }: any) => {
   };
 
   const items: { sort: number; list: any; name: string }[] = [
-    { sort: 3, list: forwards, name: 'forwards' },
-    { sort: 2, list: defenders, name: 'defensemen' },
-    { sort: 1, list: goalkeepers, name: 'goaltending' },
+    { sort: 3, list: forwards, name: "forwards" },
+    { sort: 2, list: defenders, name: "defensemen" },
+    { sort: 1, list: goalkeepers, name: "goaltending" },
   ];
 
   return (
-    <Grid container direction='row' justifyContent='center' spacing={2}>
+    <Grid container direction="row" justifyContent="center" spacing={2}>
       {items.map((item: any, key: any) => (
         <Grid size={{ sm: 12, md: 4 }} key={key}>
           <TableContainer component={Paper}>
-            <Table size='small'>
+            <Table size="small">
               <HeaderMain cells={[`${title} all-time ${item.name} Stats`]} />
             </Table>
-            <Table size='small'>
+            <Table size="small">
               <HeaderSection
                 cells={[
-                  { align: 'center', text: '#' },
-                  { text: 'Player' },
-                  { align: 'center', text: 'gp' },
-                  { align: 'center', text: 'g' },
+                  { align: "center", text: "#" },
+                  { text: "Player" },
+                  { align: "center", text: "gp" },
+                  { align: "center", text: "g" },
                 ]}
               />
               <TableBody>
                 {item.list(players).map((player: any, key: any) => (
                   <TableRow key={key}>
-                    <TableCell align='center'>{key + 1}</TableCell>
+                    <TableCell align="center">{key + 1}</TableCell>
                     <TableCell>
-                      <Box display='flex' alignItems='center'>
+                      <Box display="flex" alignItems="center">
                         <TableFlag src={player.player_flag} />
                         <Link
-                          underline='hover'
+                          underline="hover"
                           component={RouterLink}
                           to={`/players/${player.player_id}`}
                           ml={1}
@@ -89,15 +87,15 @@ const PlayersStatsTotal = ({ teamId, title }: any) => {
                         </Link>
                       </Box>
                     </TableCell>
-                    <TableCell align='center'>{player.games_t}</TableCell>
-                    <TableCell align='center'>{player.goals_t}</TableCell>
+                    <TableCell align="center">{player.games_t}</TableCell>
+                    <TableCell align="center">{player.goals_t}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
           <Box mt={1}>
-            <GreenButton fullWidth={true} text='Show More' />
+            <GreenButton fullWidth={true} text="Show More" />
           </Box>
         </Grid>
       ))}
