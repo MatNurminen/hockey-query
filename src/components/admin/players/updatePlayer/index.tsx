@@ -18,6 +18,7 @@ import SelectNumber from '../../../common/Selects/selectNumber';
 import SelectNation from '../../../common/Selects/selectNation';
 import SelectTeam from '../../../common/Selects/selectTeam';
 import { getPlayer } from '../../../../api/players/queries';
+import { useLatestSeason } from '../../../../hooks/useLatestSeason';
 
 export interface UpdatePlayerDialogProps {
   open: boolean;
@@ -31,6 +32,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
   const [saving, setSaving] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const { data: player, isError, isLoading } = getPlayer(playerId);
+  const { startYear, isLoading: _seasonsLoading } = useLatestSeason();
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading nation data</div>;
@@ -88,7 +90,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
   });
 
   const showCancelSnackbar = () => {
-    enqueueSnackbar("Player didn't save.", { variant: 'error' });
+    enqueueSnackbar("Player didn't save.", { variant: 'info' });
   };
 
   const handleClose = () => {
@@ -107,7 +109,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
   return (
     <Dialog open={open}>
       <DialogContent>
-        <SectionHeader txtAlign='left' content='Add Player' />
+        <SectionHeader txtAlign='left' content='Edit Player' />
         <Box position='relative'>
           {saving && (
             <Box
@@ -127,7 +129,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
               <CircularProgress />
             </Box>
           )}
-          <Box component='form' noValidate autoComplete='off'>
+          <Box component='form' noValidate autoComplete='off' onSubmit={formik.handleSubmit}>
             <Grid container spacing={2} rowSpacing={3}>
               <Grid size={{ xs: 6 }}>
                 <TextField
@@ -147,6 +149,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
                   helperText={
                     formik.touched.first_name && formik.errors.first_name
                   }
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 6 }}>
@@ -166,6 +169,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
                   helperText={
                     formik.touched.last_name && formik.errors.last_name
                   }
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 3 }}>
@@ -187,6 +191,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
                   helperText={
                     formik.touched.jersey_number && formik.errors.jersey_number
                   }
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 3 }}>
@@ -208,6 +213,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
                     formik.touched.player_position &&
                     formik.errors.player_position
                   }
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 2 }}>
@@ -229,6 +235,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
                   helperText={
                     formik.touched.player_order && formik.errors.player_order
                   }
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 4 }}>
@@ -242,6 +249,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
                   errorId={
                     formik.touched.nation_id && Boolean(formik.errors.nation_id)
                   }
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 4 }}>
@@ -263,6 +271,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
                   helperText={
                     formik.touched.birth_year && formik.errors.birth_year
                   }
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 4 }}>
@@ -279,6 +288,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
                   onBlur={formik.handleBlur}
                   error={formik.touched.height && Boolean(formik.errors.height)}
                   helperText={formik.touched.height && formik.errors.height}
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 4 }}>
@@ -295,6 +305,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
                   onBlur={formik.handleBlur}
                   error={formik.touched.weight && Boolean(formik.errors.weight)}
                   helperText={formik.touched.weight && formik.errors.weight}
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 6 }}>
@@ -315,6 +326,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
                   helperText={
                     formik.touched.draft_team_id && formik.errors.draft_team_id
                   }
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 3 }}>
@@ -324,7 +336,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
                   id='start_year'
                   name='start_year'
                   min={1980}
-                  max={new Date().getFullYear()}
+                  max={startYear}
                   onChange={(value: number) => {
                     formik.setFieldValue('start_year', value);
                   }}
@@ -336,6 +348,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
                   helperText={
                     formik.touched.start_year && formik.errors.start_year
                   }
+                  disabled={saving}
                 />
               </Grid>
               <Grid size={{ xs: 3 }}>
@@ -345,15 +358,25 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
                   id='end_year'
                   name='end_year'
                   min={1980}
-                  max={new Date().getFullYear()}
-                  onChange={(value: number) => {
+                  max={startYear}
+                  nullable
+                  onChange={(value: number | null) => {
                     formik.setFieldValue('end_year', value);
+                    formik.setFieldTouched('end_year', true);
+                    setTimeout(() => {
+                      if (value !== null && value < formik.values.start_year) {
+                        formik.setFieldError('end_year', 'End year must be after start year');
+                      } else {
+                        formik.setFieldError('end_year', undefined);
+                      }
+                    }, 0);
                   }}
                   onBlur={formik.handleBlur}
                   error={
                     formik.touched.end_year && Boolean(formik.errors.end_year)
                   }
                   helperText={formik.touched.end_year && formik.errors.end_year}
+                  disabled={saving}
                 />
               </Grid>
             </Grid>
@@ -365,7 +388,7 @@ const UpdatePlayer = (props: UpdatePlayerDialogProps) => {
           <GreenButton
             text='Save'
             size='small'
-            onClick={formik.handleSubmit}
+            onClick={formik.submitForm}
             iconIndex={1}
             disabled={saving}
           />

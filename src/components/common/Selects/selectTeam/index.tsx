@@ -17,6 +17,7 @@ export interface SelectProps {
   error?: boolean;
   helperText?: string | false;
   value?: number | null;
+  disabled?: boolean;
 }
 
 const SelectTeam = (props: SelectProps) => {
@@ -30,6 +31,7 @@ const SelectTeam = (props: SelectProps) => {
     error,
     helperText,
     value,
+    disabled,
   } = props;
 
   const { data: teams, isLoading, isError } = getTeamsByLeague(leagueId);
@@ -54,6 +56,7 @@ const SelectTeam = (props: SelectProps) => {
         label={label}
         onChange={handleChange}
         onBlur={onBlur}
+        disabled={disabled}
       >
         <MenuItem value=''>
           <em>NONE</em>

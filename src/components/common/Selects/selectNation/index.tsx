@@ -20,6 +20,7 @@ export interface SelectProps {
   errorId?: any;
   helperText?: any;
   value?: number;
+  disabled?: boolean;
 }
 
 const SelectNation = (props: SelectProps) => {
@@ -27,7 +28,7 @@ const SelectNation = (props: SelectProps) => {
   const nationId = String(searchParams.get('nation'));
   const [nation, setNation] = useState(nationId);
   const [nationParam, setNationParam] = useSearchParams();
-  const { id, name, setFormInput, label, errorId, helperText, value } = props;
+  const { id, name, setFormInput, label, errorId, helperText, value, disabled } = props;
 
   const defaultLabel = label || 'Nation';
 
@@ -64,6 +65,7 @@ const SelectNation = (props: SelectProps) => {
         value={value !== undefined ? String(value) : nation}
         label={defaultLabel}
         onChange={handleChange}
+        disabled={disabled}
       >
         {data.map((nation: any, key: any) => (
           <MenuItem key={key} value={String(nation.id)}>
