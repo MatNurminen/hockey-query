@@ -141,6 +141,7 @@ const NationsChart = ({ leagueId, seasonId, title }: Props) => {
           `${formatSeason(seasonId)} ${title} Demographics`
         }
       />
+      { data.length > 0 ? (
       <Box display="flex" justifyContent="center" sx={{ width: "100%", maxWidth: 800, mx: "auto", position: "relative" }}>
         <ResponsiveContainer width="100%" height={460}>
           <PieChart>
@@ -197,6 +198,7 @@ const NationsChart = ({ leagueId, seasonId, title }: Props) => {
           </Box>
         )}
       </Box>
+      ) : null }
     </Box>
   );
 };
