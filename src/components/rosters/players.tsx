@@ -11,6 +11,8 @@ import TableFlag from "../common/Images/tableFlag";
 import ClubHeader from "./clubHeader";
 import { getStandings } from "../../api/teams-stats/queries";
 import { getPlayersStatsDetail } from "../../api/players-stats/queries";
+import type { TStandings } from "../../api/teams-stats/types";
+import type { TPlayerStatDetail } from "../../api/players-stats/types";
 
 const Players = () => {
   const [searchParams] = useSearchParams();
@@ -29,16 +31,16 @@ const Players = () => {
   });
   const players = playersResponse?.data ?? [];
 
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-  if (!teams) return <h3>No data available</h3>;
-  if (!players) return <h3>No data available</h3>;
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error!</p>;
+  if (!teams) return <p>No data available</p>;
+  if (!players) return <p>No data available</p>;
 
   return (
     <TableContainer component={Paper}>
       {teams
-        .sort((a: any, b: any) => a.full_name.localeCompare(b.full_name))
-        .map((team: any) => (
+        .sort((a: TStandings, b: TStandings) => a.full_name.localeCompare(b.full_name))
+        .map((team: TStandings) => (
           <div key={team.id}>
             <ClubHeader team={team.full_name} logo={team.logo} />
             <Table size="small">
@@ -60,9 +62,9 @@ const Players = () => {
               />
               <TableBody>
                 {players
-                  .filter((player: any) => player.team_id === team.team_id)
-                  .sort((b: any, a: any) => b.player_order - a.player_order)
-                  .map((player: any, key: any) => (
+                  .filter((player: TPlayerStatDetail) => player.team_id === team.team_id)
+                  .sort((a: TPlayerStatDetail, b: TPlayerStatDetail) => a.player_order - b.player_order)
+                  .map((player: TPlayerStatDetail, key: number) => (
                     <TableRow key={key}>
                       <TableCell>{player.jersey_number}</TableCell>
                       <TableCell>{player.player_position}</TableCell>

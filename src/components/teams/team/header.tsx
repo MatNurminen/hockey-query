@@ -79,7 +79,7 @@ const Header = ({ team }: any) => {
           >
             {team?.logos.map((logo: any, key: any) => (
               <Box key={key} textAlign='center'>
-                <MainLogo src={logo.logo} />
+                <MainLogo src={logo.logo} alt=''/>
                 <Typography variant='body1' gutterBottom>
                   {logo.start_year} - {logo.end_year}
                 </Typography>

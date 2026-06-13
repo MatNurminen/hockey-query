@@ -338,7 +338,7 @@ const NationForm = ({
           <AppButton
             text="Save"
             size="small"
-            onClick={() => formik.handleSubmit()}
+            onClick={formik.submitForm}
             color="success"
             iconName="save"
             disabled={saving}
