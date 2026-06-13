@@ -20,8 +20,8 @@ const leagueSchema = object({
     .min(1900, `The end year can't be less than 1900`)
     .max(currentYear, `The end year can't be greater than + ${currentYear}`)
     .test(
-      'end-after-start',
-      'End year must be after start year',
+      "end-after-start",
+      "End year must be after start year",
       function (value) {
         const { start_year } = this.parent;
         if (!value || !start_year) return true;
@@ -49,8 +49,8 @@ const leagueSchema = object({
             `The end year can't be greater than + ${currentYear}`,
           )
           .test(
-            'end-after-start',
-            'End year must be after start year',
+            "end-after-start",
+            "End year must be after start year",
             function (value) {
               const { start_year } = this.parent;
               if (!value || !start_year) return true;
