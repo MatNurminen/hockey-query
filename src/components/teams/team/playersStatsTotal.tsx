@@ -75,7 +75,7 @@ const PlayersStatsTotal = ({ teamId, title }: any) => {
                     <TableCell align="center">{key + 1}</TableCell>
                     <TableCell>
                       <Box display="flex" alignItems="center">
-                        <TableFlag src={player.player_flag} />
+                        <TableFlag src={player.player_flag} alt="" />
                         <Link
                           underline="hover"
                           component={RouterLink}

@@ -1,9 +1,14 @@
-import SectionHeader from '../../../common/Sections/sectionHeader';
+import SectionHeader from "../../../common/Sections/sectionHeader";
+import { TTournamentDto } from "../../../../api/tournaments/types";
 
-const Header = ({ tournament }: any) => {
+interface Props {
+  tournament: TTournamentDto;
+}
+
+const Header = ({ tournament }: Props) => {
   return (
     <SectionHeader
-      txtAlign='left'
+      txtAlign="left"
       content={`Tournament: ${tournament.league.name} ${tournament.season_id}`}
     />
   );

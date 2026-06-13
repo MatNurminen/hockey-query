@@ -1,42 +1,44 @@
-import Button, { type ButtonProps } from '@mui/material/Button';
-import { Link as RouterLink } from 'react-router-dom';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import SearchIcon from '@mui/icons-material/Search';
-import CheckIcon from '@mui/icons-material/Check';
-import CancelIcon from '@mui/icons-material/Cancel';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import PaletteIcon from '@mui/icons-material/Palette';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { type ReactNode, memo } from 'react';
+import Button, { type ButtonProps } from "@mui/material/Button";
+import { Link as RouterLink } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import SearchIcon from "@mui/icons-material/Search";
+import CheckIcon from "@mui/icons-material/Check";
+import CancelIcon from "@mui/icons-material/Cancel";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import PaletteIcon from "@mui/icons-material/Palette";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { type ReactNode, memo } from "react";
 
 type AppButtonPropsBase = {
   text: string;
-  color?: ButtonProps['color'];
+  color?: ButtonProps["color"];
   iconName?:
-    | 'add'
-    | 'edit'
-    | 'save'
-    | 'photo'
-    | 'search'
-    | 'check'
-    | 'cancel'
-    | 'palette'
-    | 'pdf'
-    | 'cloudUpload'
-    | 'delete';
+    | "add"
+    | "edit"
+    | "save"
+    | "photo"
+    | "search"
+    | "check"
+    | "cancel"
+    | "palette"
+    | "pdf"
+    | "cloudUpload"
+    | "delete"
+    | "remove";
   startIcon?: ReactNode;
-  sx?: ButtonProps['sx'];
-} & Omit<ButtonProps, 'startIcon' | 'sx' | 'onClick'>;
+  sx?: ButtonProps["sx"];
+} & Omit<ButtonProps, "startIcon" | "sx" | "onClick">;
 
 type AppButtonProps = AppButtonPropsBase &
   (
     | { to: string; href?: never; onClick?: never }
     | { href: string; to?: never; onClick?: never }
-    | { onClick: ButtonProps['onClick']; to?: never; href?: never }
+    | { onClick: ButtonProps["onClick"]; to?: never; href?: never }
   );
 
 const predefinedIcons: Record<string, ReactNode> = {
@@ -51,13 +53,14 @@ const predefinedIcons: Record<string, ReactNode> = {
   pdf: <PictureAsPdfIcon />,
   cloudUpload: <CloudUploadIcon />,
   delete: <DeleteForeverIcon />,
+  remove: <RemoveIcon />,
 };
 
 const AppButton = memo(
   ({
     text,
-    color = 'primary',
-    size = 'medium',
+    color = "primary",
+    size = "medium",
     fullWidth = false,
     onClick,
     iconName,
@@ -68,14 +71,15 @@ const AppButton = memo(
     sx,
     ...other
   }: AppButtonProps) => {
-    const resolvedStartIcon = customStartIcon ?? (iconName ? predefinedIcons[iconName] : undefined);
+    const resolvedStartIcon =
+      customStartIcon ?? (iconName ? predefinedIcons[iconName] : undefined);
 
     const baseProps: ButtonProps = {
       color,
       fullWidth,
       size,
-      variant: 'contained',
-      sx: { textTransform: 'uppercase', ...sx },
+      variant: "contained",
+      sx: { textTransform: "uppercase", ...sx },
       startIcon: resolvedStartIcon,
       disabled,
       children: text,
@@ -86,18 +90,18 @@ const AppButton = memo(
       <Button component={RouterLink} to={to} {...baseProps} />
     ) : href ? (
       <Button
-        component='a'
+        component="a"
         href={href}
-        target='_blank'
-        rel='noopener noreferrer'
+        target="_blank"
+        rel="noopener noreferrer"
         {...baseProps}
       />
     ) : (
       <Button onClick={onClick} {...baseProps} />
     );
-  }
+  },
 );
 
-AppButton.displayName = 'AppButton';
+AppButton.displayName = "AppButton";
 
 export default AppButton;
