@@ -103,8 +103,6 @@ const LeagueForm = ({
         deleteAllFromTmp();
         onClose();
         helpers.resetForm();
-      } catch {
-        enqueueSnackbar("Failed to save league.", { variant: "error" });
       } finally {
         setSaving(false);
       }

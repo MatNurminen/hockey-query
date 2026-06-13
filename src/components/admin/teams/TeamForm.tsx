@@ -109,8 +109,6 @@ const TeamForm = ({
         deleteAllFromTmp();
         onClose();
         helpers.resetForm();
-      } catch {
-        enqueueSnackbar("Failed to save team.", { variant: "error" });
       } finally {
         setSaving(false);
       }
