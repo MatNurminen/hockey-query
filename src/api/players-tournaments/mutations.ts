@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useShowSnackbar } from '../../components/layout/useShowSnackbar';
 import { createMutation } from '../factories/mutationFactory';
-import { TPlayerStatDetail } from '../players-stats/types';
+import { TPaginatedResponse, TPlayerStatDetail } from '../players-stats/types';
 import queryClient from '../queryClient';
 import { TCreatePlayerTournamentDto, TPlayerTournamentDto } from './types';
 
@@ -12,24 +12,35 @@ export function useAddPlayerTournament(leagueId: number, seasonId: number) {
   return createMutation<
     TPlayerStatDetail,
     TCreatePlayerTournamentDto,
-    { previousData?: TPlayerStatDetail[]; hasShownError?: boolean }
+    {
+      previousData?: TPaginatedResponse<TPlayerStatDetail>;
+      hasShownError?: boolean;
+    }
   >(() => '/api/players-tournaments', 'POST', {
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: queryKey });
       const previousData =
-        queryClient.getQueryData<TPlayerStatDetail[]>(queryKey);
+        queryClient.getQueryData<
+          TPaginatedResponse<TPlayerStatDetail>
+        >(queryKey);
 
       return { previousData, hasShownError: false };
     },
     onSuccess: (data) => {
       queryClient.setQueryData(
         queryKey,
-        (oldTeamsTournaments: TPlayerStatDetail[] | undefined) => {
-          const updatedTeamsTournaments = oldTeamsTournaments
-            ? [...oldTeamsTournaments, data]
-            : [data];
-          return updatedTeamsTournaments;
-        }
+        (
+          oldData: TPaginatedResponse<TPlayerStatDetail> | undefined,
+        ) => {
+          if (!oldData) {
+            return { data: [data], total: 1, limit: 0, offset: 0 };
+          }
+          return {
+            ...oldData,
+            data: [...oldData.data, data],
+            total: oldData.total + 1,
+          };
+        },
       );
       queryClient.invalidateQueries({ queryKey });
     },
@@ -37,7 +48,7 @@ export function useAddPlayerTournament(leagueId: number, seasonId: number) {
       err,
       _teamsTournaments,
       context?: {
-        previousData?: TPlayerStatDetail[];
+        previousData?: TPaginatedResponse<TPlayerStatDetail>;
         hasShownError?: boolean;
       }
     ) => {
@@ -58,8 +69,15 @@ export function useAddPlayerTournament(leagueId: number, seasonId: number) {
   });
 }
 
-export function useUpdatePlayerTournament() {
+export function useUpdatePlayerTournament(
+  leagueId?: number,
+  seasonId?: number,
+) {
   const showSnackbar = useShowSnackbar();
+  const queryKey =
+    leagueId && seasonId
+      ? ['playersStatsDetail', { leagueId: [leagueId], seasonId }]
+      : undefined;
 
   return createMutation<
     TPlayerTournamentDto,
@@ -71,6 +89,9 @@ export function useUpdatePlayerTournament() {
       return bodyData;
     },
     onSuccess: () => {
+      if (queryKey) {
+        queryClient.invalidateQueries({ queryKey });
+      }
       showSnackbar('Player Tournament updated successfully', 'success');
     },
     onError: (
@@ -102,18 +123,31 @@ export function useDeletePlayerTournament(leagueId: number, seasonId: number) {
   return createMutation<
     void,
     { id: number },
-    { previousData?: TPlayerStatDetail[]; hasShownError?: boolean }
+    {
+      previousData?: TPaginatedResponse<TPlayerStatDetail>;
+      hasShownError?: boolean;
+    }
   >(({ id }) => `/api/players-tournaments/${id}`, 'DELETE', {
     onMutate: async ({ id }) => {
       await queryClient.cancelQueries({ queryKey });
 
       const previousData =
-        queryClient.getQueryData<TPlayerStatDetail[]>(queryKey);
+        queryClient.getQueryData<
+          TPaginatedResponse<TPlayerStatDetail>
+        >(queryKey);
 
       queryClient.setQueryData(
         queryKey,
-        (oldData: TPlayerStatDetail[] | undefined) =>
-          oldData?.filter((item) => item.id !== id) ?? []
+        (oldData: TPaginatedResponse<TPlayerStatDetail> | undefined) => {
+          if (!oldData) {
+            return { data: [], total: 0, limit: 0, offset: 0 };
+          }
+          return {
+            ...oldData,
+            data: oldData.data.filter((item) => item.id !== id),
+            total: oldData.total - 1,
+          };
+        },
       );
 
       return { previousData, hasShownError: false };
@@ -127,7 +161,10 @@ export function useDeletePlayerTournament(leagueId: number, seasonId: number) {
     onError: (
       err,
       _variables,
-      context?: { previousData?: TPlayerStatDetail[]; hasShownError?: boolean }
+      context?: {
+        previousData?: TPaginatedResponse<TPlayerStatDetail>;
+        hasShownError?: boolean;
+      }
     ) => {
       if (context?.previousData) {
         queryClient.setQueryData(queryKey, context.previousData);

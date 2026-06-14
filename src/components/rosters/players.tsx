@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import HeaderMain from "../common/Table/headerMain";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
@@ -16,7 +17,10 @@ import type { TPlayerStatDetail } from "../../api/players-stats/types";
 
 const Players = () => {
   const [searchParams] = useSearchParams();
-  const leagueId = [Number(searchParams.get("league"))];
+  const leagueId = useMemo(
+    () => [Number(searchParams.get("league"))],
+    [searchParams]
+  );
   const seasonId = Number(searchParams.get("season"));
 
   const {
