@@ -17,8 +17,7 @@ export function useAddPlayerTournament(leagueId: number, seasonId: number) {
       hasShownError?: boolean;
     }
   >(() => '/api/players-tournaments', 'POST', {
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: queryKey });
+    onMutate: () => {
       const previousData =
         queryClient.getQueryData<
           TPaginatedResponse<TPlayerStatDetail>
@@ -154,7 +153,6 @@ export function useDeletePlayerTournament(leagueId: number, seasonId: number) {
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey });
       showSnackbar('Player of Tournament deleted successfully', 'success');
     },
 

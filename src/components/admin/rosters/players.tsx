@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, memo, useRef } from "react";
 import Paper from "@mui/material/Paper";
 import { Link as RouterLink, useSearchParams } from "react-router-dom";
 import Link from "@mui/material/Link";
@@ -13,16 +13,21 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
 import { TStandings } from "../../../api/teams-stats/types";
 
-interface Props {
-  players: TPlayerStatDetail[];
-  teams: TStandings[];
+const EMPTY_ROWS: TPlayerStatDetail[] = [];
+
+interface TeamGridProps {
+  rows: TPlayerStatDetail[];
+  team: TStandings;
+  leagueId: number;
+  seasonId: number;
 }
 
-const Players = ({ players: initialPlayers, teams }: Props) => {
-  const [searchParams] = useSearchParams();
-  const leagueId = Number(searchParams.get("league"));
-  const seasonId = Number(searchParams.get("season"));
-
+const TeamGrid = memo(function TeamGrid({
+  rows,
+  team,
+  leagueId,
+  seasonId,
+}: TeamGridProps) {
   const [updatedCells, setUpdatedCells] = useState<Set<string>>(new Set());
 
   const { mutateAsync: updatePlayerTournament } = useUpdatePlayerTournament(
@@ -66,155 +71,219 @@ const Players = ({ players: initialPlayers, teams }: Props) => {
     return newRow;
   };
 
-  const columns: GridColDef<(typeof initialPlayers)[number]>[] = [
-    {
-      headerClassName: "header-bc",
-      field: "jersey_number",
-      headerName: "#",
-      sortable: false,
-      width: 80,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      headerClassName: "header-bc",
-      field: "player_position",
-      headerName: "POS",
-      align: "center",
-      headerAlign: "center",
-      width: 80,
-    },
-    {
-      headerClassName: "header-bc",
-      field: "fullName",
-      headerName: "NAME",
-      flex: 1,
-      sortable: false,
-      renderCell: (params) => (
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          {params.row.player_flag && (
-            <TableFlag alt="" src={params.row.player_flag} />
-          )}
-          <Link
-            underline="hover"
-            component={RouterLink}
-            to={`/players/${params.row.player_id}`}
+  const columns: GridColDef<(typeof rows)[number]>[] = useMemo(
+    () => [
+      {
+        headerClassName: "header-bc",
+        field: "jersey_number",
+        headerName: "#",
+        sortable: false,
+        width: 80,
+        align: "center",
+        headerAlign: "center",
+      },
+      {
+        headerClassName: "header-bc",
+        field: "player_position",
+        headerName: "POS",
+        align: "center",
+        headerAlign: "center",
+        width: 80,
+      },
+      {
+        headerClassName: "header-bc",
+        field: "fullName",
+        headerName: "NAME",
+        flex: 1,
+        sortable: false,
+        renderCell: (params) => (
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {params.row.player_flag && (
+              <TableFlag alt="" src={params.row.player_flag} />
+            )}
+            <Link
+              underline="hover"
+              component={RouterLink}
+              to={`/players/${params.row.player_id}`}
+            >
+              {params.row.first_name} {params.row.last_name}
+            </Link>
+            {rows.length > 0 &&
+              rows[0].type_id === 2 &&
+              (params.row.club_name
+                ? `/${params.row.club_name}/`
+                : "No club")}
+          </div>
+        ),
+      },
+      {
+        headerClassName: "header-bc",
+        field: "games",
+        headerName: "GP",
+        editable: true,
+        align: "center",
+        headerAlign: "center",
+        width: 80,
+      },
+      {
+        headerClassName: "header-bc",
+        field: "goals",
+        headerName: "G",
+        editable: true,
+        align: "center",
+        headerAlign: "center",
+        width: 80,
+      },
+      {
+        headerClassName: "header-bc",
+        field: "postseason",
+        headerName: "POSTSEASON",
+        editable: true,
+        flex: 1,
+      },
+      {
+        headerClassName: "header-bc",
+        field: "delete",
+        headerName: "",
+        sortable: false,
+        width: 120,
+        renderCell: (params) => (
+          <div
+            style={{ display: "flex", alignItems: "center", height: "100%" }}
           >
-            {params.row.first_name} {params.row.last_name}
-          </Link>
-          {Array.isArray(initialPlayers) &&
-            initialPlayers.length > 0 &&
-            initialPlayers[0].type_id === 2 &&
-            (params.row.club_name ? `/${params.row.club_name}/` : "No club")}
-        </div>
-      ),
-    },
-    {
-      headerClassName: "header-bc",
-      field: "games",
-      headerName: "GP",
-      editable: true,
-      align: "center",
-      headerAlign: "center",
-      width: 80,
-    },
-    {
-      headerClassName: "header-bc",
-      field: "goals",
-      headerName: "G",
-      editable: true,
-      align: "center",
-      headerAlign: "center",
-      width: 80,
-    },
-    {
-      headerClassName: "header-bc",
-      field: "postseason",
-      headerName: "POSTSEASON",
-      editable: true,
-      flex: 1,
-    },
-    {
-      headerClassName: "header-bc",
-      field: "delete",
-      headerName: "",
-      sortable: false,
-      width: 120,
-      renderCell: (params) => (
-        <div style={{ display: "flex", alignItems: "center", height: "100%" }}>
-          <AppButton
-            text="Delete"
-            color="error"
-            size="small"
-            onClick={() => {
-              handleDelete(Number(params.row.id));
-            }}
-          />
-        </div>
-      ),
-    },
-  ];
-
-  return (
-    <Paper>
-      {teams
-        .sort((a: TStandings, b: TStandings) =>
-          a.full_name.localeCompare(b.full_name),
-        )
-        .map((team: TStandings) => (
-          <div key={team.id}>
-            <ClubHeader
-              teamTournamentId={team.id}
-              leagueId={leagueId}
-              seasonId={seasonId}
-              team={team.full_name}
-              logo={team.logo}
-            />
-            <DataGrid
-              rows={initialPlayers
-                .filter(
-                  (player: TPlayerStatDetail) =>
-                    player.team_id === team.team_id,
-                )
-                .sort(
-                  (a: TPlayerStatDetail, b: TPlayerStatDetail) =>
-                    a.player_order - b.player_order,
-                )}
-              columns={columns}
-              hideFooter
-              disableColumnMenu
-              columnHeaderHeight={40}
-              rowHeight={40}
-              processRowUpdate={handleProcessRowUpdate}
-              localeText={{ noRowsLabel: "No players" }}
-              getCellClassName={(params) => {
-                const key = `${params.id}-${params.field}`;
-                return updatedCells.has(key) ? "updated-cell" : "";
-              }}
-              sx={{
-                "& .header-bc": {
-                  backgroundColor: "#093f56",
-                },
-                "& .MuiDataGrid-columnHeaderTitle": {
-                  color: "#fff",
-                  fontSize: "17px",
-                },
-                "& .MuiDataGrid-columnSeparator": {
-                  visibility: "hidden",
-                },
-                "& .MuiDataGrid-columnHeader:focus-within .MuiDataGrid-sortIcon, \
-                & .MuiDataGrid-columnHeader:hover .MuiDataGrid-sortIcon": {
-                  color: "#fff",
-                },
-                "& .updated-cell": {
-                  backgroundColor: "#d0ffd0",
-                  fontWeight: "medium",
-                  fontStyle: "italic",
-                },
+            <AppButton
+              text="Delete"
+              color="error"
+              size="small"
+              onClick={() => {
+                handleDelete(Number(params.row.id));
               }}
             />
           </div>
-        ))}
+        ),
+      },
+    ],
+    [rows],
+  );
+
+  return (
+    <div>
+      <ClubHeader
+        teamTournamentId={team.id}
+        leagueId={leagueId}
+        seasonId={seasonId}
+        team={team.full_name}
+        logo={team.logo}
+      />
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        hideFooter
+        disableColumnMenu
+        columnHeaderHeight={40}
+        rowHeight={40}
+        processRowUpdate={handleProcessRowUpdate}
+        localeText={{ noRowsLabel: "No players" }}
+        getCellClassName={(params) => {
+          const key = `${params.id}-${params.field}`;
+          return updatedCells.has(key) ? "updated-cell" : "";
+        }}
+        sx={{
+          "& .header-bc": {
+            backgroundColor: "#093f56",
+          },
+          "& .MuiDataGrid-columnHeaderTitle": {
+            color: "#fff",
+            fontSize: "17px",
+          },
+          "& .MuiDataGrid-columnSeparator": {
+            visibility: "hidden",
+          },
+          "& .MuiDataGrid-columnHeader:focus-within .MuiDataGrid-sortIcon, \
+          & .MuiDataGrid-columnHeader:hover .MuiDataGrid-sortIcon": {
+            color: "#fff",
+          },
+          "& .updated-cell": {
+            backgroundColor: "#d0ffd0",
+            fontWeight: "medium",
+            fontStyle: "italic",
+          },
+        }}
+      />
+    </div>
+  );
+});
+
+function buildTeamRows(
+  players: TPlayerStatDetail[],
+  prevMap: Map<number, TPlayerStatDetail[]>,
+): Map<number, TPlayerStatDetail[]> {
+  const groups = new Map<number, TPlayerStatDetail[]>();
+  for (const player of players) {
+    const rows = groups.get(player.team_id);
+    if (rows) {
+      rows.push(player);
+    } else {
+      groups.set(player.team_id, [player]);
+    }
+  }
+
+  const map = new Map<number, TPlayerStatDetail[]>();
+  for (const [teamId, rows] of groups) {
+    rows.sort(
+      (a: TPlayerStatDetail, b: TPlayerStatDetail) =>
+        a.player_order - b.player_order,
+    );
+    const prev = prevMap.get(teamId);
+    if (
+      prev &&
+      prev.length === rows.length &&
+      prev.every((p, i) => p.id === rows[i].id)
+    ) {
+      map.set(teamId, prev);
+    } else {
+      map.set(teamId, rows);
+    }
+  }
+  return map;
+}
+
+interface Props {
+  players: TPlayerStatDetail[];
+  teams: TStandings[];
+}
+
+const Players = ({ players: initialPlayers, teams }: Props) => {
+  const [searchParams] = useSearchParams();
+  const leagueId = Number(searchParams.get("league"));
+  const seasonId = Number(searchParams.get("season"));
+
+  const prevMapRef = useRef<Map<number, TPlayerStatDetail[]>>(new Map());
+  const teamRows = useMemo(() => {
+    const map = buildTeamRows(initialPlayers, prevMapRef.current);
+    prevMapRef.current = map;
+    return map;
+  }, [initialPlayers]);
+
+  const sortedTeams = useMemo(
+    () =>
+      [...teams].sort((a: TStandings, b: TStandings) =>
+        a.full_name.localeCompare(b.full_name),
+      ),
+    [teams],
+  );
+
+  return (
+    <Paper>
+      {sortedTeams.map((team: TStandings) => (
+        <TeamGrid
+          key={team.id}
+          team={team}
+          rows={teamRows.get(team.team_id) ?? EMPTY_ROWS}
+          leagueId={leagueId}
+          seasonId={seasonId}
+        />
+      ))}
     </Paper>
   );
 };
