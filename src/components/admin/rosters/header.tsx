@@ -13,11 +13,13 @@ interface Props {
 const Header = ({ players }: Props) => {
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const handleOpenPdf = async () => {
+  const handleOpenPdf = async (goalie: boolean) => {
     if (!players.length) return;
     setIsGenerating(true);
     try {
-      const blob = await pdf(<PDFDocument players={players} />).toBlob();
+      const blob = await pdf(
+        <PDFDocument players={players} goalie={goalie} />,
+      ).toBlob();
       const url = URL.createObjectURL(blob);
       window.open(url, "_blank");
       setTimeout(() => URL.revokeObjectURL(url), 10000);
@@ -51,21 +53,17 @@ const Header = ({ players }: Props) => {
         <BlueButton
           iconIndex={3}
           size="small"
-          text={isBusy ? "Generation..." : "Worksheet"}
-          onClick={handleOpenPdf}
+          text={isBusy ? "Generation..." : "WRKS Players"}
+          onClick={() => handleOpenPdf(false)}
           disabled={isBusy}
         />
-        {Array.isArray(players) &&
-          players.length > 0 &&
-          players[0].type_id === 2 && (
-            <BlueButton
-              iconIndex={3}
-              size="small"
-              text={isBusy ? "Generation..." : "Roster"}
-              onClick={handleOpenPdf}
-              disabled={isBusy}
-            />
-          )}
+        <BlueButton
+          iconIndex={3}
+          size="small"
+          text={isBusy ? "Generation..." : "WRKS Goalies"}
+          onClick={() => handleOpenPdf(true)}
+          disabled={isBusy}
+        />
       </Stack>
     </Stack>
   );

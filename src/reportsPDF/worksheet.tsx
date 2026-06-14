@@ -16,6 +16,7 @@ interface Player {
 
 interface PDFDocumentProps {
   players: Player[];
+  goalie?: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -53,19 +54,19 @@ const styles = StyleSheet.create({
     position: 'absolute' as const,
     top: 30,
     bottom: 30,
-    left: '25%' as const, // ~193 pt
+    left: '25%' as const,
   },
   verticalLine2: {
     position: 'absolute' as const,
     top: 30,
     bottom: 30,
-    left: '74%' as const, // ~579 pt
+    left: '74%' as const,
   },
 });
 
-const PDFDocument: React.FC<PDFDocumentProps> = ({ players }) => {
+const PDFDocument: React.FC<PDFDocumentProps> = ({ players, goalie }) => {
   const sortedPlayers = players
-    .filter((player) => player.player_order !== 1)
+    .filter((player) => goalie ? player.player_order === 1 : player.player_order !== 1)
     .sort((a, b) => a.last_name.localeCompare(b.last_name));
 
   const rowHeight = 30;
@@ -81,7 +82,6 @@ const PDFDocument: React.FC<PDFDocumentProps> = ({ players }) => {
   return (
     <Document>
       {pages.map((pagePlayers, pageIndex) => {
-        // Check if columns 3 and 4 have players
         const hasCol3 = pagePlayers.length > estimatedRowsPerColumn * 2;
         const hasCol4 = pagePlayers.length > estimatedRowsPerColumn * 3;
 
@@ -93,7 +93,6 @@ const PDFDocument: React.FC<PDFDocumentProps> = ({ players }) => {
             style={styles.page}
             wrap
           >
-            {/* Conditionally render vertical line 1 */}
             {pagePlayers.length > estimatedRowsPerColumn && (
               <Svg style={styles.verticalLine1}>
                 <Line
@@ -130,7 +129,7 @@ const PDFDocument: React.FC<PDFDocumentProps> = ({ players }) => {
                         style={styles.tableRow}
                       >
                         <Text style={styles.tableCell}>
-                          {row.player_position}. {row.last_name}
+                          {row.player_position.toLowerCase()}. {row.last_name}
                         </Text>
                       </View>
                     ))}
@@ -146,7 +145,7 @@ const PDFDocument: React.FC<PDFDocumentProps> = ({ players }) => {
                         style={styles.tableRow}
                       >
                         <Text style={styles.tableCell}>
-                          {row.player_position}. {row.last_name}
+                          {row.player_position.toLowerCase()}. {row.last_name}
                         </Text>
                       </View>
                     ))}
@@ -166,7 +165,7 @@ const PDFDocument: React.FC<PDFDocumentProps> = ({ players }) => {
                         style={styles.tableRow}
                       >
                         <Text style={styles.tableCell}>
-                          {row.player_position}. {row.last_name}
+                          {row.player_position.toLowerCase()}. {row.last_name}
                         </Text>
                       </View>
                     ))}
@@ -185,7 +184,7 @@ const PDFDocument: React.FC<PDFDocumentProps> = ({ players }) => {
                         style={styles.tableRow}
                       >
                         <Text style={styles.tableCell}>
-                          {row.player_position}. {row.last_name}
+                          {row.player_position.toLowerCase()}. {row.last_name}
                         </Text>
                       </View>
                     ))}
