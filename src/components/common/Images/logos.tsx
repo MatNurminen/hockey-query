@@ -1,18 +1,16 @@
-import { useState } from 'react';
-import Grid from '@mui/material/Grid2';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import { useSnackbar } from 'notistack';
-import { waitForImageAvailable } from '../../utils/waitForImageAvailable';
-import SbUploadFile from '../../common/Supabase/sbUploadFile';
-import SelectNumber from '../../common/Selects/selectNumber';
+import { useState } from "react";
+import Grid from "@mui/material/Grid2";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import { useSnackbar } from "notistack";
+import { waitForImageAvailable } from "../../utils/waitForImageAvailable";
+import SbUploadFile from "../../common/Supabase/sbUploadFile";
+import SelectNumber from "../../common/Selects/selectNumber";
+import { useLatestSeason } from "../../../hooks/useLatestSeason";
 
 const bucketPath = import.meta.env.VITE_CF_BUCKET_PATH;
 const noImage = import.meta.env.VITE_CG_NO_IMAGE;
-
-const MIN_YEAR = 1980;
-const MAX_YEAR = new Date().getFullYear();
 
 interface LogosProps {
   logo_id?: number;
@@ -26,7 +24,7 @@ interface LogosProps {
       logo?: string;
       start_year?: number;
       end_year?: number | null;
-    }
+    },
   ) => void;
   startYearError?: string;
   startYearTouched?: boolean;
@@ -49,9 +47,11 @@ const Logos = ({
   onFieldBlur,
 }: LogosProps) => {
   const [loadingLogo, setLoadingLogo] = useState(false);
-  const [tmpLogoPath, setTmpLogoPath] = useState(logo || '');
+  const [tmpLogoPath, setTmpLogoPath] = useState(logo || "");
   const [imageError, setImageError] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const MIN_YEAR = 1980;
+  const MAX_YEAR = useLatestSeason();
 
   const handleLogoUpload = async (filePath: string) => {
     const url = `${bucketPath}${filePath}`;
@@ -62,11 +62,11 @@ const Logos = ({
       await waitForImageAvailable(url);
       setTmpLogoPath(filePath);
       onUpdate(index, { logo: url });
-      enqueueSnackbar('Logo uploaded successfully', { variant: 'success' });
-    } catch (e) {
+      enqueueSnackbar("Logo uploaded successfully", { variant: "success" });
+    } catch {
       setImageError(true);
-      enqueueSnackbar('Failed to load image from storage.', {
-        variant: 'error',
+      enqueueSnackbar("Failed to load image from storage.", {
+        variant: "error",
       });
     } finally {
       setLoadingLogo(false);
@@ -91,13 +91,16 @@ const Logos = ({
 
   const handleImageError = () => {
     setImageError(true);
-    enqueueSnackbar('Image loading error', { variant: 'warning' });
+    enqueueSnackbar("Image loading error", { variant: "warning" });
   };
 
   const getImageSrc = () => {
     if (logo_id) return logo;
     if (tmpLogoPath) {
-      if (tmpLogoPath.startsWith("http://") || tmpLogoPath.startsWith("https://")) {
+      if (
+        tmpLogoPath.startsWith("http://") ||
+        tmpLogoPath.startsWith("https://")
+      ) {
         return tmpLogoPath;
       }
       return `${bucketPath}${tmpLogoPath}`;
@@ -107,31 +110,31 @@ const Logos = ({
 
   return (
     <Grid container spacing={2}>
-      <Grid size={{ xs: 12 }} sx={{ justifyItems: 'center' }}>
+      <Grid size={{ xs: 12 }} sx={{ justifyItems: "center" }}>
         {loadingLogo ? (
           <CircularProgress />
         ) : (
           <Box
-            component='img'
+            component="img"
             src={getImageSrc()}
             alt={`League logo ${index + 1}`}
             sx={{
-              height: '50px',
-              objectFit: 'contain',
+              height: "50px",
+              objectFit: "contain",
               opacity: imageError ? 0.5 : 1,
-              border: imageError ? '1px solid #ff6b6b' : 'none',
-              borderRadius: imageError ? '4px' : '0',
+              border: imageError ? "1px solid #ff6b6b" : "none",
+              borderRadius: imageError ? "4px" : "0",
             }}
             onError={handleImageError}
           />
         )}
         <TextField
-          sx={{ display: 'none' }}
+          sx={{ display: "none" }}
           required
-          name='logo'
-          label='Logo'
-          variant='outlined'
-          size='small'
+          name="logo"
+          label="Logo"
+          variant="outlined"
+          size="small"
           value={tmpLogoPath}
         />
         <SbUploadFile onFileUpload={handleLogoUpload} />
@@ -139,9 +142,9 @@ const Logos = ({
       <Grid size={{ xs: 6 }}>
         <SelectNumber
           value={start_year}
-          label='Start Year *'
-          id='start_year'
-          name='start_year'
+          label="Start Year *"
+          id="start_year"
+          name="start_year"
           min={MIN_YEAR}
           max={MAX_YEAR}
           onChange={handleStartYearChange}
@@ -153,9 +156,9 @@ const Logos = ({
       <Grid size={{ xs: 6 }}>
         <SelectNumber
           value={end_year}
-          label='End Year'
-          id='end_year'
-          name='end_year'
+          label="End Year"
+          id="end_year"
+          name="end_year"
           min={MIN_YEAR}
           max={MAX_YEAR}
           nullable
