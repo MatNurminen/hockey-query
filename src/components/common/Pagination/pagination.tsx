@@ -38,7 +38,9 @@ const Pagination = ({
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-        <Typography variant="subtitle2">{total} {label}</Typography>
+        <Typography variant="subtitle2">
+          {total} {"label"}
+        </Typography>
       </Box>
 
       <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
