@@ -148,6 +148,7 @@ const TeamForm = ({
     Object.keys(updatedData).forEach((field) => {
       formik.setFieldTouched(`logos.${index}.${field}`, true);
     });
+    setTimeout(() => formik.validateForm(), 0);
   };
 
   const handleLogoFieldBlur = (field: string) => {
@@ -353,6 +354,7 @@ const TeamForm = ({
                       max={maxYear}
                       onChange={(value: number) => {
                         formik.setFieldValue("start_year", value);
+                        setTimeout(() => formik.validateForm(), 0);
                       }}
                       onBlur={formik.handleBlur}
                       error={
@@ -377,6 +379,7 @@ const TeamForm = ({
                       onChange={(value: number | null) => {
                         formik.setFieldValue("end_year", value);
                         formik.setFieldTouched("end_year", true);
+                        setTimeout(() => formik.validateForm(), 0);
                       }}
                       onBlur={formik.handleBlur}
                       error={

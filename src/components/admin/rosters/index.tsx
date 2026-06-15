@@ -44,12 +44,12 @@ const AdmRosters = () => {
         <p>Error Player!</p>
       </Container>
     );
-  if (!players)
+  if (players.length === 0)
     return (
       <Container sx={{ py: 1, mb: 10 }}>
         <Header players={players} />
         <Selects />
-        <p>No data available</p>
+        <p>No players found</p>
       </Container>
     );
 

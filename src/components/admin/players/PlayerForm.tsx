@@ -324,6 +324,7 @@ const PlayerForm = ({
                       max={maxYear}
                       onChange={(value: number) => {
                         formik.setFieldValue("start_year", value);
+                        setTimeout(() => formik.validateForm(), 0);
                       }}
                       onBlur={formik.handleBlur}
                       error={
@@ -348,6 +349,7 @@ const PlayerForm = ({
                       onChange={(value: number | null) => {
                         formik.setFieldValue("end_year", value);
                         formik.setFieldTouched("end_year", true);
+                        setTimeout(() => formik.validateForm(), 0);
                       }}
                       onBlur={formik.handleBlur}
                       error={

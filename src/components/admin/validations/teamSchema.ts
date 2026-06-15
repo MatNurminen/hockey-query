@@ -1,64 +1,25 @@
 import { array, number, object, string } from "yup";
-
-const currentYear = new Date().getFullYear();
+import { endYearSchema, yearSchema } from "./helpers";
 
 const teamSchema = object({
   full_name: string()
     .required("Full name is required")
-    .max(250, "More then 250 characters"),
+    .max(250, "More than 250 characters"),
   name: string()
     .required("Name is required")
-    .max(50, "More then 50 characters"),
+    .max(50, "More than 50 characters"),
   short_name: string()
     .required("Short name is required")
-    .max(10, "More then 10 characters"),
-  start_year: number()
-    .required("Start year is required")
-    .min(1900, `The start year can't be less than 1900`)
-    .max(currentYear, `The start year can't be greater than + ${currentYear}`),
-  end_year: number()
-    .nullable()
-    .notRequired()
-    .min(1900, `The end year can't be less than 1900`)
-    .max(currentYear, `The end year can't be greater than + ${currentYear}`)
-    .test(
-      "end-after-start",
-      "End year must be after start year",
-      function (value) {
-        const { start_year } = this.parent;
-        if (!value || !start_year) return true;
-        return value >= start_year;
-      },
-    ),
+    .max(10, "More than 10 characters"),
+  start_year: yearSchema(),
+  end_year: endYearSchema(),
   nation_id: number().required("Nation of team is required"),
   logos: array()
     .of(
       object().shape({
         logo: string().required("Logo is required"),
-        start_year: number()
-          .required("Start Year is required")
-          .min(1900, `The start year can't be less than 1900`)
-          .max(
-            currentYear,
-            `The start year can't be greater than + ${currentYear}`,
-          ),
-        end_year: number()
-          .nullable()
-          .notRequired()
-          .min(1900, `The end year can't be less than 1900`)
-          .max(
-            currentYear,
-            `The end year can't be greater than + ${currentYear}`,
-          )
-          .test(
-            "end-after-start",
-            "End year must be after start year",
-            function (value) {
-              const { start_year } = this.parent;
-              if (!value || !start_year) return true;
-              return value >= start_year;
-            },
-          ),
+        start_year: yearSchema(),
+        end_year: endYearSchema(),
       }),
     )
     .required("At least one logo is required"),
