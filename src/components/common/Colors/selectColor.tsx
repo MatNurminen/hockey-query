@@ -2,7 +2,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { ChromePicker, ColorResult } from 'react-color';
 import GreenButton from '../Buttons/greenButton';
 import GrayButton from '../Buttons/grayButton';
@@ -14,7 +14,7 @@ export interface SelectColorProps {
   onCancel?: () => void;
   initialColor?: string;
   title?: string;
-  disableAlpha?: boolean;
+  showAlpha?: boolean;
 }
 
 const isValidHexColor = (color: string): boolean => {
@@ -35,48 +35,47 @@ const SelectColor = ({
   onCancel,
   initialColor = '#ffffff',
   title = 'Select color',
-  disableAlpha = true,
+  showAlpha = false,
 }: SelectColorProps) => {
   const [color, setColor] = useState(normalizeColor(initialColor));
 
+  const prevOpenRef = useRef(open);
+
   useEffect(() => {
-    setColor(normalizeColor(initialColor));
-  }, [initialColor, open]);
+    if (open && !prevOpenRef.current) {
+      setColor(normalizeColor(initialColor));
+    }
+    prevOpenRef.current = open;
+  }, [open, initialColor]);
 
-  // Только обновляем внутреннее состояние, не вызываем onColorChange
-  const handleColorChange = (colorResult: ColorResult) => {
+  const handleColorChange = useCallback((colorResult: ColorResult) => {
     setColor(colorResult.hex);
-  };
+  }, []);
 
-  // Подтверждение выбора цвета
-  const handleSelect = () => {
+  const handleSelect = useCallback(() => {
     onColorChange(color);
     onClose();
-  };
+  }, [color, onColorChange, onClose]);
 
-  // Отмена выбора цвета
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     if (onCancel) onCancel();
     onClose();
-  };
+  }, [onCancel, onClose]);
 
   return (
     <Dialog
       open={open}
       onClose={handleCancel}
       aria-labelledby='color-picker-dialog-title'
-      aria-describedby='color-picker-dialog-description'
       maxWidth='sm'
     >
       <DialogTitle id='color-picker-dialog-title'>{title}</DialogTitle>
       <DialogContent>
-        <div id='color-picker-dialog-description'>
-          <ChromePicker
-            color={color}
-            onChange={handleColorChange}
-            disableAlpha={disableAlpha}
-          />
-        </div>
+        <ChromePicker
+          color={color}
+          onChange={handleColorChange}
+          disableAlpha={!showAlpha}
+        />
       </DialogContent>
       <DialogActions sx={{ mb: 2, mr: 2 }}>
         <GreenButton

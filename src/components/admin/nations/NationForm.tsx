@@ -107,9 +107,7 @@ const NationForm = ({
     formik.setFieldValue("color", color);
   };
 
-  const handleColorCancel = () => {
-    formik.setFieldValue("color", "#ffffff");
-  };
+
 
   const handleFlagUpload = async (filePath: string) => {
     const url = `${bucketPath}${filePath}`;
@@ -323,10 +321,9 @@ const NationForm = ({
                   open={openColor}
                   onClose={handleCloseColor}
                   onColorChange={handleColorChange}
-                  onCancel={handleColorCancel}
                   initialColor={formik.values.color || "#ffffff"}
                   title="Select color"
-                  disableAlpha={true}
+                  showAlpha={false}
                 />
               </BorderedBox>
             </Grid>
