@@ -1,6 +1,5 @@
 import { number, object, string } from "yup";
-
-const currentYear = new Date().getFullYear();
+import { endYearSchema, yearSchema } from "./helpers";
 
 const playerSchema = object({
   first_name: string()
@@ -19,24 +18,8 @@ const playerSchema = object({
   height: number().notRequired(),
   weight: number().notRequired(),
   draft_team_id: number().notRequired(),
-  start_year: number()
-    .required("Start Year is required")
-    .min(1900, `The start year can't be less than 1900`)
-    .max(currentYear, `The start year can't be greater than + ${currentYear}`),
-  end_year: number()
-    .nullable()
-    .notRequired()
-    .min(1900, `The end year can't be less than 1900`)
-    .max(currentYear, `The end year can't be greater than + ${currentYear}`)
-    .test(
-      "end-after-start",
-      "End year must be after start year",
-      function (value) {
-        const { start_year } = this.parent;
-        if (!value || !start_year) return true;
-        return value >= start_year;
-      },
-    ),
+  start_year: yearSchema(),
+  end_year: endYearSchema(),
 });
 
 export default playerSchema;
