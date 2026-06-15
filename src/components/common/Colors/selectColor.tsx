@@ -1,11 +1,11 @@
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogActions from '@mui/material/DialogActions';
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { ChromePicker, ColorResult } from 'react-color';
-import GreenButton from '../Buttons/greenButton';
-import GrayButton from '../Buttons/grayButton';
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogActions from "@mui/material/DialogActions";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { ChromePicker, ColorResult } from "react-color";
+import GreenButton from "../Buttons/greenButton";
+import GrayButton from "../Buttons/grayButton";
 
 export interface SelectColorProps {
   open: boolean;
@@ -23,7 +23,7 @@ const isValidHexColor = (color: string): boolean => {
 
 const normalizeColor = (color: string): string => {
   if (!isValidHexColor(color)) {
-    return '#ffffff';
+    return "#ffffff";
   }
   return color;
 };
@@ -33,8 +33,8 @@ const SelectColor = ({
   onClose,
   onColorChange,
   onCancel,
-  initialColor = '#ffffff',
-  title = 'Select color',
+  initialColor = "#ffffff",
+  title = "Select color",
   showAlpha = false,
 }: SelectColorProps) => {
   const [color, setColor] = useState(normalizeColor(initialColor));
@@ -66,10 +66,10 @@ const SelectColor = ({
     <Dialog
       open={open}
       onClose={handleCancel}
-      aria-labelledby='color-picker-dialog-title'
-      maxWidth='sm'
+      aria-labelledby="color-picker-dialog-title"
+      maxWidth="sm"
     >
-      <DialogTitle id='color-picker-dialog-title'>{title}</DialogTitle>
+      <DialogTitle id="color-picker-dialog-title">{title}</DialogTitle>
       <DialogContent>
         <ChromePicker
           color={color}
@@ -79,12 +79,12 @@ const SelectColor = ({
       </DialogContent>
       <DialogActions sx={{ mb: 2, mr: 2 }}>
         <GreenButton
-          text='Select'
-          size='small'
+          text="Select"
+          size="small"
           iconIndex={5}
           onClick={handleSelect}
         />
-        <GrayButton text='Cancel' size='small' onClick={handleCancel} />
+        <GrayButton text="Cancel" size="small" onClick={handleCancel} />
       </DialogActions>
     </Dialog>
   );

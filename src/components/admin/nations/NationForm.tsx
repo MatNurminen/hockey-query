@@ -107,8 +107,6 @@ const NationForm = ({
     formik.setFieldValue("color", color);
   };
 
-
-
   const handleFlagUpload = async (filePath: string) => {
     const url = `${bucketPath}${filePath}`;
     setLoadingFlag(true);
@@ -244,9 +242,7 @@ const NationForm = ({
                       value={formik.values.flag}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      error={
-                        formik.touched.flag && Boolean(formik.errors.flag)
-                      }
+                      error={formik.touched.flag && Boolean(formik.errors.flag)}
                       helperText={formik.touched.flag && formik.errors.flag}
                     />
                     <SbUploadFile onFileUpload={handleFlagUpload} />
@@ -280,9 +276,7 @@ const NationForm = ({
                       value={formik.values.logo}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      error={
-                        formik.touched.logo && Boolean(formik.errors.logo)
-                      }
+                      error={formik.touched.logo && Boolean(formik.errors.logo)}
                       helperText={formik.touched.logo && formik.errors.logo}
                     />
                     <SbUploadFile onFileUpload={handleLogoUpload} />
