@@ -1,6 +1,5 @@
 import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
-import Tabs from "@mui/material/Tabs";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import MenuTabs from "./MenuTabs";
@@ -8,22 +7,19 @@ import MenuTabs from "./MenuTabs";
 const AdminNavbar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+
+  if (isMobile) return null;
+
   return (
-    <>
-      {isMobile ? null : (
-        <AppBar
-          elevation={0}
-          sx={{ backgroundColor: "#042e41" }}
-          position="static"
-        >
-          <Container>
-            <Tabs value={false}>
-              <MenuTabs />
-            </Tabs>
-          </Container>
-        </AppBar>
-      )}
-    </>
+    <AppBar
+      elevation={0}
+      sx={{ backgroundColor: "#042e41" }}
+      position="static"
+    >
+      <Container>
+        <MenuTabs />
+      </Container>
+    </AppBar>
   );
 };
 

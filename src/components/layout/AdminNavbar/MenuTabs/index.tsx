@@ -34,22 +34,6 @@ function MenuTabs() {
   const [openTeam, setOpenTeam] = useState(false);
   const [openLeague, setOpenLeague] = useState(false);
 
-  const handleOpenNation = () => {
-    setOpenNation(true);
-  };
-
-  const handleOpenLeague = () => {
-    setOpenLeague(true);
-  };
-
-  const handleOpenTeam = () => {
-    setOpenTeam(true);
-  };
-
-  const handleOpenPlayer = () => {
-    setOpenPlayer(true);
-  };
-
   const handleClose = () => {
     setOpenPlayer(false);
     setOpenNation(false);
@@ -64,10 +48,6 @@ function MenuTabs() {
         to: tab.path,
         sx: {
           textDecoration: "none",
-          "&:hover": {
-            backgroundColor: "transparent",
-            textDecoration: "none",
-          },
         },
       };
     }
@@ -78,24 +58,37 @@ function MenuTabs() {
     {
       label: "Add Nation",
       icon: <AddLocationAltIcon />,
-      onClick: handleOpenNation,
+      onClick: () => setOpenNation(true),
     },
-    { label: "Add League", icon: <PostAddIcon />, onClick: handleOpenLeague },
-    { label: "Add Team", icon: <GroupAddIcon />, onClick: handleOpenTeam },
+    {
+      label: "Add League",
+      icon: <PostAddIcon />,
+      onClick: () => setOpenLeague(true),
+    },
+    {
+      label: "Add Team",
+      icon: <GroupAddIcon />,
+      onClick: () => setOpenTeam(true),
+    },
     {
       label: "Add Player",
       icon: <PersonAddIcon />,
-      onClick: handleOpenPlayer,
+      onClick: () => setOpenPlayer(true),
     },
     { label: "Edit Player", path: "/players", icon: <HowToRegIcon /> },
-    { label: "Tournaments", path: "/tournaments", icon: <PostAddIcon /> },
   ];
 
   return (
     <>
       <Stack
         width={"100%"}
-        divider={<Divider orientation="vertical" flexItem />}
+        divider={
+          <Divider
+            orientation="vertical"
+            flexItem
+            sx={{ borderColor: "#043950" }}
+          />
+        }
         direction="row"
         justifyContent="space-between"
         alignItems="center"
@@ -110,10 +103,10 @@ function MenuTabs() {
           />
         ))}
       </Stack>
-      <AddPlayer open={openPlayer} onClose={handleClose} />
-      <AddNation open={openNation} onClose={handleClose} />
-      <AddTeam open={openTeam} onClose={handleClose} />
-      <AddLeague open={openLeague} onClose={handleClose} />
+      {openPlayer && <AddPlayer open onClose={handleClose} />}
+      {openNation && <AddNation open onClose={handleClose} />}
+      {openTeam && <AddTeam open onClose={handleClose} />}
+      {openLeague && <AddLeague open onClose={handleClose} />}
     </>
   );
 }
