@@ -4,6 +4,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useSearchParams } from 'react-router-dom';
 import { getLeaguesCurLogo } from '../../../../api/leagues/queries';
+import { TLeagueDto } from '../../../../api/leagues/types';
 
 export interface SelectLeagueProps {
   value?: string;
@@ -41,7 +42,7 @@ const SelectLeague = ({ value, onChange }: SelectLeagueProps) => {
         onChange={handleChange}
         label='League'
       >
-        {leagues.map((league: any) => (
+        {leagues.map((league: TLeagueDto) => (
           <MenuItem key={league.id} value={league.id}>
             {league.name}
           </MenuItem>

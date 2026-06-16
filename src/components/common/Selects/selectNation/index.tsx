@@ -1,36 +1,46 @@
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Box from '@mui/material/Box';
-import TableFlag from '../../Images/tableFlag';
-import FormHelperText from '@mui/material/FormHelperText';
-import { getNations } from '../../../../api/nations/queries';
+import { useState, type FocusEventHandler, type ReactNode } from "react";
+import { useSearchParams } from "react-router-dom";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Box from "@mui/material/Box";
+import TableFlag from "../../Images/tableFlag";
+import FormHelperText from "@mui/material/FormHelperText";
+import { getNations } from "../../../../api/nations/queries";
+import { TNationDto } from "../../../../api/nations/types";
 
 export interface SelectProps {
   id?: string;
   name?: string;
   label?: string;
   defaultValue?: string;
-  setFormInput?: ({}) => void;
+  setFormInput?: (value: { nation_id: number }) => void;
   onChange?: (value: number) => void;
-  onBlur?: any;
-  errorId?: any;
-  helperText?: any;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
+  errorId?: boolean;
+  helperText?: ReactNode;
   value?: number;
   disabled?: boolean;
 }
 
 const SelectNation = (props: SelectProps) => {
   const [searchParams] = useSearchParams();
-  const nationId = String(searchParams.get('nation'));
+  const nationId = String(searchParams.get("nation"));
   const [nation, setNation] = useState(nationId);
   const [nationParam, setNationParam] = useSearchParams();
-  const { id, name, setFormInput, label, errorId, helperText, value, disabled } = props;
+  const {
+    id,
+    name,
+    setFormInput,
+    label,
+    errorId,
+    helperText,
+    value,
+    disabled,
+  } = props;
 
-  const defaultLabel = label || 'Nation';
+  const defaultLabel = label || "Nation";
 
   const { data, isLoading, isError } = getNations();
 
@@ -46,7 +56,7 @@ const SelectNation = (props: SelectProps) => {
     if (setFormInput) {
       setFormInput({ nation_id: numericValue });
     } else {
-      nationParam.set('nation', stringValue);
+      nationParam.set("nation", stringValue);
       setNationParam(nationParam);
     }
 
@@ -56,10 +66,10 @@ const SelectNation = (props: SelectProps) => {
   };
 
   return (
-    <FormControl fullWidth size='small' error={errorId}>
-      <InputLabel id='select-label'>{defaultLabel}</InputLabel>
+    <FormControl fullWidth size="small" error={errorId}>
+      <InputLabel id="select-label">{defaultLabel}</InputLabel>
       <Select
-        labelId='nation-label'
+        labelId="nation-label"
         id={id}
         name={name}
         value={value !== undefined ? String(value) : nation}
@@ -67,11 +77,11 @@ const SelectNation = (props: SelectProps) => {
         onChange={handleChange}
         disabled={disabled}
       >
-        {data.map((nation: any, key: any) => (
-          <MenuItem key={key} value={String(nation.id)}>
-            <Box display='flex' alignItems='center'>
-              <Box display='flex' sx={{ mr: 1 }}>
-                <TableFlag alt='' src={nation.flag} />
+        {data.map((nation: TNationDto) => (
+          <MenuItem key={nation.id} value={String(nation.id)}>
+            <Box display="flex" alignItems="center">
+              <Box display="flex" sx={{ mr: 1 }}>
+                <TableFlag alt="" src={nation.flag} />
               </Box>
               {nation.name}
             </Box>

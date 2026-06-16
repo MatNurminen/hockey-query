@@ -6,6 +6,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getSeasons } from "../../../../api/seasons/queries";
 import { navigateWithParams } from "../../../utils/urlHelpers";
+import { TSeasonDto } from "../../../../api/seasons/types";
 
 export interface SelectSeasonProps {
   value?: string;
@@ -44,7 +45,7 @@ const SelectSeason = ({ value, onChange }: SelectSeasonProps) => {
           value={currentValue || ""}
           onChange={handleChange}
         >
-          {data.map((season: any) => (
+          {data.map((season: TSeasonDto) => (
             <MenuItem key={season.id} value={String(season.id)}>
               {season.name}
             </MenuItem>

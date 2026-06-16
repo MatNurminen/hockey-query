@@ -1,11 +1,12 @@
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Box from '@mui/material/Box';
-import TableFlag from '../../Images/tableFlag';
-import FormHelperText from '@mui/material/FormHelperText';
-import { getTeamsByLeague } from '../../../../api/teams/queries';
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Box from "@mui/material/Box";
+import TableFlag from "../../Images/tableFlag";
+import FormHelperText from "@mui/material/FormHelperText";
+import { getTeamsByLeague } from "../../../../api/teams/queries";
+import { TTeamsByLeague } from "../../../../api/teams/types";
 
 export interface SelectProps {
   leagueId: number;
@@ -23,9 +24,9 @@ export interface SelectProps {
 const SelectTeam = (props: SelectProps) => {
   const {
     leagueId,
-    id = 'team-select',
-    name = 'team',
-    label = 'Team',
+    id = "team-select",
+    name = "team",
+    label = "Team",
     onChange,
     onBlur,
     error,
@@ -41,31 +42,31 @@ const SelectTeam = (props: SelectProps) => {
   if (!teams) return <h3>No data available</h3>;
 
   const handleChange = (event: SelectChangeEvent<number | null>) => {
-    const val = event.target.value === '' ? null : Number(event.target.value);
+    const val = event.target.value === "" ? null : Number(event.target.value);
     onChange?.(val);
   };
 
   return (
-    <FormControl fullWidth size='small' error={error}>
+    <FormControl fullWidth size="small" error={error}>
       <InputLabel id={`${id}-label`}>{label}</InputLabel>
       <Select
         labelId={`${id}-label`}
         id={id}
         name={name}
-        value={value ?? ''}
+        value={value ?? ""}
         label={label}
         onChange={handleChange}
         onBlur={onBlur}
         disabled={disabled}
       >
-        <MenuItem value=''>
+        <MenuItem value="">
           <em>NONE</em>
         </MenuItem>
-        {teams.map((team: any) => (
+        {teams.map((team: TTeamsByLeague) => (
           <MenuItem key={team.id} value={team.id}>
-            <Box display='flex' alignItems='center'>
-              <Box display='flex' sx={{ mr: 1 }}>
-                <TableFlag src={team.logo} />
+            <Box display="flex" alignItems="center">
+              <Box display="flex" sx={{ mr: 1 }}>
+                <TableFlag src={team.logo} alt="" />
               </Box>
               {team.full_name}
             </Box>

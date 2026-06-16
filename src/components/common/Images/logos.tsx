@@ -51,7 +51,7 @@ const Logos = ({
   const [imageError, setImageError] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const MIN_YEAR = 1980;
-  const MAX_YEAR = useLatestSeason();
+  const { startYear: MAX_YEAR } = useLatestSeason();
 
   const handleLogoUpload = async (filePath: string) => {
     const url = `${bucketPath}${filePath}`;

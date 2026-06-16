@@ -1,21 +1,18 @@
-import { useState, FC } from 'react';
+import { useState, FC, useEffect } from 'react';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useEffect } from 'react';
-import { useAppDispatch } from '../../../../store/reduxHooks';
 import { useSearchParams, useLocation } from 'react-router-dom';
 
 interface SelectOption {
   id: number | null;
   name: string;
-  [key: string]: any;
 }
 
 interface SelectLocation {
   param_key: string;
-  callback: (a1: string) => any;
+  callback: (search: string) => unknown;
   options: SelectOption[];
 }
 
@@ -28,7 +25,7 @@ const SelectLocation: FC<SelectLocation> = ({
   const [param, setParam] = useSearchParams();
   const { search } = useLocation();
 
-  const cur_param: any = param.get(param_key);
+  const cur_param = param.get(param_key) ?? '';
 
   const handleChange = (event: SelectChangeEvent) => {
     param.set(param_key, event.target.value);
@@ -36,12 +33,10 @@ const SelectLocation: FC<SelectLocation> = ({
     setValue(event.target.value);
   };
 
-  const dispatch = useAppDispatch();
-
   useEffect(() => {
-    dispatch(callback(search));
+    callback(search);
     setValue(cur_param);
-  }, [dispatch, search]);
+  }, [callback, search]);
 
   return (
     <FormControl fullWidth size='small'>
