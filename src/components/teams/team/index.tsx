@@ -11,6 +11,7 @@ import { getTeam } from '../../../api/teams/queries';
 import PlayersStatsTotal from './playersStatsTotal';
 import PlayersStatsPerSeason from './playersStatsPerSeason';
 import NatsTotal from './natsTotal';
+import NationsTeamChart from './nationsTeamChart';
 
 const Team = () => {
   const params = useParams();
@@ -40,6 +41,9 @@ const Team = () => {
       </Paper>
       <Paper sx={{ mt: 2 }}>
         <Roster teamId={teamId} seasonId={seasonId} title={title} />
+      </Paper>
+      <Paper sx={{ mt: 2 }}>
+        <NationsTeamChart teamId={teamId} seasonId={Number(seasonId)} title={title} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
         <Nats teamId={teamId} seasonId={seasonId} title={title} />
