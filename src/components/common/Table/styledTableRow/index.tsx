@@ -1,8 +1,10 @@
-import TableRow from '@mui/material/TableRow';
-import styles from '../styles';
+import { styled } from "@mui/material/styles";
+import TableRow from "@mui/material/TableRow";
 
-const StyledTableRow = ({ classes }: any) => {
-  return <TableRow className={classes.tblRow} />;
-};
+const StyledTableRow = styled(TableRow)({
+  "&:nth-of-type(odd)": {
+    backgroundColor: "#ecf1f3",
+  },
+});
 
-export default styles(StyledTableRow);
+export default StyledTableRow;
