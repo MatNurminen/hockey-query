@@ -1,30 +1,29 @@
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { PieChart, Pie, Sector, ResponsiveContainer, type PieLabelRenderProps, type PieSectorShapeProps, type PieSectorDataItem } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Sector,
+  ResponsiveContainer,
+  type PieLabelRenderProps,
+  type PieSectorShapeProps,
+  type PieSectorDataItem,
+} from "recharts";
 import SectionChapter from "../../common/Sections/sectionChapter";
-import { getCountPlayersByNation } from "../../../api/players-stats/queries";
 import { formatSeason } from "../../utils/formatSeason";
+import { TCountPlayerByNation } from "../../../api/players-stats/types";
 
-interface Props {
-  leagueId: number;
-  seasonId: number;
+type Props = {
+  players: TCountPlayerByNation[];
   title: string;
-}
+  seasonId: number;
+};
 
-const NationsChart = ({ leagueId, seasonId, title }: Props) => {
-  const { data, isLoading, isError } = getCountPlayersByNation({
-    leagueId,
-    seasonId,
-  });
-
+const NationsChart = ({ title, seasonId, players }: Props) => {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-  if (!data) return <h3>No data available</h3>;
-
-  const chartData = data.map((nation) => ({
+  const chartData = players.map((nation) => ({
     name: nation.name,
     value: Number(nation.count),
     fill: nation.color,
@@ -137,68 +136,81 @@ const NationsChart = ({ leagueId, seasonId, title }: Props) => {
     <Box my={2}>
       <SectionChapter
         txtAlign="left"
-        content={
-          `${formatSeason(seasonId)} ${title} Demographics`
-        }
+        content={`${formatSeason(seasonId)} ${title} Demographics`}
       />
-      { data.length > 0 ? (
-      <Box display="flex" justifyContent="center" sx={{ width: "100%", maxWidth: 800, mx: "auto", position: "relative" }}>
-        <ResponsiveContainer width="100%" height={460}>
-          <PieChart>
-          <Pie
-            data={chartData}
-            cx={"50%"}
-            cy={"50%"}
-            innerRadius={100}
-            outerRadius={150}
-            dataKey="value"
-            paddingAngle={0.5}
-            cornerRadius={4}
-            isAnimationActive={false}
-            label={renderCustomLabel}
-            shape={renderShape}
-            onMouseEnter={onPieEnter}
-            onMouseLeave={onPieLeave}
-          />
-          </PieChart>
-        </ResponsiveContainer>
+      {players.length > 0 ? (
+        <Box
+          display="flex"
+          justifyContent="center"
+          sx={{
+            width: "100%",
+            maxWidth: 800,
+            mx: "auto",
+            position: "relative",
+          }}
+        >
+          <ResponsiveContainer width="100%" height={460}>
+            <PieChart>
+              <Pie
+                data={chartData}
+                cx={"50%"}
+                cy={"50%"}
+                innerRadius={100}
+                outerRadius={150}
+                dataKey="value"
+                paddingAngle={0.5}
+                cornerRadius={4}
+                isAnimationActive={false}
+                label={renderCustomLabel}
+                shape={renderShape}
+                onMouseEnter={onPieEnter}
+                onMouseLeave={onPieLeave}
+              />
+            </PieChart>
+          </ResponsiveContainer>
 
-        {activeEntry && (
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              bgcolor: "white",
-              border: "1px solid #e0e0e0",
-              borderRadius: "8px",
-              zIndex: 1,
-              width: 100,
-              height: 100,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 0.5,
-            }}
-          >
-            <Typography fontWeight={700} fontSize={12} color="#333">
-              {activeEntry.name}
-            </Typography>
-            {activeEntry.flag && (
-              <Box component="img" src={activeEntry.flag} alt="" width={35} height={25} />
-            )}
-            <Typography fontWeight={600} fontSize={18} color="#555">
-              {((activeEntry.value / total) * 100).toFixed(1)}%
-            </Typography>
-            <Typography fontWeight={700} fontSize={12} color="#333">
-              {activeEntry.value} players
-            </Typography>
-          </Box>
-        )}
-      </Box>
-      ) : null }
+          {activeEntry && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                bgcolor: "white",
+                border: "1px solid #e0e0e0",
+                borderRadius: "8px",
+                zIndex: 1,
+                width: 100,
+                height: 100,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 0.5,
+              }}
+            >
+              <Typography fontWeight={700} fontSize={12} color="#333">
+                {activeEntry.name}
+              </Typography>
+              {activeEntry.flag && (
+                <Box
+                  component="img"
+                  src={activeEntry.flag}
+                  alt=""
+                  width={35}
+                  height={25}
+                />
+              )}
+              <Typography fontWeight={600} fontSize={18} color="#555">
+                {((activeEntry.value / total) * 100).toFixed(1)}%
+              </Typography>
+              <Typography fontWeight={700} fontSize={12} color="#333">
+                {activeEntry.value} players
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      ) : null}
     </Box>
   );
 };
