@@ -14,18 +14,21 @@ interface Props {
 const MenuDrawer = ({ pages }: Props) => {
   const [openDrawer, setOpenDrawer] = useState(false);
 
+  const handleToggle = () => setOpenDrawer((prev) => !prev);
+  const handleClose = () => setOpenDrawer(false);
+
   return (
     <>
-      <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
+      <Drawer open={openDrawer} onClose={handleClose}>
         <List>
-          {pages.map((page, key) => (
-            <ListItemButton key={key} component={LinkRoute} to={page.to}>
+          {pages.map((page) => (
+            <ListItemButton key={page.label} component={LinkRoute} to={page.to} onClick={handleClose}>
               <ListItemText primary={page.label} />
             </ListItemButton>
           ))}
         </List>
       </Drawer>
-      <IconButton color="inherit" onClick={() => setOpenDrawer(prev => !prev)}>
+      <IconButton color="inherit" onClick={handleToggle}>
         <MenuIcon />
       </IconButton>
     </>

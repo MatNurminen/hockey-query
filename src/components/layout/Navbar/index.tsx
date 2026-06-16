@@ -3,13 +3,12 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import MenuDrawer from "./MenuDrawer";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import LinkRoute from "../../common/LinkRoute";
-import { TabsMain } from "./styles";
 import { useLatestSeason } from "../../../hooks/useLatestSeason";
 
 const NavBar = () => {
@@ -28,70 +27,66 @@ const NavBar = () => {
   ];
 
   return (
-    <>
-      <AppBar
-        elevation={0}
-        sx={{ backgroundColor: "#063950" }}
-        position="static"
-      >
-        <Container sx={{ my: 2 }}>
-          <Toolbar>
-            <LinkRoute
-              to="/"
-              sx={{
+    <AppBar elevation={0} sx={{ backgroundColor: "#063950" }} position="static">
+      <Container sx={{ my: 2 }}>
+        <Toolbar>
+          <LinkRoute
+            to="/"
+            sx={{
+              display: "block",
+              width: "8%",
+            }}
+          >
+            <img
+              src="/img/logo.png"
+              alt="Logo"
+              style={{
                 display: "block",
-                width: "8%",
+                width: "100%",
+              }}
+            />
+          </LinkRoute>
+          {isMobile ? (
+            <Box
+              sx={{
+                ml: "auto",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
               }}
             >
-              <img
-                src="/img/logo.png"
-                alt="Logo"
-                style={{
-                  display: "block",
-                  width: "100%",
-                }}
-              />
-            </LinkRoute>
-            {isMobile ? (
-              <Box
-                sx={{
-                  ml: "auto",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                }}
-              >
-                <Button variant="contained" color="success">
-                  Sign In
-                </Button>
-                <MenuDrawer pages={pages} />
-              </Box>
-            ) : (
-              <>
-                <TabsMain value={false}>
-                  {pages.map((page, key) => (
-                    <Tab
-                      key={key}
-                      sx={{ mx: 4, p: 0 }}
-                      label={
-                        <Typography component="div" color="#fff">
-                          <Box sx={{ fontWeight: "bold" }}>{page.label}</Box>
-                        </Typography>
-                      }
-                      to={page.to}
-                      component={LinkRoute}
-                    />
-                  ))}
-                </TabsMain>
-                <Button sx={{ ml: "auto" }} variant="contained" color="success">
-                  Sign In
-                </Button>
-              </>
-            )}
-          </Toolbar>
-        </Container>
-      </AppBar>
-    </>
+              <Button variant="contained" color="success">
+                Sign In
+              </Button>
+              <MenuDrawer pages={pages} />
+            </Box>
+          ) : (
+            <Stack direction="row" sx={{ ml: "auto", alignItems: "center" }}>
+              {pages.map((page, key) => (
+                <Tab
+                  key={key}
+                  sx={{
+                    mx: 4,
+                    p: 0,
+                    textDecoration: "none",
+                    color: "#fff",
+                    opacity: 1,
+                    fontWeight: "bold",
+                  }}
+                  label={page.label}
+                  to={page.to}
+                  component={LinkRoute}
+                  underline="none"
+                />
+              ))}
+              <Button sx={{ ml: "auto" }} variant="contained" color="success">
+                Sign In
+              </Button>
+            </Stack>
+          )}
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 };
 
