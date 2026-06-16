@@ -157,8 +157,8 @@ const PlayerForm = ({
                       name="jersey_number"
                       min={1}
                       max={99}
-                      onChange={(value: number) => {
-                        formik.setFieldValue("jersey_number", value);
+                      onChange={(value: number | null) => {
+                        if (value !== null) formik.setFieldValue("jersey_number", value);
                       }}
                       onBlur={formik.handleBlur}
                       error={
@@ -202,8 +202,8 @@ const PlayerForm = ({
                       name="player_order"
                       min={1}
                       max={3}
-                      onChange={(value: number) => {
-                        formik.setFieldValue("player_order", value);
+                      onChange={(value: number | null) => {
+                        if (value !== null) formik.setFieldValue("player_order", value);
                       }}
                       onBlur={formik.handleBlur}
                       error={
@@ -240,8 +240,8 @@ const PlayerForm = ({
                       name="birth_year"
                       min={1950}
                       max={2020}
-                      onChange={(value: number) => {
-                        formik.setFieldValue("birth_year", value);
+                      onChange={(value: number | null) => {
+                        if (value !== null) formik.setFieldValue("birth_year", value);
                       }}
                       onBlur={formik.handleBlur}
                       error={
@@ -262,8 +262,8 @@ const PlayerForm = ({
                       name="height"
                       min={150}
                       max={220}
-                      onChange={(value: number) => {
-                        formik.setFieldValue("height", value);
+                      onChange={(value: number | null) => {
+                        if (value !== null) formik.setFieldValue("height", value);
                       }}
                       onBlur={formik.handleBlur}
                       error={
@@ -281,8 +281,8 @@ const PlayerForm = ({
                       name="weight"
                       min={50}
                       max={120}
-                      onChange={(value: number) => {
-                        formik.setFieldValue("weight", value);
+                      onChange={(value: number | null) => {
+                        if (value !== null) formik.setFieldValue("weight", value);
                       }}
                       onBlur={formik.handleBlur}
                       error={
@@ -322,8 +322,8 @@ const PlayerForm = ({
                       name="start_year"
                       min={1980}
                       max={maxYear}
-                      onChange={(value: number) => {
-                        formik.setFieldValue("start_year", value);
+                      onChange={(value: number | null) => {
+                        if (value !== null) formik.setFieldValue("start_year", value);
                         setTimeout(() => formik.validateForm(), 0);
                       }}
                       onBlur={formik.handleBlur}

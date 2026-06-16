@@ -316,8 +316,9 @@ const LeagueForm = ({
                       name="start_year"
                       min={1980}
                       max={maxYear}
-                      onChange={(value: number) => {
-                        formik.setFieldValue("start_year", value);
+                      onChange={(value: number | null) => {
+                        if (value !== null)
+                          formik.setFieldValue("start_year", value);
                         setTimeout(() => formik.validateForm(), 0);
                       }}
                       onBlur={formik.handleBlur}

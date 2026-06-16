@@ -16,7 +16,7 @@ interface Props {
   error?: boolean;
   helperText?: ReactNode;
   onChange: (value: number | null) => void;
-  onBlur?: () => void;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   disabled?: boolean;
 }
 

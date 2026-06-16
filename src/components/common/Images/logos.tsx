@@ -12,7 +12,7 @@ import { useLatestSeason } from "../../../hooks/useLatestSeason";
 const bucketPath = import.meta.env.VITE_CF_BUCKET_PATH;
 const noImage = import.meta.env.VITE_CG_NO_IMAGE;
 
-interface LogosProps {
+interface Props {
   logo_id?: number;
   logo: string;
   start_year: number | null;
@@ -45,7 +45,7 @@ const Logos = ({
   endYearError,
   endYearTouched,
   onFieldBlur,
-}: LogosProps) => {
+}: Props) => {
   const [loadingLogo, setLoadingLogo] = useState(false);
   const [tmpLogoPath, setTmpLogoPath] = useState(logo || "");
   const [imageError, setImageError] = useState(false);
@@ -73,8 +73,10 @@ const Logos = ({
     }
   };
 
-  const handleStartYearChange = (value: number) => {
-    onUpdate(index, { start_year: value });
+  const handleStartYearChange = (value: number | null) => {
+    if (value !== null) {
+      onUpdate(index, { start_year: value });
+    }
   };
 
   const handleEndYearChange = (value: number | null) => {
