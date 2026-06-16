@@ -7,7 +7,3 @@ export type MoveFileParams = {
   fromKey: string;
   toKey: string;
 };
-
-export type TCfSubfolderDto = {
-  subfolderName: string;
-};

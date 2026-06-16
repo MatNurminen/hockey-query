@@ -1,9 +1,9 @@
-import { useState, FC, useEffect } from 'react';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useSearchParams, useLocation } from 'react-router-dom';
+import { useState, FC, useEffect } from "react";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { useSearchParams, useLocation } from "react-router-dom";
 
 interface SelectOption {
   id: number | null;
@@ -21,11 +21,11 @@ const SelectLocation: FC<SelectLocation> = ({
   callback,
   options,
 }) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [param, setParam] = useSearchParams();
   const { search } = useLocation();
 
-  const cur_param = param.get(param_key) ?? '';
+  const cur_param = param.get(param_key) ?? "";
 
   const handleChange = (event: SelectChangeEvent) => {
     param.set(param_key, event.target.value);
@@ -39,7 +39,7 @@ const SelectLocation: FC<SelectLocation> = ({
   }, [callback, search]);
 
   return (
-    <FormControl fullWidth size='small'>
+    <FormControl fullWidth size="small">
       <InputLabel>{param_key}</InputLabel>
       <Select
         labelId={`${param_key}-label`}
@@ -49,7 +49,7 @@ const SelectLocation: FC<SelectLocation> = ({
         onChange={handleChange}
       >
         {options.map((option, key) => (
-          <MenuItem key={key} value={option.id || ''}>
+          <MenuItem key={key} value={option.id || ""}>
             {option.name}
           </MenuItem>
         ))}

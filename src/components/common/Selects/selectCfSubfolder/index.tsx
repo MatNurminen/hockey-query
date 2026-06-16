@@ -4,19 +4,18 @@ import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { memo } from "react";
-import { TCfSubfolderDto } from "../../../../api/cloudflare/types";
 
-interface SelectProps {
+interface Props {
   value: string;
   onChange: (value: string) => void;
 }
 
-const SelectCfSubfolder = memo(({ value, onChange }: SelectProps) => {
+const SelectCfSubfolder = memo(({ value, onChange }: Props) => {
   const { data, isLoading, isError } = getCfSubfolders("teams");
 
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-  if (!data) return <h3>No data available</h3>;
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error!</p>;
+  if (!data) return <p>No data available</p>;
 
   const handleChange = (event: SelectChangeEvent) => {
     onChange(event.target.value);
@@ -32,9 +31,9 @@ const SelectCfSubfolder = memo(({ value, onChange }: SelectProps) => {
         label="Folder"
         onChange={handleChange}
       >
-        {data.map((folder: TCfSubfolderDto) => (
-          <MenuItem key={folder.subfolderName} value={folder.subfolderName}>
-            {folder.subfolderName}
+        {data.map((folder: string) => (
+          <MenuItem key={folder} value={folder}>
+            {folder}
           </MenuItem>
         ))}
       </Select>

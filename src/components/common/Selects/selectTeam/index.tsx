@@ -8,7 +8,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import { getTeamsByLeague } from "../../../../api/teams/queries";
 import { TTeamsByLeague } from "../../../../api/teams/types";
 
-export interface SelectProps {
+export interface Props {
   leagueId: number;
   id?: string;
   name?: string;
@@ -21,7 +21,7 @@ export interface SelectProps {
   disabled?: boolean;
 }
 
-const SelectTeam = (props: SelectProps) => {
+const SelectTeam = (props: Props) => {
   const {
     leagueId,
     id = "team-select",
@@ -37,9 +37,9 @@ const SelectTeam = (props: SelectProps) => {
 
   const { data: teams, isLoading, isError } = getTeamsByLeague(leagueId);
 
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-  if (!teams) return <h3>No data available</h3>;
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error!</p>;
+  if (!teams) return <p>No data available</p>;
 
   const handleChange = (event: SelectChangeEvent<number | null>) => {
     const val = event.target.value === "" ? null : Number(event.target.value);

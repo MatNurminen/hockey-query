@@ -10,7 +10,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import { getNations } from "../../../../api/nations/queries";
 import { TNationDto } from "../../../../api/nations/types";
 
-export interface SelectProps {
+export interface Props {
   id?: string;
   name?: string;
   label?: string;
@@ -24,7 +24,7 @@ export interface SelectProps {
   disabled?: boolean;
 }
 
-const SelectNation = (props: SelectProps) => {
+const SelectNation = (props: Props) => {
   const [searchParams] = useSearchParams();
   const nationId = String(searchParams.get("nation"));
   const [nation, setNation] = useState(nationId);
@@ -34,6 +34,7 @@ const SelectNation = (props: SelectProps) => {
     name,
     setFormInput,
     label,
+    onBlur,
     errorId,
     helperText,
     value,
@@ -44,9 +45,9 @@ const SelectNation = (props: SelectProps) => {
 
   const { data, isLoading, isError } = getNations();
 
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-  if (!data) return <h3>No data available</h3>;
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error!</p>;
+  if (!data) return <p>No data available</p>;
 
   const handleChange = (event: SelectChangeEvent) => {
     const stringValue = event.target.value;
@@ -75,6 +76,7 @@ const SelectNation = (props: SelectProps) => {
         value={value !== undefined ? String(value) : nation}
         label={defaultLabel}
         onChange={handleChange}
+        onBlur={onBlur}
         disabled={disabled}
       >
         {data.map((nation: TNationDto) => (

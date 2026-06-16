@@ -5,7 +5,7 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import FormHelperText from "@mui/material/FormHelperText";
 
-interface SelectNumberProps {
+interface Props {
   value?: number | null;
   label: string;
   id?: string;
@@ -33,7 +33,7 @@ const SelectNumber = ({
   onChange,
   onBlur,
   disabled,
-}: SelectNumberProps) => {
+}: Props) => {
   const toInternal = (v: number | null | undefined) =>
     nullable && (v === null || v === undefined) ? "NONE" : String(v ?? "");
 

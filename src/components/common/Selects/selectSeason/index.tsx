@@ -8,12 +8,12 @@ import { getSeasons } from "../../../../api/seasons/queries";
 import { navigateWithParams } from "../../../utils/urlHelpers";
 import { TSeasonDto } from "../../../../api/seasons/types";
 
-export interface SelectSeasonProps {
+export interface Props {
   value?: string;
   onChange?: (value: string) => void;
 }
 
-const SelectSeason = ({ value, onChange }: SelectSeasonProps) => {
+const SelectSeason = ({ value, onChange }: Props) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { data, isLoading, isError } = getSeasons();
@@ -33,8 +33,8 @@ const SelectSeason = ({ value, onChange }: SelectSeasonProps) => {
     }
   };
 
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError || !data) return <h3>Error loading seasons</h3>;
+  if (isLoading) return <p>Loading...</p>;
+  if (isError || !data) return <p>Error loading seasons</p>;
 
   return (
     <Stack direction="row" spacing={2}>
