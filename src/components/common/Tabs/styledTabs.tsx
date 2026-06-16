@@ -1,5 +1,5 @@
-import { styled } from '@mui/material/styles';
-import Tabs from '@mui/material/Tabs';
+import { styled } from "@mui/material/styles";
+import Tabs from "@mui/material/Tabs";
 
 const StyledTabs = styled(Tabs)`
   && .MuiTab-root {
@@ -17,7 +17,7 @@ const StyledTabs = styled(Tabs)`
     background-color: #093f56;
   }
   && .MuiTabs-indicator {
-    display: none; /* Убираем индикатор */
+    display: none;
   }
   && .MuiTab-root:last-of-type {
     margin-right: 0;
