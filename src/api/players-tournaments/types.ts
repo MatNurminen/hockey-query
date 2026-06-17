@@ -4,7 +4,7 @@ export type TPlayerTournamentDto = {
   player_id: number;
   games?: number;
   goals?: number;
-  postseason?: string;
+  postseason?: Record<string, unknown> | null;
 };
 
 export type TCreatePlayerTournamentDto = {
@@ -12,5 +12,5 @@ export type TCreatePlayerTournamentDto = {
   player_id: number;
   games?: number;
   goals?: number;
-  postseason?: string;
+  postseason?: Record<string, unknown> | null;
 };
