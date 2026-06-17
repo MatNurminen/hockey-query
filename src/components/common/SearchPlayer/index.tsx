@@ -3,6 +3,8 @@ import { useDebounce } from "use-debounce";
 import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
 import TableFlag from "../../common/Images/tableFlag";
 import { getPlayers } from "../../../api/players/queries";
 import { TPlayerDto } from "../../../api/players/types";
@@ -14,6 +16,7 @@ type Props = {
 const SearchPlayer = ({ onPlayerSelect }: Props) => {
   const [inputValue, setInputValue] = useState("");
   const [value, setValue] = useState<TPlayerDto | null>(null);
+  const [focused, setFocused] = useState(false);
   const [debouncedInput] = useDebounce(inputValue, 400);
   const enabled = debouncedInput.length > 2;
 
@@ -48,7 +51,7 @@ const SearchPlayer = ({ onPlayerSelect }: Props) => {
         return (
           <Box
             component="li"
-            key={key}
+            key={option.id}
             {...rest}
             sx={{ display: "flex", alignItems: "center" }}
           >
@@ -65,9 +68,35 @@ const SearchPlayer = ({ onPlayerSelect }: Props) => {
       }}
       sx={{ width: "100%", backgroundColor: "background.paper" }}
       open={enabled && !isFetching && players.length > 0}
-      renderInput={(params) => (
-        <TextField {...params} label="Search players" size="small" />
-      )}
+      renderInput={(params) => {
+        const { InputLabelProps, InputProps, ...otherParams } = params;
+        return (
+          <TextField
+            {...otherParams}
+            label="Search players"
+            size="small"
+            slotProps={{
+              input: {
+                ...InputProps,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon sx={{ color: "action.active" }} />
+                  </InputAdornment>
+                ),
+              },
+              inputLabel: {
+                ...InputLabelProps,
+                shrink: !!(inputValue || focused),
+                sx: {
+                  ...(!(inputValue || focused) ? { ml: 3 } : {}),
+                },
+              },
+            }}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+          />
+        );
+      }}
     />
   );
 };
