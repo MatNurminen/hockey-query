@@ -8,7 +8,7 @@ export type TTeamTournamentDto = {
   losts?: number;
   goals_for?: number;
   goals_against?: number;
-  postseason?: string;
+  postseason?: Record<string, unknown> | null;
 };
 
 export type TCreateTeamTournamentDto = {
@@ -20,7 +20,7 @@ export type TCreateTeamTournamentDto = {
   losts?: number;
   goals_for?: number;
   goals_against?: number;
-  postseason?: string;
+  postseason?: Record<string, unknown> | null;
 };
 
 export type TTeamByTournamentDto = {

@@ -80,6 +80,12 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
     updatedRow.pts = updatedRow.wins * 2 + updatedRow.ties;
     updatedRow.gd = updatedRow.goals_for - updatedRow.goals_against;
 
+    if (typeof updatedRow.postseason === "string") {
+      updatedRow.postseason = updatedRow.postseason
+        ? { title: updatedRow.postseason }
+        : null;
+    }
+
     const changedFields = (
       Object.keys(updatedRow) as (keyof TStandings)[]
     ).filter((key) => key !== "id" && updatedRow[key] !== oldRow[key]);
@@ -219,6 +225,9 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
       headerName: "POSTSEASON",
       editable: true,
       flex: 1,
+      renderCell: (params) => (
+        <span>{String(params.row.postseason?.title ?? "") || "-"}</span>
+      ),
     },
   ];
 

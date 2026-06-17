@@ -8,7 +8,6 @@ export type TStandings = {
   losts: number;
   goals_for: number;
   goals_against: number;
-  postseason: string;
   gd: number;
   pts: number;
   full_name: string;
@@ -16,6 +15,7 @@ export type TStandings = {
   name: string;
   season: string;
   logo: string;
+  postseason: Record<string, unknown> | null;
 };
 
 export type StandingsParams = {
