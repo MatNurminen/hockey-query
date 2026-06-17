@@ -1,9 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
 import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import SearchPlayer from "../../common/SearchPlayer";
 
 const SearchBar = () => {
@@ -14,9 +12,6 @@ const SearchBar = () => {
       <Container sx={{ my: 2 }}>
         <Stack direction="row" justifyContent="center">
           <SearchPlayer onPlayerSelect={(id) => navigate(`/players/${id}`)} />
-          <Button variant="contained" color="success" size="small">
-            <SearchIcon />
-          </Button>
         </Stack>
       </Container>
     </AppBar>
