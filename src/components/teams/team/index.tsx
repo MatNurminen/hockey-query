@@ -4,7 +4,6 @@ import Header from './header';
 import SectionExternalLinks from '../../common/Sections/sectionExternalLinks';
 import SelectSeason from '../../common/Selects/selectSeason';
 import Roster from './roster';
-import Nats from './nats';
 import History from './history';
 import Paper from '@mui/material/Paper';
 import { getTeam } from '../../../api/teams/queries';
@@ -44,9 +43,6 @@ const Team = () => {
       </Paper>
       <Paper sx={{ mt: 2 }}>
         <NationsTeamChart teamId={teamId} seasonId={Number(seasonId)} title={title} />
-      </Paper>
-      <Paper sx={{ mt: 2 }}>
-        <Nats teamId={teamId} seasonId={seasonId} title={title} />
       </Paper>
       <Paper sx={{ mt: 2, backgroundColor: 'transparent', boxShadow: 'none' }}>
         <History title={title} teamId={teamId} />

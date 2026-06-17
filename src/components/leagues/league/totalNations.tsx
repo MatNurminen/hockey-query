@@ -25,7 +25,10 @@ const TotalNations = ({ leagueId, seasonId }: Props) => {
 
   return (
     <Box my={2}>
-      <SectionChapter txtAlign="left" content="Player Nationalities Throughout History" />
+      <SectionChapter
+        txtAlign="left"
+        content="Player Nationalities Throughout History"
+      />
       <List
         sx={{ columns: { sm: 2, md: 3, lg: 4 }, pb: 1 }}
         dense={true}
