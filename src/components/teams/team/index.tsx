@@ -1,23 +1,23 @@
-import Container from '@mui/material/Container';
-import { useSearchParams, useParams } from 'react-router-dom';
-import Header from './header';
-import SectionExternalLinks from '../../common/Sections/sectionExternalLinks';
-import SelectSeason from '../../common/Selects/selectSeason';
-import Roster from './roster';
-import History from './history';
-import Paper from '@mui/material/Paper';
-import { getTeam } from '../../../api/teams/queries';
-import PlayersStatsTotal from './playersStatsTotal';
-import PlayersStatsPerSeason from './playersStatsPerSeason';
-import NatsTotal from './natsTotal';
-import NationsTeamChart from './nationsTeamChart';
+import Container from "@mui/material/Container";
+import { useSearchParams, useParams } from "react-router-dom";
+import Header from "./header";
+import SectionExternalLinks from "../../common/Sections/sectionExternalLinks";
+import SelectSeason from "../../common/Selects/selectSeason";
+import Roster from "./roster";
+import History from "./history";
+import Paper from "@mui/material/Paper";
+import { getTeam } from "../../../api/teams/queries";
+import PlayersStatsTotal from "./playersStatsTotal";
+import PlayersStatsPerSeason from "./playersStatsPerSeason";
+import NatsTotal from "./natsTotal";
+import NationsTeamChart from "./nationsTeamChart";
 
 const Team = () => {
   const params = useParams();
   const teamId = Number(params.id);
 
   const [searchParams] = useSearchParams();
-  const seasonId: string = searchParams.get('season') || '2012';
+  const seasonId: string = searchParams.get("season") || "2012";
 
   const { data: team, isError, isLoading } = getTeam(teamId);
 
@@ -42,16 +42,20 @@ const Team = () => {
         <Roster teamId={teamId} seasonId={seasonId} title={title} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
-        <NationsTeamChart teamId={teamId} seasonId={Number(seasonId)} title={title} />
+        <NationsTeamChart
+          teamId={teamId}
+          seasonId={Number(seasonId)}
+          title={title}
+        />
       </Paper>
-      <Paper sx={{ mt: 2, backgroundColor: 'transparent', boxShadow: 'none' }}>
+      <Paper sx={{ mt: 2, backgroundColor: "transparent", boxShadow: "none" }}>
         <History title={title} teamId={teamId} />
       </Paper>
-      <Paper sx={{ mt: 4, backgroundColor: 'transparent', boxShadow: 'none' }}>
-        <PlayersStatsTotal teamId={teamId} title={title} />
+      <Paper sx={{ mt: 4, backgroundColor: "transparent", boxShadow: "none" }}>
+        <PlayersStatsTotal teamId={teamId} />
       </Paper>
-      <Paper sx={{ mt: 2, backgroundColor: 'transparent', boxShadow: 'none' }}>
-        <PlayersStatsPerSeason teamId={teamId} title={title} />
+      <Paper sx={{ mt: 2, backgroundColor: "transparent", boxShadow: "none" }}>
+        <PlayersStatsPerSeason teamId={teamId} />
       </Paper>
       <Paper>
         <NatsTotal teamId={teamId} />

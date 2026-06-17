@@ -14,7 +14,7 @@ import GreenButton from "../../common/Buttons/greenButton";
 import TableFlag from "../../common/Images/tableFlag";
 import { getPlayersStatsDetail } from "../../../api/players-stats/queries";
 
-const PlayersStatsPerSeason = ({ teamId, title }: any) => {
+const PlayersStatsPerSeason = ({ teamId }: any) => {
   const { data, isLoading, isError } = getPlayersStatsDetail({
     teamId,
   });
@@ -57,7 +57,7 @@ const PlayersStatsPerSeason = ({ teamId, title }: any) => {
           <TableContainer component={Paper}>
             <Table size="small">
               <HeaderMain
-                cells={[`${title} all-time ${item.name} goals per season`]}
+                cells={[`Franchise all-time ${item.name} goals per season`]}
               />
             </Table>
             <Table size="small">
@@ -77,7 +77,7 @@ const PlayersStatsPerSeason = ({ teamId, title }: any) => {
                     <TableCell align="center">{key + 1}</TableCell>
                     <TableCell>
                       <Box display="flex" alignItems="center">
-                        <TableFlag src={player.player_flag} />
+                        <TableFlag src={player.player_flag} alt="" />
                         <Link
                           underline="hover"
                           component={RouterLink}

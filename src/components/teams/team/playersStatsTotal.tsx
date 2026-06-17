@@ -14,7 +14,7 @@ import GreenButton from "../../common/Buttons/greenButton";
 import TableFlag from "../../common/Images/tableFlag";
 import { getPlayersStatsTotal } from "../../../api/players-stats/queries";
 
-const PlayersStatsTotal = ({ teamId, title }: any) => {
+const PlayersStatsTotal = ({ teamId }: any) => {
   const { data, isLoading, isError } = getPlayersStatsTotal({
     teamId,
   });
@@ -58,7 +58,7 @@ const PlayersStatsTotal = ({ teamId, title }: any) => {
         <Grid size={{ sm: 12, md: 4 }} key={key}>
           <TableContainer component={Paper}>
             <Table size="small">
-              <HeaderMain cells={[`${title} all-time ${item.name} Stats`]} />
+              <HeaderMain cells={[`Franchise all-time ${item.name} Stats`]} />
             </Table>
             <Table size="small">
               <HeaderSection
