@@ -49,3 +49,10 @@ export type TTeamFact = {
   avage: number;
   logo: string;
 };
+
+export type TTeamChampions = {
+  season_id: number;
+  team_id: number;
+  full_name: string;
+  postseason: Record<string, unknown> | null;
+};
