@@ -8,6 +8,7 @@ import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import { TTeamChampions } from "../../../api/teams-stats/types";
+import { memo } from "react";
 
 interface Props {
   title: string;
@@ -32,44 +33,47 @@ const Champions = ({ title, leagueId }: Props) => {
         txtAlign="left"
         content={"List of " + title + " Champions"}
       />
-      <Stack direction="row" spacing={2}>
-        {columns.map((columnTeams, colIndex) => (
-          <List key={colIndex} sx={{ pb: 1, flex: 1 }}>
-            {columnTeams.map((team, index) => (
-              <ListItem key={index} sx={{ py: 0, minHeight: "auto" }}>
-                <ListItemText
-                  primary={
-                    <Stack direction="row" spacing={1}>
-                      <Link
-                        underline="hover"
-                        component={RouterLink}
-                        to={`/players/${team.season_id}`}
-                        ml={1}
-                      >
-                        <Typography fontWeight="600" variant="body2">
-                          {team.season_id + 1}
-                        </Typography>
-                      </Link>
-                      <Link
-                        underline="hover"
-                        component={RouterLink}
-                        to={`/teams/${team.team_id}?season=${team.season_id}`}
-                        ml={1}
-                      >
-                        <Typography variant="body2">
-                          {team.full_name}
-                        </Typography>
-                      </Link>
-                    </Stack>
-                  }
-                />
-              </ListItem>
-            ))}
-          </List>
-        ))}
-      </Stack>
+      {data?.length ? (
+        <Stack direction="row" spacing={2}>
+          {columns.map((columnTeams, colIndex) => (
+            <List key={colIndex} sx={{ pb: 1, flex: 1 }}>
+              {columnTeams.map((team) => (
+                <ListItem
+                  key={team.season_id + team.team_id}
+                  sx={{ py: 0, minHeight: "auto" }}
+                >
+                  <ListItemText
+                    primary={
+                      <Stack direction="row" spacing={1}>
+                        <Link
+                          underline="hover"
+                          component={RouterLink}
+                          to={`/rosters?league=${leagueId}&season=${team.season_id}`}
+                        >
+                          <Typography fontWeight="600" variant="body2">
+                            {team.season_id + 1}
+                          </Typography>
+                        </Link>
+                        <Link
+                          underline="hover"
+                          component={RouterLink}
+                          to={`/teams/${team.team_id}?season=${team.season_id}`}
+                        >
+                          <Typography variant="body2">
+                            {team.full_name}
+                          </Typography>
+                        </Link>
+                      </Stack>
+                    }
+                  />
+                </ListItem>
+              ))}
+            </List>
+          ))}
+        </Stack>
+      ) : null}
     </>
   );
 };
 
-export default Champions;
+export default memo(Champions);
