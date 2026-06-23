@@ -1,12 +1,14 @@
-import Container from '@mui/material/Container';
-import { useParams } from 'react-router-dom';
-import Header from './header';
-import International from './international';
-import Paper from '@mui/material/Paper';
-import Leagues from './leagues';
-import { getNation } from '../../../api/nations/queries';
-import PlrsStatsTotal from './plrsStatsTotal';
-import PlrsStatsSeason from './plrsStatsSeason';
+import Container from "@mui/material/Container";
+import { useParams } from "react-router-dom";
+import Header from "./header";
+import International from "./international";
+import Paper from "@mui/material/Paper";
+import Leagues from "./leagues";
+import { getNation } from "../../../api/nations/queries";
+import PlrsStatsTotal from "./plrsStatsTotal";
+import PlrsStatsSeason from "./plrsStatsSeason";
+import SelectSeason from "../../common/Selects/selectSeason";
+import Box from "@mui/material/Box";
 
 const Nation = () => {
   const params = useParams();
@@ -24,17 +26,20 @@ const Nation = () => {
         <Header nation={nation} nationId={nationId} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
-        <Leagues nationId={params.id} />
+        <Leagues nationId={nationId} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
         <International nation={nation} />
       </Paper>
-      <Paper sx={{ mt: 2 }}>
+      <Paper sx={{ mt: 2, p: 2 }}>
+        <SelectSeason />
+      </Paper>
+      <Box sx={{ mt: 2 }}>
         <PlrsStatsSeason nationId={nationId} natName={nation.name} />
-      </Paper>
-      <Paper sx={{ mt: 2, py: 2 }}>
-        <PlrsStatsTotal nationId={params.id} />
-      </Paper>
+      </Box>
+      <Box>
+        <PlrsStatsTotal nationId={nationId} />
+      </Box>
     </Container>
   );
 };

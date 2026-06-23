@@ -1,21 +1,27 @@
-import Grid from '@mui/material/Grid2';
-import SectionHeader from '../../common/Sections/sectionHeader';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
-import Box from '@mui/material/Box';
-import HeaderMain from '../../common/Table/headerMain';
-import MainLogo from '../../common/Images/mainLogo';
-import { getPlayersCountByNation } from '../../../api/players/queries';
-import { getTeamsCountByNation } from '../../../api/teams/queries';
-import AppButton from '../../common/Buttons/appButton';
-import { useState } from 'react';
-import UpdateNation from '../../admin/nations/updateNation';
+import Grid from "@mui/material/Grid2";
+import SectionHeader from "../../common/Sections/sectionHeader";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
+import Box from "@mui/material/Box";
+import HeaderMain from "../../common/Table/headerMain";
+import MainLogo from "../../common/Images/mainLogo";
+import { getPlayersCountByNation } from "../../../api/players/queries";
+import { getTeamsCountByNation } from "../../../api/teams/queries";
+import AppButton from "../../common/Buttons/appButton";
+import { memo, useState } from "react";
+import UpdateNation from "../../admin/nations/updateNation";
+import { TNationDto } from "../../../api/nations/types";
 
-const Header = ({ nation, nationId }: { nation: any; nationId: number }) => {
+interface Props {
+  nation: TNationDto;
+  nationId: number;
+}
+
+const Header = ({ nation, nationId }: Props) => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -48,18 +54,18 @@ const Header = ({ nation, nationId }: { nation: any; nationId: number }) => {
         <Grid my={3} size={{ md: 6, sm: 12 }}>
           <Grid
             container
-            direction='row'
-            justifyContent='flex-start'
-            alignItems='center'
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="center"
             mt={-2}
           >
             <Grid size={2}>
-              <img alt='' width={60} src={nation.flag} />
+              <img alt="" width={60} src={nation.flag} />
             </Grid>
             <Grid size={10}>
               <SectionHeader
-                txtAlign='left'
-                content={nation.name + ', ' + nation.short_name}
+                txtAlign="left"
+                content={nation.name + ", " + nation.short_name}
               />
             </Grid>
           </Grid>
@@ -67,18 +73,18 @@ const Header = ({ nation, nationId }: { nation: any; nationId: number }) => {
             <Grid
               size={2}
               sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
               <Box
                 sx={{
                   width: 32,
                   height: 32,
-                  borderRadius: '50%',
-                  bgcolor: nation.color || '#fff',
-                  border: '2px solid #ccc',
+                  borderRadius: "50%",
+                  bgcolor: nation.color || "#fff",
+                  border: "2px solid #ccc",
                 }}
               />
             </Grid>
@@ -89,8 +95,8 @@ const Header = ({ nation, nationId }: { nation: any; nationId: number }) => {
         </Grid>
         <Grid my={3} size={{ md: 6, sm: 12 }}>
           <TableContainer component={Paper}>
-            <Table size='small'>
-              <HeaderMain cells={[`DATABASE STATS - ${nation.name}`, '']} />
+            <Table size="small">
+              <HeaderMain cells={[`DATABASE STATS - ${nation.name}`, ""]} />
               <TableBody>
                 <TableRow>
                   <TableCell>
@@ -112,13 +118,13 @@ const Header = ({ nation, nationId }: { nation: any; nationId: number }) => {
             </Table>
           </TableContainer>
         </Grid>
-        <Grid textAlign='right' size={{ xs: 12 }} sx={{ mb: 1 }}>
+        <Grid textAlign="right" size={{ xs: 12 }} sx={{ mb: 1 }}>
           <AppButton
-            text='Edit Nation'
+            text="Edit Nation"
             onClick={handleOpen}
-            size='small'
-            color='success'
-            iconName='edit'
+            size="small"
+            color="success"
+            iconName="edit"
           />
         </Grid>
       </Grid>
@@ -127,4 +133,4 @@ const Header = ({ nation, nationId }: { nation: any; nationId: number }) => {
   );
 };
 
-export default Header;
+export default memo(Header);

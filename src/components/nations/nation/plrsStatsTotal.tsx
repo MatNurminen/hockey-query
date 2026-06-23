@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,10 +13,14 @@ import { Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import AppButton from '../../common/Buttons/appButton';
 import Grid from '@mui/material/Grid2';
-import Container from '@mui/material/Container';
 import { useMultiplePlayersStatsTotal } from '../../../api/players-stats/hooks';
+import { TPlayerStatTotal } from '../../../api/players-stats/types';
 
-const PlrsStatsTotal = ({ nationId }: any) => {
+interface Props {
+  nationId: number;
+}
+
+const PlrsStatsTotal = ({ nationId }: Props) => {
   const configs = [
     {
       id: 1,
@@ -49,9 +54,8 @@ const PlrsStatsTotal = ({ nationId }: any) => {
   if (isError) return <h3>Error!</h3>;
 
   return (
-    <Container>
       <Grid container spacing={3}>
-        {items.map((item: any) => (
+        {items.map((item: { id: number; name: string; list: TPlayerStatTotal[] }) => (
           <Grid key={item.id} size={{ xs: 12, md: 6 }}>
             <TableContainer component={Paper}>
               <Table size='small'>
@@ -67,9 +71,9 @@ const PlrsStatsTotal = ({ nationId }: any) => {
                   ]}
                 />
                 <TableBody>
-                  {item.list.map((player: any, key: any) => (
+                  {item.list.map((player: TPlayerStatTotal, index: number) => (
                     <TableRow key={player.player_id}>
-                      <TableCell align='center'>{key + 1}</TableCell>
+                      <TableCell align='center'>{index + 1}</TableCell>
                       <TableCell>
                         <Box display='flex' alignItems='center'>
                           <TableFlag alt='' src={player.player_flag} />
@@ -91,14 +95,11 @@ const PlrsStatsTotal = ({ nationId }: any) => {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Box mt={1}>
-              <AppButton color='success' fullWidth={true} text='SHOW MORE' onClick={() => console.log('SHOW MORE')} />
-            </Box>
+              <AppButton color='success' fullWidth={true} text='SHOW MORE' to={`/nation?nation=${nationId}`} />
           </Grid>
         ))}
       </Grid>
-    </Container>
   );
 };
 
-export default PlrsStatsTotal;
+export default memo(PlrsStatsTotal);

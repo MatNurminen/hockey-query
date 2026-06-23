@@ -1,28 +1,30 @@
-import TableContainer from '@mui/material/TableContainer';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
-import AppButton from '../../common/Buttons/appButton';
-import HeaderTable from './headerTable';
-import Stack from '@mui/material/Stack';
-import { memo, useState } from 'react';
-import DeleteDialog from '../../common/Dialogs/deleteDialog';
-import TableFlag from '../../common/Images/tableFlag';
-import { getNations } from '../../../api/nations/queries';
-import { useDeleteNation } from '../../../api/nations/mutations';
+import TableContainer from "@mui/material/TableContainer";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@mui/material/Link";
+import AppButton from "../../common/Buttons/appButton";
+import HeaderTable from "./headerTable";
+import Stack from "@mui/material/Stack";
+import { memo, useState } from "react";
+import DeleteDialog from "../../common/Dialogs/deleteDialog";
+import TableFlag from "../../common/Images/tableFlag";
+import { getNations } from "../../../api/nations/queries";
+import { useDeleteNation } from "../../../api/nations/mutations";
+import { TNationDto } from "../../../api/nations/types";
+import { useLatestSeason } from "../../../hooks/useLatestSeason";
 
 const NationsTable = () => {
-  const [selectedNation, setSelectedNation] = useState<any | null>(null);
-  const [name, setName] = useState('');
+  const [selectedNation, setSelectedNation] = useState<number | null>(null);
+  const [name, setName] = useState("");
 
-  const { data: nations } = getNations();
+  const { data: nations, isLoading, isError } = getNations();
   const { mutate: deleteNation } = useDeleteNation();
 
-  const currentSeason = 2024;
+  const { startYear: currentSeason } = useLatestSeason();
 
   const handleOpen = (id: number) => {
     setSelectedNation(id);
@@ -38,10 +40,14 @@ const NationsTable = () => {
         { id: selectedNation },
         {
           onSuccess: () => setSelectedNation(null),
-        }
+        },
       );
     }
   };
+
+  if (isLoading) return <h3>Loading...</h3>;
+  if (isError) return <h3>Error!</h3>;
+  if (!nations?.length) return <h3>No data available</h3>;
 
   return (
     <Stack spacing={3}>
@@ -52,17 +58,17 @@ const NationsTable = () => {
         onConfirm={handleDelete}
       />
       <TableContainer component={Paper}>
-        <Table size='small'>
+        <Table size="small">
           <HeaderTable />
           <TableBody>
-            {nations?.map((nation: any) => (
+            {nations.map((nation: TNationDto) => (
               <TableRow key={nation.id}>
-                <TableCell align='center'>
+                <TableCell align="center">
                   <TableFlag alt={nation.name} src={nation.flag} />
                 </TableCell>
                 <TableCell>
                   <Link
-                    underline='hover'
+                    underline="hover"
                     component={RouterLink}
                     to={`/nations/${nation.id}?season=${currentSeason}`}
                   >
@@ -70,14 +76,15 @@ const NationsTable = () => {
                   </Link>
                 </TableCell>
                 <TableCell>{nation.short_name}</TableCell>
-                <TableCell align='right'>
+                <TableCell align="right">
                   <AppButton
-                    text='Delete'
-                    size='small'
-                    color='error'
-                    iconName='delete'
+                    text="Delete"
+                    size="small"
+                    color="error"
+                    iconName="delete"
                     onClick={() => {
-                      handleOpen(nation.id), setName(nation.name);
+                      handleOpen(nation.id);
+                      setName(nation.name);
                     }}
                   />
                 </TableCell>

@@ -1,26 +1,33 @@
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableContainer from '@mui/material/TableContainer';
-import HeaderMain from '../../common/Table/headerMain';
-import HeaderSection from '../../common/Table/headerSection';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import TableFlag from '../../common/Images/tableFlag';
-import ListItemText from '@mui/material/ListItemText';
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
-import { getTeamsForNation } from '../../../api/teams-stats/queries';
-import Grid from '@mui/material/Grid2';
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableContainer from "@mui/material/TableContainer";
+import HeaderMain from "../../common/Table/headerMain";
+import HeaderSection from "../../common/Table/headerSection";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import TableFlag from "../../common/Images/tableFlag";
+import ListItemText from "@mui/material/ListItemText";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@mui/material/Link";
+import { getTeamsForNation } from "../../../api/teams-stats/queries";
+import Grid from "@mui/material/Grid2";
+import { memo } from "react";
+import { TNationDto } from "../../../api/nations/types";
+import { TTeamsForNation } from "../../../api/teams-stats/types";
 
-const International = ({ nation }: { nation: any }) => {
+interface Props {
+  nation: TNationDto;
+}
+
+const International = ({ nation }: Props) => {
   const {
     data: wc,
     isLoading: wcLoading,
     isError: wcError,
   } = getTeamsForNation({
     nationId: nation.id,
-    shortName: 'WC%',
+    shortName: "WC%",
     limit: 10,
   });
   const {
@@ -29,36 +36,36 @@ const International = ({ nation }: { nation: any }) => {
     isError: u20Error,
   } = getTeamsForNation({
     nationId: nation.id,
-    shortName: 'U20%',
+    shortName: "U20%",
     limit: 10,
   });
 
-  if (wcLoading || u20Loading) return <p>Загрузка...</p>;
-  if (wcError || u20Error) return <p>Ошибка загрузки</p>;
-  if (!wc || !u20) return <div>No data available</div>;
+  if (wcLoading || u20Loading) return <p>Loading...</p>;
+  if (wcError || u20Error) return <p>Error!</p>;
+  if (!wc?.length && !u20?.length) return <div>No data available</div>;
 
-  const items: { id: number; name: string; data: any }[] = [
-    { id: 1, name: nation.name, data: wc },
-    { id: 2, name: nation.name + ' U20', data: u20 },
+  const items: { id: number; name: string; data: TTeamsForNation[] }[] = [
+    { id: 1, name: nation.name, data: wc ?? [] },
+    { id: 2, name: nation.name + " U20", data: u20 ?? [] },
   ];
 
   return (
     <>
       <TableContainer component={Paper}>
-        <Table size='small'>
-          <HeaderMain cells={['International Record']} />
+        <Table size="small">
+          <HeaderMain cells={["International Record"]} />
         </Table>
-        <Table size='small'>
+        <Table size="small">
           <HeaderSection
             cells={[
-              { text: 'World Championship', width: '50%' },
-              { text: 'U20 World Championship', width: '50%' },
+              { text: "World Championship", width: "50%" },
+              { text: "U20 World Championship", width: "50%" },
             ]}
           />
         </Table>
       </TableContainer>
       <Grid container sx={{ py: 1 }}>
-        {items.map((item: any) => (
+        {items.map((item) => (
           <Grid size={6} key={item.id}>
             {item.data?.length > 0 && (
               <List dense={true} disablePadding={true}>
@@ -68,27 +75,30 @@ const International = ({ nation }: { nation: any }) => {
                   </ListItemIcon>
 
                   <Link
-                    underline='hover'
+                    underline="hover"
                     component={RouterLink}
                     to={`/teams/${item.data[0].team_id}`}
                   >
                     <ListItemText primary={item.name} />
                   </Link>
                 </ListItem>
-                {item.data.map((team: any, key: any) => (
-                  <ListItem key={key} sx={{ py: 0 }}>
+                {item.data.map((record) => (
+                  <ListItem
+                    key={record.season_id + record.league_id + record.team_id}
+                    sx={{ py: 0 }}
+                  >
                     <ListItemText
                       primary={
                         <>
                           <Link
-                            underline='hover'
+                            underline="hover"
                             component={RouterLink}
-                            to={`/rosters?league=${team.league_id}&season=${team.season_id}`}
+                            to={`/rosters?league=${record.league_id}&season=${record.season_id}`}
                             style={{ marginRight: 4 }}
                           >
-                            {team.season_id}
+                            {record.season_id}
                           </Link>
-                          {team.short_name} {team.postseason}
+                          {record.short_name} {record.postseason}
                         </>
                       }
                     />
@@ -103,4 +113,4 @@ const International = ({ nation }: { nation: any }) => {
   );
 };
 
-export default International;
+export default memo(International);

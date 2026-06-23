@@ -1,7 +1,7 @@
+import { memo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
-import Divider from "@mui/material/Divider";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -9,18 +9,22 @@ import TableRow from "@mui/material/TableRow";
 import Box from "@mui/material/Box";
 import HeaderMain from "../../common/Table/headerMain";
 import HeaderSection from "../../common/Table/headerSection";
-import SelectSeason from "../../common/Selects/selectSeason";
 import TableFlag from "../../common/Images/tableFlag";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
 import AppButton from "../../common/Buttons/appButton";
-import Container from "@mui/material/Container";
 import { useMultiplePlayersStatsDetail } from "../../../api/players-stats/hooks";
 import { formatSeason } from "../../utils/formatSeason";
+import { TPlayerStatDetail } from "../../../api/players-stats/types";
 
-const PlrsStatsSeason = ({ nationId, natName }: any) => {
+interface Props {
+  nationId: number;
+  natName: string;
+}
+
+const PlrsStatsSeason = ({ nationId, natName }: Props) => {
   const [searchParams] = useSearchParams();
-  const seasonId: any = searchParams.get("season") || 2012;
+  const seasonId = Number(searchParams.get("season"));
 
   const configs = [
     {
@@ -59,11 +63,8 @@ const PlrsStatsSeason = ({ nationId, natName }: any) => {
 
   return (
     <>
-      <Box m={2} pt={2}>
-        <SelectSeason />
-      </Box>
-      {items.map((item: any) => (
-        <Container key={item.id}>
+      {items.map((item: { id: number; name: string; list: TPlayerStatDetail[] }) => (
+        <Box key={item.id}>
           <TableContainer component={Paper}>
             <Table size="small">
               <HeaderMain
@@ -86,9 +87,9 @@ const PlrsStatsSeason = ({ nationId, natName }: any) => {
                 ]}
               />
               <TableBody>
-                {item.list.map((player: any, key: any) => (
+                {item.list.map((player: TPlayerStatDetail, index: number) => (
                   <TableRow key={player.player_id}>
-                    <TableCell align="center">{key + 1}</TableCell>
+                    <TableCell align="center">{index + 1}</TableCell>
                     <TableCell>
                       <Box display="flex" alignItems="center">
                         <TableFlag alt="" src={player.player_flag} />
@@ -133,19 +134,17 @@ const PlrsStatsSeason = ({ nationId, natName }: any) => {
               </TableBody>
             </Table>
           </TableContainer>
-          <Box mt={1}>
-            <AppButton
-              color="success"
-              fullWidth={true}
-              text="Show more"
-              to={`/nation?nation=${nationId}&season=${seasonId}`}
-            />
-          </Box>
-          <Divider sx={{ my: 3 }} />
-        </Container>
+          <AppButton
+            color="success"
+            fullWidth={true}
+            text="Show more"
+            to={`/nation?nation=${nationId}&season=${seasonId}`}
+            sx={{ mb: 2 }}
+          />
+        </Box>
       ))}
     </>
   );
 };
 
-export default PlrsStatsSeason;
+export default memo(PlrsStatsSeason);

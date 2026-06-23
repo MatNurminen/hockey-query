@@ -1,5 +1,5 @@
 interface MainLogoProps {
-  src: string;
+  src?: string;
   alt: string;
 }
 

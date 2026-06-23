@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import HeaderSection from '../../common/Table/headerSection';
 
 const HeaderTable = () => {
@@ -15,4 +16,4 @@ const HeaderTable = () => {
   );
 };
 
-export default HeaderTable;
+export default memo(HeaderTable);
