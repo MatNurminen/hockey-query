@@ -1,25 +1,26 @@
-import { useMemo } from 'react';
-import Container from '@mui/material/Container';
-import TableContainer from '@mui/material/TableContainer';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import { useSearchParams } from 'react-router-dom';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
-import Box from '@mui/material/Box';
-import SectionHeader from '../../common/Sections/sectionHeader';
-import HeaderMain from '../../common/Table/headerMain';
-import HeaderSection from '../../common/Table/headerSection';
-import { getDraftDetails } from '../../../api/players/queries';
-import TableFlag from '../../common/Images/tableFlag';
+import { memo, useMemo } from "react";
+import Container from "@mui/material/Container";
+import TableContainer from "@mui/material/TableContainer";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import { useSearchParams } from "react-router-dom";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@mui/material/Link";
+import Box from "@mui/material/Box";
+import SectionHeader from "../../common/Sections/sectionHeader";
+import HeaderMain from "../../common/Table/headerMain";
+import HeaderSection from "../../common/Table/headerSection";
+import { getDraftDetails } from "../../../api/players/queries";
+import TableFlag from "../../common/Images/tableFlag";
+import { TDraftDetail } from "../../../api/players/types";
 
 const DraftDetails = () => {
   const [searchParams] = useSearchParams();
-  const nationId = Number(searchParams.get('nation')) || undefined;
-  const teamId = Number(searchParams.get('team')) || undefined;
+  const nationId = Number(searchParams.get("nation")) || undefined;
+  const teamId = Number(searchParams.get("team")) || undefined;
 
   const queryParams = useMemo(() => {
     if (nationId) return { nationId };
@@ -30,7 +31,7 @@ const DraftDetails = () => {
   const { data: players, isLoading, isError } = getDraftDetails(queryParams);
 
   const header = useMemo(() => {
-    if (!players?.length) return '';
+    if (!players?.length) return "";
     return nationId
       ? `By Nation: ${players[0].name}`
       : `Drafted by ${players[0].full_name}`;
@@ -38,47 +39,37 @@ const DraftDetails = () => {
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error</p>;
-  if (!players) return <div>No data available</div>;
+  if (!players?.length) return <div>No data available</div>;
 
   return (
     <Container sx={{ py: 1, mb: 10 }}>
-      <SectionHeader txtAlign='left' content='NHL Entry Draft' />
-      <SectionHeader txtAlign='left' content={header} />
+      <SectionHeader txtAlign="left" content="NHL Entry Draft" />
+      <SectionHeader txtAlign="left" content={header} />
       <TableContainer component={Paper}>
-        <Table size='small'>
-          <HeaderMain cells={['Drafted Players']} />
+        <Table size="small">
+          <HeaderMain cells={["Drafted Players"]} />
         </Table>
       </TableContainer>
       <TableContainer component={Paper}>
-        <Table size='small'>
+        <Table size="small">
           <HeaderSection
             cells={[
-              { align: 'center', text: '#' },
-              { text: 'Team' },
-              { text: 'Player' },
-              { align: 'center', text: 'Seasons' },
-              { align: 'center', text: 'GP' },
-              { align: 'center', text: 'G' },
+              { align: "center", text: "#" },
+              { text: "Player" },
+              { align: "center", text: "Seasons" },
+              { align: "center", text: "GP" },
+              { align: "center", text: "G" },
             ]}
           />
           <TableBody>
-            {players?.map((player: any, key: number) => (
+            {players.map((player: TDraftDetail, index: number) => (
               <TableRow key={player.id}>
-                <TableCell align='center'>{key + 1}</TableCell>
+                <TableCell align="center">{index + 1}</TableCell>
                 <TableCell>
-                  <Link
-                    underline='hover'
-                    component={RouterLink}
-                    to={`/teams/${player.draft_team_id}`}
-                  >
-                    {player.full_name}
-                  </Link>
-                </TableCell>
-                <TableCell>
-                  <Box display='flex' alignItems='center'>
-                    <TableFlag src={player.flag} />
+                  <Box display="flex" alignItems="center">
+                    <TableFlag src={player.flag} alt={player.name} />
                     <Link
-                      underline='hover'
+                      underline="hover"
                       component={RouterLink}
                       to={`/players/${player.id}`}
                       ml={1}
@@ -87,13 +78,13 @@ const DraftDetails = () => {
                     </Link>
                   </Box>
                 </TableCell>
-                <TableCell align='center'>
-                  {player.years_t && player.years_t !== '0'
+                <TableCell align="center">
+                  {player.years_t != null && player.years_t > 0
                     ? player.years_t
                     : null}
                 </TableCell>
-                <TableCell align='center'>{player.games_t}</TableCell>
-                <TableCell align='center'>{player.goals_t}</TableCell>
+                <TableCell align="center">{player.games_t}</TableCell>
+                <TableCell align="center">{player.goals_t}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -103,4 +94,4 @@ const DraftDetails = () => {
   );
 };
 
-export default DraftDetails;
+export default memo(DraftDetails);
