@@ -11,13 +11,13 @@ const SectionChapter: React.FC<SectionChapterProps> = ({
   content,
 }) => {
   return (
-    <Box
-      sx={{ my: 1, px: 2, py: 1, backgroundColor: "#093f56", color: "#fff" }}
-    >
-      <Typography component={"span"} align={txtAlign}>
-        <Box sx={{ fontWeight: "medium", textTransform: "uppercase" }}>
-          {content}
-        </Box>
+    <Box sx={{ px: 2, py: 1, backgroundColor: "#093f56", color: "#fff" }}>
+      <Typography
+        sx={{ fontWeight: "medium", textTransform: "uppercase" }}
+        component={"span"}
+        align={txtAlign}
+      >
+        {content}
       </Typography>
     </Box>
   );

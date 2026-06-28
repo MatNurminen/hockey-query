@@ -21,8 +21,8 @@ const ByNation = () => {
       <SectionChapter txtAlign="left" content="Draft selections by nation" />
       <List sx={{ columns: { xs: 2, sm: 3, md: 4 } }} dense={true}>
         {drafts.map((draft) => (
-          <ListItem key={draft.id}>
-            <ListItemAvatar sx={{ mr: -2 }}>
+          <ListItem key={draft.id} sx={{ gap: 2 }}>
+            <ListItemAvatar sx={{ minWidth: 0 }}>
               <TableFlag src={draft.flag} alt={draft.name} />
             </ListItemAvatar>
             <ListItemText

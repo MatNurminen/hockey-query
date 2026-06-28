@@ -11,13 +11,12 @@ import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import SectionHeader from "../../common/Sections/sectionHeader";
-import HeaderMain from "../../common/Table/headerMain";
 import HeaderSection from "../../common/Table/headerSection";
 import { getDraftDetails } from "../../../api/players/queries";
 import TableFlag from "../../common/Images/tableFlag";
 import { TDraftDetail } from "../../../api/players/types";
-import SectionChapter from "../../common/Sections/sectionChapter";
 import SectionFirst from "../../common/Sections/sectionFirst";
+import SectionChapter from "../../common/Sections/sectionChapter";
 
 const DraftDetails = () => {
   const [searchParams] = useSearchParams();
@@ -44,15 +43,10 @@ const DraftDetails = () => {
   if (!players?.length) return <div>No data available</div>;
 
   return (
-    <Container sx={{ py: 1, mb: 10 }}>
+    <Container sx={{ py: 1 }}>
       <SectionHeader txtAlign="left" content="NHL Entry Draft" />
       <SectionFirst txtAlign="left" content={header} />
-      {/* <SectionHeader txtAlign="left" content={header} /> */}
-      <TableContainer component={Paper}>
-        <Table size="small">
-          <HeaderMain cells={["Drafted Players"]} />
-        </Table>
-      </TableContainer>
+      <SectionChapter content="Drafted Players" txtAlign="left" />
       <TableContainer component={Paper}>
         <Table size="small">
           <HeaderSection

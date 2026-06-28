@@ -6,7 +6,6 @@ import TableFlag from "../../common/Images/tableFlag";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
-import Box from "@mui/material/Box";
 import { getDraftTeams } from "../../../api/players/queries";
 import { memo } from "react";
 
@@ -23,10 +22,14 @@ const ByTeam = () => {
       <List sx={{ columns: { xs: 2, sm: 3 } }} dense={true}>
         {drafts.map((draft) => (
           <ListItem key={draft.id}>
-            <ListItemAvatar>
-              <Box display="flex" justifyContent="center" alignItems="center">
-                <TableFlag src={draft.logo} alt={draft.full_name} />
-              </Box>
+            <ListItemAvatar
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <TableFlag src={draft.logo} alt={draft.full_name} />
             </ListItemAvatar>
             <ListItemText
               primary={

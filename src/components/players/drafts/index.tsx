@@ -6,7 +6,7 @@ import Paper from "@mui/material/Paper";
 
 const Drafts = () => {
   return (
-    <Container sx={{ py: 1, mb: 10 }}>
+    <Container sx={{ py: 1 }}>
       <SectionHeader txtAlign="left" content="NHL Entry Draft" />
       <Paper sx={{ mt: 2 }}>
         <ByNation />
