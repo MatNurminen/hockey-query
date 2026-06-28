@@ -16,6 +16,8 @@ import HeaderSection from "../../common/Table/headerSection";
 import { getDraftDetails } from "../../../api/players/queries";
 import TableFlag from "../../common/Images/tableFlag";
 import { TDraftDetail } from "../../../api/players/types";
+import SectionChapter from "../../common/Sections/sectionChapter";
+import SectionFirst from "../../common/Sections/sectionFirst";
 
 const DraftDetails = () => {
   const [searchParams] = useSearchParams();
@@ -44,7 +46,8 @@ const DraftDetails = () => {
   return (
     <Container sx={{ py: 1, mb: 10 }}>
       <SectionHeader txtAlign="left" content="NHL Entry Draft" />
-      <SectionHeader txtAlign="left" content={header} />
+      <SectionFirst txtAlign="left" content={header} />
+      {/* <SectionHeader txtAlign="left" content={header} /> */}
       <TableContainer component={Paper}>
         <Table size="small">
           <HeaderMain cells={["Drafted Players"]} />
