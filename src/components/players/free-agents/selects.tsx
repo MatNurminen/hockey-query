@@ -1,11 +1,16 @@
-import Box from '@mui/material/Box';
-import SelectSeason from '../../common/Selects/selectSeason';
-import Grid from '@mui/material/Grid2';
-import SelectNation from '../../common/Selects/selectNation';
+import Box from "@mui/material/Box";
+import SelectSeason from "../../common/Selects/selectSeason";
+import Grid from "@mui/material/Grid2";
+import SelectNation from "../../common/Selects/selectNation";
+import { memo } from "react";
 
-const Selects = ({ nationId }: any) => {
+interface Props {
+  nationId: string;
+}
+
+const Selects = ({ nationId }: Props) => {
   return (
-    <Box sx={{ flexGrow: 1 }} py={3} pl={2}>
+    <Box sx={{ flexGrow: 1, py: 3, pl: 2 }}>
       <Grid container spacing={4}>
         <Grid size={{ xs: 5 }}>
           <SelectSeason />
@@ -18,4 +23,4 @@ const Selects = ({ nationId }: any) => {
   );
 };
 
-export default Selects;
+export default memo(Selects);
