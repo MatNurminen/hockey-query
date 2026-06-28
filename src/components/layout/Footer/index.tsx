@@ -51,7 +51,7 @@ const Footer = () => {
       sx={{
         backgroundColor: "#252525",
         color: "#fff",
-        mt: 4,
+        mt: 6,
         pt: 6,
         pb: 3,
       }}

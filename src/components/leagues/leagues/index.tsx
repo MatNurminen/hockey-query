@@ -14,7 +14,7 @@ const Leagues = () => {
   if (!data) return <h3>No data available</h3>;
 
   return (
-    <Container sx={{ py: 1, mb: 10 }}>
+    <Container sx={{ py: 1 }}>
       <Header />
       <LeaguesTable leagues={data} seasonId={latestSeason} />
     </Container>

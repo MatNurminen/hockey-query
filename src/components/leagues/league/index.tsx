@@ -35,7 +35,7 @@ const League = () => {
   const title: string = league.short_name;
 
   return (
-    <Container sx={{ py: 1, mt: 2, mb: 10 }}>
+    <Container sx={{ py: 1, mt: 2 }}>
       <Paper sx={{ px: 2, pb: 1 }}>
         <Header league={league} />
       </Paper>

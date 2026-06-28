@@ -4,7 +4,7 @@ import NationsTable from './nationsTable';
 
 const Nations = () => {
   return (
-    <Container sx={{ py: 1, mb: 10 }}>
+    <Container sx={{ py: 1 }}>
       <Header />
       <NationsTable />
     </Container>
