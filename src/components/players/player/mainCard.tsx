@@ -6,8 +6,16 @@ import Box from '@mui/system/Box';
 import CardMedia from '@mui/material/CardMedia';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
+import { TPlayerDto } from '../../../api/players/types';
+import { TPlayerStatDetail } from '../../../api/players-stats/types';
+import { memo } from 'react';
 
-const MainCard = ({ player, lastTeam }: any) => {
+interface Props {
+  player: TPlayerDto;
+  lastTeam: TPlayerStatDetail | null;
+}
+
+const MainCard = ({ player, lastTeam }: Props) => {
   return (
     <Card sx={{ border: 'none', boxShadow: 'none' }}>
       <CardContent sx={{ backgroundColor: '#093f56' }}>
@@ -58,4 +66,4 @@ const MainCard = ({ player, lastTeam }: any) => {
   );
 };
 
-export default MainCard;
+export default memo(MainCard);

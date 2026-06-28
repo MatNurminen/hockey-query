@@ -72,7 +72,7 @@ const PlayerForm = ({
   };
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} disableRestoreFocus onClose={() => {}}>
       <DialogContent>
         {seasonsLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>

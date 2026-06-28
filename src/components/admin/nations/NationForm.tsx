@@ -149,7 +149,7 @@ const NationForm = ({
   };
 
   return (
-    <Dialog open={open} onClose={() => {}}>
+    <Dialog open={open} disableRestoreFocus onClose={() => {}}>
       <DialogContent>
         <SectionHeader txtAlign="left" content={title} />
         <Box position="relative">

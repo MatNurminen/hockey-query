@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import TableContainer from "@mui/material/TableContainer";
 import { getPlayersStatsDetail } from "../../../api/players-stats/queries";
 import Paper from "@mui/material/Paper";
@@ -12,8 +12,16 @@ import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
+import { TPlayerStatDetail } from "../../../api/players-stats/types";
 
-const StatsTab = ({ playerName, playerId, typeId, setLastTeam }: any) => {
+interface Props {
+  playerName: string;
+  playerId: number;
+  typeId: number;
+  setLastTeam: React.Dispatch<React.SetStateAction<TPlayerStatDetail | null>>;
+}
+
+const StatsTab = ({ playerName, playerId, typeId, setLastTeam }: Props) => {
   const {
     data: stats,
     isLoading,
@@ -25,14 +33,12 @@ const StatsTab = ({ playerName, playerId, typeId, setLastTeam }: any) => {
   useEffect(() => {
     if (!stats) return;
 
-    const lastTeam = stats.data
-      .filter((team) => team.type_id === 1)
-      .reduce(
-        (max, season) => (season.season_id > max.season_id ? season : max),
-        {
-          season_id: -Infinity,
-        },
-      );
+    const leagueTeams = stats.data.filter((team) => team.type_id === 1);
+    if (leagueTeams.length === 0) return;
+
+    const lastTeam = leagueTeams.reduce((max, season) =>
+      season.season_id > max.season_id ? season : max,
+    );
 
     setLastTeam(lastTeam);
   }, [stats, setLastTeam]);
@@ -61,9 +67,9 @@ const StatsTab = ({ playerName, playerId, typeId, setLastTeam }: any) => {
         />
         <TableBody>
           {stats.data
-            .sort((a: any, b: any) => b.season_id - a.season_id)
+            .sort((a, b) => b.season_id - a.season_id)
             .filter((stat) => stat.type_id === typeId)
-            .map((stat: any) => (
+            .map((stat) => (
               <TableRow key={stat.id}>
                 <TableCell>{stat.name}</TableCell>
                 <TableCell>
@@ -105,4 +111,4 @@ const StatsTab = ({ playerName, playerId, typeId, setLastTeam }: any) => {
   );
 };
 
-export default StatsTab;
+export default memo(StatsTab);

@@ -11,12 +11,13 @@ import StatsTotal from './statsTotal';
 import Highlights from './highlights';
 import GreenButton from '../../common/Buttons/greenButton';
 import UpdatePlayer from '../../admin/players/updatePlayer';
+import { TPlayerStatDetail } from '../../../api/players-stats/types';
 
 const Player = () => {
   const params = useParams();
   const playerId = Number(params.id);
   const [open, setOpen] = useState(false);
-  const [lastTeam, setLastTeam] = useState(null);
+  const [lastTeam, setLastTeam] = useState<TPlayerStatDetail | null>(null);
 
   const { data: player, isError, isLoading } = getPlayer(playerId);
 

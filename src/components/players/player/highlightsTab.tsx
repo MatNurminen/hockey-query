@@ -3,8 +3,15 @@ import TableContainer from '@mui/material/TableContainer';
 import HeaderMain from '../../common/Table/headerMain';
 import HeaderSection from '../../common/Table/headerSection';
 import Table from '@mui/material/Table';
+import { memo } from 'react';
+import type { Cell } from '../../common/Table/types';
 
-const HighlightsTab = ({ playerName, playerId, headerCells }: any) => {
+interface Props {
+  playerName: string;
+  headerCells: Cell[];
+}
+
+const HighlightsTab = ({ playerName, headerCells }: Props) => {
   return (
     <TableContainer component={Paper}>
       <Table size='small'>
@@ -17,4 +24,4 @@ const HighlightsTab = ({ playerName, playerId, headerCells }: any) => {
   );
 };
 
-export default HighlightsTab;
+export default memo(HighlightsTab);
