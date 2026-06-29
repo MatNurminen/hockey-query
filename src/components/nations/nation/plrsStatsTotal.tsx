@@ -13,7 +13,11 @@ import { Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import AppButton from '../../common/Buttons/appButton';
 import Grid from '@mui/material/Grid2';
-import { useMultiplePlayersStatsTotal } from '../../../api/players-stats/hooks';
+import {
+  useMultiplePlayersStatsTotal,
+  type MultipleStatsConfig,
+} from '../../../api/players-stats/hooks';
+import type { PlayersStatsTotalParams } from '../../../api/players-stats/types';
 import { TPlayerStatTotal } from '../../../api/players-stats/types';
 
 interface Props {
@@ -21,7 +25,7 @@ interface Props {
 }
 
 const PlrsStatsTotal = ({ nationId }: Props) => {
-  const configs = [
+  const configs: MultipleStatsConfig<PlayersStatsTotalParams>[] = [
     {
       id: 1,
       name: 'NHL All-Time Points',

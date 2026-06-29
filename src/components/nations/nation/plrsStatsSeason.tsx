@@ -13,7 +13,11 @@ import TableFlag from "../../common/Images/tableFlag";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
 import AppButton from "../../common/Buttons/appButton";
-import { useMultiplePlayersStatsDetail } from "../../../api/players-stats/hooks";
+import {
+  useMultiplePlayersStatsDetail,
+  type MultipleStatsConfig,
+} from "../../../api/players-stats/hooks";
+import type { PlayersStatsDetailParams } from "../../../api/players-stats/types";
 import { formatSeason } from "../../utils/formatSeason";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
 
@@ -26,7 +30,7 @@ const PlrsStatsSeason = ({ nationId, natName }: Props) => {
   const [searchParams] = useSearchParams();
   const seasonId = Number(searchParams.get("season"));
 
-  const configs = [
+  const configs: MultipleStatsConfig<PlayersStatsDetailParams>[] = [
     {
       id: 1,
       name: "north america",
