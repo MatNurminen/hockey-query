@@ -1,4 +1,8 @@
-import { useMultiplePlayersStatsTotal } from "../../../api/players-stats/hooks";
+import {
+  useMultiplePlayersStatsTotal,
+  type MultipleStatsConfig,
+} from "../../../api/players-stats/hooks";
+import type { PlayersStatsTotalParams } from "../../../api/players-stats/types";
 import type { TPlayerStatTotal } from "../../../api/players-stats/types";
 import PlayersStatsTable from "./playersStatsTable";
 
@@ -8,7 +12,7 @@ interface Props {
 }
 
 const PlayersStatsTotal = ({ leagueId, seasonId }: Props) => {
-  const configs = [
+  const configs: MultipleStatsConfig<PlayersStatsTotalParams>[] = [
     {
       id: 3,
       name: "forwards",

@@ -1,4 +1,8 @@
-import { useMultiplePlayersStatsDetail } from "../../../api/players-stats/hooks";
+import {
+  useMultiplePlayersStatsDetail,
+  type MultipleStatsConfig,
+} from "../../../api/players-stats/hooks";
+import type { PlayersStatsDetailParams } from "../../../api/players-stats/types";
 import type { TPlayerStatDetail } from "../../../api/players-stats/types";
 import PlayersStatsTable from "./playersStatsTable";
 import { formatSeason } from "../../utils/formatSeason";
@@ -10,7 +14,7 @@ interface Props {
 }
 
 const PlayersStatsSeason = ({ leagueId, seasonId, title }: Props) => {
-  const configs = [
+  const configs: MultipleStatsConfig<PlayersStatsDetailParams>[] = [
     {
       id: 3,
       name: "forwards",

@@ -1,6 +1,10 @@
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
-import { useMultiplePlayersStatsDetail } from "../../../api/players-stats/hooks";
+import {
+  useMultiplePlayersStatsDetail,
+  type MultipleStatsConfig,
+} from "../../../api/players-stats/hooks";
+import type { PlayersStatsDetailParams } from "../../../api/players-stats/types";
 import type { TPlayerStatDetail } from "../../../api/players-stats/types";
 import PlayersStatsTable from "./playersStatsTable";
 
@@ -10,7 +14,7 @@ interface Props {
 }
 
 const PlayersStatsPerSeason = ({ leagueId, seasonId }: Props) => {
-  const configs = [
+  const configs: MultipleStatsConfig<PlayersStatsDetailParams>[] = [
     {
       id: 3,
       name: "forwards",
