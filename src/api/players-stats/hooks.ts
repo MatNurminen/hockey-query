@@ -1,10 +1,17 @@
 import { getPlayersStatsDetail, getPlayersStatsTotal } from "./queries";
+import type { PlayersStatsDetailParams, PlayersStatsTotalParams } from "./types";
+
+export type MultipleStatsConfig<T> = {
+  id: number;
+  name: string;
+  params: T;
+};
 
 export function useMultiplePlayersStatsDetail(
   configs: {
     id: number;
     name: string;
-    params: any;
+    params: PlayersStatsDetailParams;
   }[],
 ) {
   const results = configs.map((config) => getPlayersStatsDetail(config.params));
@@ -31,7 +38,7 @@ export function useMultiplePlayersStatsTotal(
   configs: {
     id: number;
     name: string;
-    params: any;
+    params: PlayersStatsTotalParams;
   }[],
 ) {
   const results = configs.map((config) => getPlayersStatsTotal(config.params));

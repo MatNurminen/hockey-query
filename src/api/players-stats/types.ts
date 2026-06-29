@@ -66,7 +66,7 @@ export type TPlayerStatDetail = {
 };
 
 export type PlayersStatsDetailParams = {
-  leagueId?: number[];
+  leagueId?: number | number[];
   excludeLeagueId?: number[];
   teamId?: number;
   nationId?: number;
