@@ -31,6 +31,7 @@ export function useAddTournament(leagueId: string | number) {
             id: data.id,
             season_id: data.season_id,
             league_id: data.league_id,
+            description: data.description,
             season: `Season ${data.season_id}`,
             league: `League ${data.league_id}`,
             logo: null,
