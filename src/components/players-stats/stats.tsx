@@ -1,30 +1,36 @@
-import { useState } from 'react';
-import Tab from '@mui/material/Tab';
-import StyledTabs from '../common/Tabs/styledTabs';
-import StatsTab from './statsTab';
-import { useSearchParams } from 'react-router-dom';
-import { useMultiplePlayersStatsDetail } from '../../api/players-stats/hooks';
+import { useState } from "react";
+import Tab from "@mui/material/Tab";
+import StyledTabs from "../common/Tabs/styledTabs";
+import StatsTab from "./statsTab";
+import {
+  useMultiplePlayersStatsDetail,
+  type MultipleStatsConfig,
+} from "../../api/players-stats/hooks";
+import type { PlayersStatsDetailParams } from "../../api/players-stats/types";
 
-const Stats = ({ goalies }: any) => {
+interface Props {
+  goalies: boolean;
+  nationId: number;
+  seasonId: number;
+}
+
+const Stats = ({ goalies, nationId, seasonId }: Props) => {
   const [value, setValue] = useState(0);
-  const [searchParams] = useSearchParams();
-  const nationId: any = searchParams.get('nation') || 1;
-  const seasonId: any = searchParams.get('season') || 2012;
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   const items: { id: number; title: string; typeId: number }[] = [
-    { id: 0, title: 'Europe', typeId: 1 },
-    { id: 1, title: 'North America', typeId: 2 },
-    { id: 2, title: 'International', typeId: 3 },
+    { id: 0, title: "Europe", typeId: 1 },
+    { id: 1, title: "North America", typeId: 2 },
+    { id: 2, title: "International", typeId: 3 },
   ];
 
-  const configs = [
+  const configs: MultipleStatsConfig<PlayersStatsDetailParams>[] = [
     {
       id: 1,
-      name: 'europe',
+      name: "europe",
       params: {
         nationId,
         seasonId,
@@ -34,7 +40,7 @@ const Stats = ({ goalies }: any) => {
     },
     {
       id: 2,
-      name: 'america',
+      name: "america",
       params: {
         nationId,
         seasonId,
@@ -43,7 +49,7 @@ const Stats = ({ goalies }: any) => {
     },
     {
       id: 3,
-      name: 'international',
+      name: "international",
       params: {
         nationId,
         seasonId,
@@ -59,10 +65,10 @@ const Stats = ({ goalies }: any) => {
       <StyledTabs
         value={value}
         onChange={handleChange}
-        aria-label='stats'
-        variant='fullWidth'
+        aria-label="stats"
+        variant="fullWidth"
       >
-        {items.map((item: any) => (
+        {items.map((item) => (
           <Tab key={item.id} label={item.title} />
         ))}
       </StyledTabs>
