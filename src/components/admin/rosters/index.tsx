@@ -28,6 +28,9 @@ const AdmRosters = () => {
   } = getPlayersStatsDetail({ leagueId, seasonId });
   const players = playersResponse?.data ?? [];
 
+console.log('players', players);
+
+
   if (isLoading)
     return (
       <Container sx={{ py: 1, mb: 10 }}>
@@ -42,14 +45,6 @@ const AdmRosters = () => {
         <Header players={players} />
         <Selects />
         <p>Error Player!</p>
-      </Container>
-    );
-  if (players.length === 0)
-    return (
-      <Container sx={{ py: 1, mb: 10 }}>
-        <Header players={players} />
-        <Selects />
-        <p>No players found</p>
       </Container>
     );
 

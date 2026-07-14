@@ -63,6 +63,7 @@ export type TPlayerStatDetail = {
   team_flag: string;
   type_id: number;
   club_name?: string;
+  league_name?: string;
 };
 
 export type PlayersStatsDetailParams = {
