@@ -1,10 +1,11 @@
-import Paper from '@mui/material/Paper';
-import TableContainer from '@mui/material/TableContainer';
-import HeaderMain from '../../common/Table/headerMain';
-import HeaderSection from '../../common/Table/headerSection';
-import Table from '@mui/material/Table';
-import { memo } from 'react';
-import type { Cell } from '../../common/Table/types';
+import Paper from "@mui/material/Paper";
+import TableContainer from "@mui/material/TableContainer";
+import HeaderMain from "../../common/Table/headerMain";
+import HeaderSection from "../../common/Table/headerSection";
+import Table from "@mui/material/Table";
+import { memo } from "react";
+import type { Cell } from "../../common/Table/types";
+import SectionChapter from "../../common/Sections/sectionChapter";
 
 interface Props {
   playerName: string;
@@ -13,14 +14,17 @@ interface Props {
 
 const HighlightsTab = ({ playerName, headerCells }: Props) => {
   return (
-    <TableContainer component={Paper}>
-      <Table size='small'>
-        <HeaderMain cells={[`${playerName} Career Highlights`]} />
-      </Table>
-      <Table size='small'>
-        <HeaderSection cells={headerCells} />
-      </Table>
-    </TableContainer>
+    <>
+      <SectionChapter
+        txtAlign={"left"}
+        content={`${playerName} Career Highlights`}
+      />
+      <TableContainer component={Paper}>
+        <Table size="small">
+          <HeaderSection cells={headerCells} />
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 
