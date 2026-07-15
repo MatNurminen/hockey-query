@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
 import SectionFirst from "../common/Sections/sectionFirst";
 import { styled } from "@mui/material/styles";
+import { memo } from "react";
 
 const Img = styled("img")({
   margin: "auto",
@@ -35,4 +36,4 @@ const ClubHeader = ({ team, logo }: ClubHeaderProps) => {
   );
 };
 
-export default ClubHeader;
+export default memo(ClubHeader);

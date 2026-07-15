@@ -264,7 +264,7 @@ const Players = ({ players: initialPlayers, teams, leagueId, seasonId }: Props) 
 
   const sortedTeams = useMemo(
     () =>
-      [...teams].sort((a: TStandings, b: TStandings) =>
+      [...teams].toSorted((a: TStandings, b: TStandings) =>
         a.full_name.localeCompare(b.full_name),
       ),
     [teams],
