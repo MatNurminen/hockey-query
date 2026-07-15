@@ -10,9 +10,9 @@ import TableRow from "@mui/material/TableRow";
 import { Link as RouterLink } from "react-router-dom";
 import type { ReactNode } from "react";
 import AppButton from "../../common/Buttons/appButton";
-import HeaderMain from "../../common/Table/headerMain";
 import HeaderSection from "../../common/Table/headerSection";
 import TableFlag from "../../common/Images/tableFlag";
+import SectionChapter from "../../common/Sections/sectionChapter";
 
 export type WithPlayerInfo = {
   player_id: number;
@@ -63,10 +63,8 @@ const PlayersStatsTable = <T extends WithPlayerInfo>({
     >
       {items.map((item) => (
         <Grid size={gridSize} key={item.id}>
+          <SectionChapter content={getHeaderText(item)} txtAlign={"right"} />
           <TableContainer component={Paper}>
-            <Table size="small">
-              <HeaderMain cells={[getHeaderText(item)]} />
-            </Table>
             <Table size="small">
               <HeaderSection
                 cells={[

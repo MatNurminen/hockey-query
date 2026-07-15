@@ -80,44 +80,42 @@ const LeaguesTable = ({ leagues, seasonId }: Props) => {
           <Table size="small">
             <HeaderTable title={mode.title} />
             <TableBody>
-              {leagues
-                .filter(mode.condition)
-                .map((league) => (
-                  <TableRow key={league.id}>
-                    <TableCell align="center">
-                      <img
-                        height={30}
-                        alt=""
-                        src={league.logos.at(-1)?.logo}
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = "none";
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Link
-                        underline="hover"
-                        component={RouterLink}
-                        to={`/leagues/${league.id}?season=${seasonId}`}
-                      >
-                        {league.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell>{league.short_name}</TableCell>
-                    <TableCell align="right">
-                      <AppButton
-                        text="Delete"
-                        size="small"
-                        color="error"
-                        iconName="delete"
-                        onClick={() => {
-                          handleOpen(league.id);
-                          setName(league.name);
-                        }}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
+              {leagues.filter(mode.condition).map((league) => (
+                <TableRow key={league.id}>
+                  <TableCell align="center">
+                    <img
+                      height={30}
+                      alt=""
+                      src={league.logos.at(-1)?.logo}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      underline="hover"
+                      component={RouterLink}
+                      to={`/leagues/${league.id}?season=${seasonId}`}
+                    >
+                      {league.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell>{league.short_name}</TableCell>
+                  <TableCell align="right">
+                    <AppButton
+                      text="Delete"
+                      size="small"
+                      color="error"
+                      iconName="delete"
+                      onClick={() => {
+                        handleOpen(league.id);
+                        setName(league.name);
+                      }}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>

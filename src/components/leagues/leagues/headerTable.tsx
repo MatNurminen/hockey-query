@@ -9,7 +9,7 @@ interface Props {
 const HeaderTable = ({ title }: Props) => {
   return (
     <>
-      <HeaderMain cells={[title, '', '', '']} />
+      <HeaderMain cells={[{text: title}, {text: ''}, {text: ''}, {text: ''}]} />
       <HeaderSection
         cells={[
           { align: 'center', text: 'Logo' },

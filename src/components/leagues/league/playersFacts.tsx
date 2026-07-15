@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import HeaderMain from "../../common/Table/headerMain";
 import HeaderSection from "../../common/Table/headerSection";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
@@ -14,6 +13,7 @@ import TableFlag from "../../common/Images/tableFlag";
 import { getPlayersStatsDetail } from "../../../api/players-stats/queries";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
 import { formatSeason } from "../../utils/formatSeason";
+import SectionChapter from "../../common/Sections/sectionChapter";
 
 interface Props {
   leagueId: number;
@@ -89,11 +89,10 @@ const PlayersFacts = ({ leagueId, seasonId }: Props) => {
 
   return (
     <>
-      <Table size="small">
-        <HeaderMain
-          cells={[`${formatSeason(seasonId)} Interesting Facts`]}
-        />
-      </Table>
+      <SectionChapter
+        txtAlign={"left"}
+        content={`${formatSeason(seasonId)} Interesting Facts`}
+      />
       <Grid container>
         {items.map((item) => (
           <Grid size={{ sm: 12, md: 4 }} key={item.name}>

@@ -1,8 +1,5 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { formatSeason } from "../../utils/formatSeason";
-import HeaderMain from "../../common/Table/headerMain";
-import TableContainer from "@mui/material/TableContainer";
-import Table from "@mui/material/Table";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
 import {
@@ -15,6 +12,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useUpdateTeamTournament } from "../../../api/teams-tournaments/mutations";
 import Paper from "@mui/material/Paper";
 import { TStandings } from "../../../api/teams-stats/types";
+import SectionChapter from "../../common/Sections/sectionChapter";
 
 interface Props {
   leagueId: number;
@@ -234,13 +232,10 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
   return (
     <>
       <Paper>
-        <TableContainer sx={{ mb: -0.5 }}>
-          <Table size="small">
-            <HeaderMain
-              cells={[`${formatSeason(seasonId)} ${title} Standings`]}
-            />
-          </Table>
-        </TableContainer>
+        <SectionChapter
+          txtAlign={"left"}
+          content={`${formatSeason(seasonId)} ${title} Standings`}
+        />
         <DataGrid
           rows={rowsWithRank}
           columns={columns}

@@ -1,4 +1,3 @@
-import HeaderMain from "../../common/Table/headerMain";
 import HeaderSection from "../../common/Table/headerSection";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
@@ -14,6 +13,7 @@ import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
 import { TTeamFact } from "../../../api/teams-stats/types";
 import { formatSeason } from "../../utils/formatSeason";
+import SectionChapter from "../../common/Sections/sectionChapter";
 
 interface Props {
   leagueId: number;
@@ -29,52 +29,53 @@ const CompareTeams = ({ leagueId, seasonId, title }: Props) => {
   if (!data) return <h3>No data available</h3>;
 
   return (
-    <TableContainer component={Paper}>
-      <Table size="small">
-        <HeaderMain
-          cells={[`${formatSeason(seasonId)} ${title} Team Comparison`]}
-        />
-      </Table>
-      <Table size="small">
-        <HeaderSection
-          cells={[
-            { align: "center", text: "#" },
-            { text: "team" },
-            { align: "center", text: "players" },
-            { align: "center", text: "avg height" },
-            { align: "center", text: "avg weight" },
-            { align: "center", text: "avg age" },
-          ]}
-        />
-        <TableBody>
-          {data.map((team: TTeamFact, index) => (
-            <TableRow key={team.team_id}>
-              <TableCell align="center">{index + 1}</TableCell>
-              <TableCell>
-                <Stack direction="row" alignItems="center" spacing={2}>
-                  <Box width={40} display="flex" justifyContent="center">
-                    <TableFlag alt="" src={team.logo} />
-                  </Box>
-                  <Box>
-                    <Link
-                      underline="hover"
-                      component={RouterLink}
-                      to={`/teams/${team.team_id}`}
-                    >
-                      {team.full_name}
-                    </Link>
-                  </Box>
-                </Stack>
-              </TableCell>
-              <TableCell align="center">{team.plrs}</TableCell>
-              <TableCell align="center">{team.avheight} cm</TableCell>
-              <TableCell align="center">{team.avweight} kg</TableCell>
-              <TableCell align="center">{team.avage}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <SectionChapter
+        txtAlign={"left"}
+        content={`${formatSeason(seasonId)} ${title} Team Comparison`}
+      />
+      <TableContainer component={Paper}>
+        <Table size="small">
+          <HeaderSection
+            cells={[
+              { align: "center", text: "#" },
+              { text: "team" },
+              { align: "center", text: "players" },
+              { align: "center", text: "avg height" },
+              { align: "center", text: "avg weight" },
+              { align: "center", text: "avg age" },
+            ]}
+          />
+          <TableBody>
+            {data.map((team: TTeamFact, index) => (
+              <TableRow key={team.team_id}>
+                <TableCell align="center">{index + 1}</TableCell>
+                <TableCell>
+                  <Stack direction="row" alignItems="center" spacing={2}>
+                    <Box width={40} display="flex" justifyContent="center">
+                      <TableFlag alt="" src={team.logo} />
+                    </Box>
+                    <Box>
+                      <Link
+                        underline="hover"
+                        component={RouterLink}
+                        to={`/teams/${team.team_id}`}
+                      >
+                        {team.full_name}
+                      </Link>
+                    </Box>
+                  </Stack>
+                </TableCell>
+                <TableCell align="center">{team.plrs}</TableCell>
+                <TableCell align="center">{team.avheight} cm</TableCell>
+                <TableCell align="center">{team.avweight} kg</TableCell>
+                <TableCell align="center">{team.avage}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 
