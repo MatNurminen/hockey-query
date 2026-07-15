@@ -3,9 +3,10 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { Cell } from "../types";
 
 interface HeaderMainProps {
-  cells: string[];
+  cells: Cell[];
 }
 
 const HeaderMain = ({ cells }: HeaderMainProps) => {
@@ -13,10 +14,10 @@ const HeaderMain = ({ cells }: HeaderMainProps) => {
     <TableHead sx={{ backgroundColor: "#093f56" }}>
       <TableRow>
         {cells.map((cell, key) => (
-          <TableCell key={key}>
+          <TableCell key={key} align={cell.align} width={cell.width}>
             <Box sx={{ textTransform: "uppercase" }}>
               <Typography sx={{ fontWeight: "medium", color: "#fff" }}>
-                {cell}
+                {cell.text}
               </Typography>
             </Box>
           </TableCell>
