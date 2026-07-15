@@ -55,7 +55,7 @@ const StatsTab = ({ tabHeader, players, goalies }: Props) => {
             ]}
           />
           {leagues
-            .sort((a, b) => a.short_name.localeCompare(b.short_name))
+            .toSorted((a, b) => a.short_name.localeCompare(b.short_name))
             .map((league) => {
               const leaguePlayers = players.filter(
                 (player) =>

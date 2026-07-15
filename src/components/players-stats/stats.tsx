@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Tab from "@mui/material/Tab";
 import StyledTabs from "../common/Tabs/styledTabs";
 import StatsTab from "./statsTab";
@@ -14,6 +14,14 @@ interface Props {
   seasonId: number;
 }
 
+const items: { id: number; title: string }[] = [
+  { id: 0, title: "Europe" },
+  { id: 1, title: "North America" },
+  { id: 2, title: "International" },
+];
+
+const northAmericaLeagues = [14, 15]
+
 const Stats = ({ goalies, nationId, seasonId }: Props) => {
   const [value, setValue] = useState(0);
 
@@ -21,42 +29,39 @@ const Stats = ({ goalies, nationId, seasonId }: Props) => {
     setValue(newValue);
   };
 
-  const items: { id: number; title: string; typeId: number }[] = [
-    { id: 0, title: "Europe", typeId: 1 },
-    { id: 1, title: "North America", typeId: 2 },
-    { id: 2, title: "International", typeId: 3 },
-  ];
-
-  const configs: MultipleStatsConfig<PlayersStatsDetailParams>[] = [
-    {
-      id: 1,
-      name: "europe",
-      params: {
-        nationId,
-        seasonId,
-        excludeLeagueId: [14, 15],
-        typeId: 1,
+  const configs = useMemo<MultipleStatsConfig<PlayersStatsDetailParams>[]>(
+    () => [
+      {
+        id: 1,
+        name: "europe",
+        params: {
+          nationId,
+          seasonId,
+          excludeLeagueId: northAmericaLeagues,
+          typeId: 1,
+        },
       },
-    },
-    {
-      id: 2,
-      name: "america",
-      params: {
-        nationId,
-        seasonId,
-        leagueId: [14, 15],
+      {
+        id: 2,
+        name: "america",
+        params: {
+          nationId,
+          seasonId,
+          leagueId: northAmericaLeagues,
+        },
       },
-    },
-    {
-      id: 3,
-      name: "international",
-      params: {
-        nationId,
-        seasonId,
-        typeId: 2,
+      {
+        id: 3,
+        name: "international",
+        params: {
+          nationId,
+          seasonId,
+          typeId: 2,
+        },
       },
-    },
-  ];
+    ],
+    [nationId, seasonId],
+  );
 
   const { data: player } = useMultiplePlayersStatsDetail(configs);
 
@@ -74,13 +79,11 @@ const Stats = ({ goalies, nationId, seasonId }: Props) => {
       </StyledTabs>
       {items.map((item) => (
         <div key={item.id} hidden={value !== item.id}>
-          {value === item.id && (
-            <StatsTab
-              goalies={goalies}
-              tabHeader={item.title}
-              players={player[item.id].list}
-            />
-          )}
+          <StatsTab
+            goalies={goalies}
+            tabHeader={item.title}
+            players={player[item.id].list}
+          />
         </div>
       ))}
     </>

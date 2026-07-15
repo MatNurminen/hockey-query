@@ -7,11 +7,13 @@ import Stats from "./stats";
 import Grid from "@mui/material/Grid2";
 import Divider from "@mui/material/Divider";
 import { useLatestSeason } from "../../hooks/useLatestSeason";
+import { useFirstNation } from "../../hooks/useFirstNation";
 
 const NationStats = () => {
   const [searchParams] = useSearchParams();
   const { startYear } = useLatestSeason();
-  const nationId = Number(searchParams.get("nation")) || 1;
+  const { firstNationId } = useFirstNation();
+  const nationId = Number(searchParams.get("nation")) || firstNationId;
   const seasonId = Number(searchParams.get("season")) || startYear;
 
   const { data: nation, isLoading, isError } = getNation(nationId);
