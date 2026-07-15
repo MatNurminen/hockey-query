@@ -1,6 +1,6 @@
 import { useState, useMemo, memo, useRef } from "react";
 import Paper from "@mui/material/Paper";
-import { Link as RouterLink, useSearchParams } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
 import TableFlag from "../../common/Images/tableFlag";
 import ClubHeader from "./clubHeader";
@@ -59,7 +59,6 @@ const TeamGrid = memo(function TeamGrid({
       player_id: newRow.player_id,
       games: newRow.games || 0,
       goals: newRow.goals || 0,
-      postseason: newRow.postseason,
     });
 
     setUpdatedCells((prev) => {
@@ -251,13 +250,11 @@ function buildTeamRows(
 interface Props {
   players: TPlayerStatDetail[];
   teams: TStandings[];
+  leagueId: number;
+  seasonId: number;
 }
 
-const Players = ({ players: initialPlayers, teams }: Props) => {
-  const [searchParams] = useSearchParams();
-  const leagueId = Number(searchParams.get("league"));
-  const seasonId = Number(searchParams.get("season"));
-
+const Players = ({ players: initialPlayers, teams, leagueId, seasonId }: Props) => {
   const prevMapRef = useRef<Map<number, TPlayerStatDetail[]>>(new Map());
   const teamRows = useMemo(() => {
     const map = buildTeamRows(initialPlayers, prevMapRef.current);

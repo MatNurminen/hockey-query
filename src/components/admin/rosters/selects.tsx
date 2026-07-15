@@ -2,6 +2,7 @@ import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
 import SelectLeague from "../../common/Selects/selectLeague";
 import SelectSeason from "../../common/Selects/selectSeason";
+import { memo } from "react";
 
 const Selects = () => {
   return (
@@ -18,4 +19,4 @@ const Selects = () => {
   );
 };
 
-export default Selects;
+export default memo(Selects);

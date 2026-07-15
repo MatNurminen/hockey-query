@@ -28,9 +28,6 @@ const AdmRosters = () => {
   } = getPlayersStatsDetail({ leagueId, seasonId });
   const players = playersResponse?.data ?? [];
 
-console.log('players', players);
-
-
   if (isLoading)
     return (
       <Container sx={{ py: 1, mb: 10 }}>
@@ -59,7 +56,12 @@ console.log('players', players);
       ) : !teams ? (
         <p>No data available</p>
       ) : (
-        <Players players={players} teams={teams} />
+        <Players
+          players={players}
+          teams={teams}
+          leagueId={leagueId[0]}
+          seasonId={seasonId}
+        />
       )}
     </Container>
   );
