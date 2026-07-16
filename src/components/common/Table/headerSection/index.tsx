@@ -14,7 +14,7 @@ const HeaderSection = ({ cells }: HeaderSectionProps) => {
     <TableHead sx={{ backgroundColor: "#ca3136" }}>
       <TableRow>
         {cells.map((cell, key) => (
-          <TableCell key={key} align={cell.align} width={cell.width}>
+          <TableCell key={key} align={cell.align} width={cell.width} colSpan={cell.colSpan}>
             <Box sx={{ textTransform: "uppercase" }}>
               <Typography sx={{ fontWeight: "medium", color: "#fff" }}>
                 {cell.text}

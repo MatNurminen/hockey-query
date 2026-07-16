@@ -4,4 +4,5 @@ export interface Cell {
   align?: TableCellProps["align"];
   width?: string | number;
   text: string;
+  colSpan?: number;
 }
