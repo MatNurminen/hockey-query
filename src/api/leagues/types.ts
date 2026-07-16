@@ -1,4 +1,4 @@
-import { TCreateLeagueLogoDto, TLeagueLogoDto } from '../league-logos/types';
+import { TCreateLeagueLogoDto, TLeagueLogoDto } from "../league-logos/types";
 
 export type TLeagueDto = {
   id: number;

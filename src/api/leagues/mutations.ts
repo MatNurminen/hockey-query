@@ -1,8 +1,9 @@
-import axios from 'axios';
-import { useShowSnackbar } from '../../components/layout/useShowSnackbar';
-import { createMutation } from '../factories/mutationFactory';
-import queryClient from '../queryClient';
-import { TCreateLeagueDto, TLeagueDto } from './types';
+import axios from "axios";
+import { useShowSnackbar } from "../../components/layout/useShowSnackbar";
+import { createMutation } from "../factories/mutationFactory";
+import queryClient from "../queryClient";
+import { TCreateLeagueDto, TLeagueDto } from "./types";
+import { TLeagueLogoDto } from "../league-logos/types";
 
 export function useAddLeague() {
   const showSnackbar = useShowSnackbar();
@@ -11,63 +12,66 @@ export function useAddLeague() {
     TLeagueDto,
     TCreateLeagueDto,
     { previousData?: TLeagueDto[]; hasShownError?: boolean }
-  >('/api/leagues', 'POST', {
+  >("/api/leagues", "POST", {
     onMutate: async (newLeague) => {
-      await queryClient.cancelQueries({ queryKey: ['leaguesLogo'] });
+      await queryClient.cancelQueries({ queryKey: ["leaguesLogo"] });
       const previousData = queryClient.getQueryData<TLeagueDto[]>([
-        'leaguesLogo',
+        "leaguesLogo",
       ]);
 
       const isNameDuplicate = previousData?.some(
-        (league) => league.name.toLowerCase() === newLeague.name.toLowerCase()
+        (league) => league.name.toLowerCase() === newLeague.name.toLowerCase(),
       );
       const isShortNameDuplicate = previousData?.some(
         (league) =>
-          league.short_name.toLowerCase() === newLeague.short_name.toLowerCase()
+          league.short_name.toLowerCase() ===
+          newLeague.short_name.toLowerCase(),
       );
 
       if (isNameDuplicate) {
-        throw new Error('League with this name already exists');
+        throw new Error("League with this name already exists");
       }
       if (isShortNameDuplicate) {
-        throw new Error('League with this short name already exists');
+        throw new Error("League with this short name already exists");
       }
 
       return { previousData };
     },
     onSuccess: (data) => {
       queryClient.setQueryData(
-        ['leaguesLogo'],
+        ["leaguesLogo"],
         (oldLeagues: TLeagueDto[] | undefined) => {
           const updatedLeagues = oldLeagues ? [...oldLeagues, data] : [data];
           return updatedLeagues
-            .sort((a, b) => a.name.localeCompare(b.name))
+            .toSorted((a, b) => a.name.localeCompare(b.name))
             .map((league) => ({
               ...league,
-              logos: league.logos.filter((logo: any) => logo.end_year === null),
+              logos: league.logos.filter(
+                (logo: TLeagueLogoDto) => logo.end_year === null,
+              ),
             }));
-        }
+        },
       );
     },
     onError: (
       err,
       _league,
-      context?: { previousData?: TLeagueDto[]; hasShownError?: boolean }
+      context?: { previousData?: TLeagueDto[]; hasShownError?: boolean },
     ) => {
       if (context?.previousData) {
-        queryClient.setQueryData(['leaguesLogo'], context.previousData);
+        queryClient.setQueryData(["leaguesLogo"], context.previousData);
       }
       if (!context?.hasShownError) {
-        if (err.message === 'League with this name already exists') {
-          showSnackbar('League with this name already exists', 'error');
+        if (err.message === "League with this name already exists") {
+          showSnackbar("League with this name already exists", "error");
         } else if (
-          err.message === 'League with this short name already exists'
+          err.message === "League with this short name already exists"
         ) {
-          showSnackbar('League with this short name already exists', 'error');
+          showSnackbar("League with this short name already exists", "error");
         } else if (axios.isAxiosError(err) && err.response?.data?.message) {
-          showSnackbar(err.response.data.message, 'error');
+          showSnackbar(err.response.data.message, "error");
         } else {
-          showSnackbar('Failed to add league', 'error');
+          showSnackbar("Failed to add league", "error");
         }
         if (context) {
           context.hasShownError = true;
@@ -84,83 +88,83 @@ export function useUpdateLeague() {
     TLeagueDto,
     TCreateLeagueDto & { id: number },
     { previousData?: TLeagueDto[]; hasShownError?: boolean }
-  >(({ id }) => `/api/leagues/${id}`, 'PATCH', {
+  >(({ id }) => `/api/leagues/${id}`, "PATCH", {
     transformBody: (variables: TCreateLeagueDto & { id: number }) => {
       const { id, ...bodyData } = variables;
       return bodyData;
     },
     onMutate: async (updatedLeague) => {
-      await queryClient.cancelQueries({ queryKey: ['leaguesLogo'] });
+      await queryClient.cancelQueries({ queryKey: ["leaguesLogo"] });
       const previousData = queryClient.getQueryData<TLeagueDto[]>([
-        'leaguesLogo',
+        "leaguesLogo",
       ]);
 
       const isNameDuplicate = previousData?.some(
         (league) =>
           league.id !== updatedLeague.id &&
-          league.name.toLowerCase() === updatedLeague.name.toLowerCase()
+          league.name.toLowerCase() === updatedLeague.name.toLowerCase(),
       );
 
       const isShortNameDuplicate = previousData?.some(
         (league) =>
           league.id !== updatedLeague.id &&
           league.short_name.toLowerCase() ===
-            updatedLeague.short_name.toLowerCase()
+            updatedLeague.short_name.toLowerCase(),
       );
 
       if (isNameDuplicate) {
-        throw new Error('League with this name already exists');
+        throw new Error("League with this name already exists");
       }
       if (isShortNameDuplicate) {
-        throw new Error('League with this short name already exists');
+        throw new Error("League with this short name already exists");
       }
 
       queryClient.setQueryData(
-        ['leaguesLogo'],
+        ["leaguesLogo"],
         (oldLeagues: TLeagueDto[] | undefined) =>
           oldLeagues
             ? oldLeagues.map((league) =>
                 league.id === updatedLeague.id
                   ? { ...league, ...updatedLeague }
-                  : league
+                  : league,
               )
-            : []
+            : [],
       );
       return { previousData, hasShownError: false };
     },
     onSuccess: (data) => {
       queryClient.setQueryData(
-        ['leaguesLogo'],
+        ["leaguesLogo"],
         (oldLeagues: TLeagueDto[] | undefined) =>
           oldLeagues
             ? oldLeagues.map((league) =>
-                league.id === data.id ? { ...data } : league
+                league.id === data.id ? { ...data } : league,
               )
-            : [data]
+            : [data],
       );
-      queryClient.setQueryData(['league', data.id], data);
+      queryClient.setQueryData(["league", data.id], data);
 
-      showSnackbar('League updated successfully', 'success');
+      showSnackbar("League updated successfully", "success");
     },
     onError: (
       err,
       _league,
-      context?: { previousData?: TLeagueDto[]; hasShownError?: boolean }
+      context?: { previousData?: TLeagueDto[]; hasShownError?: boolean },
     ) => {
       if (context?.previousData) {
-        queryClient.setQueryData(['leaguesLogo'], context.previousData);
+        queryClient.setQueryData(["leaguesLogo"], context.previousData);
       }
       if (!context?.hasShownError) {
-        if (err.message === 'League with this name already exists') {
-          showSnackbar('League with this name already exists', 'error');
+        if (err.message === "League with this name already exists") {
+          showSnackbar("League with this name already exists", "error");
         } else if (
-          err.message === 'League with this short name already exists'
+          err.message === "League with this short name already exists"
         ) {
-          showSnackbar('League with this short name already exists', 'error');
+          showSnackbar("League with this short name already exists", "error");
         } else if (axios.isAxiosError(err) && err.response?.data?.message) {
-          showSnackbar(err.response.data.message, 'error');
+          showSnackbar(err.response.data.message, "error");
         } else {
-          showSnackbar('Failed to update league', 'error');
+          showSnackbar("Failed to update league", "error");
         }
         if (context) {
           context.hasShownError = true;
@@ -177,37 +181,37 @@ export function useDeleteLeague() {
     void,
     { id: number },
     { previousData?: TLeagueDto[]; hasShownError?: boolean }
-  >(({ id }) => `/api/leagues/${id}`, 'DELETE', {
+  >(({ id }) => `/api/leagues/${id}`, "DELETE", {
     onMutate: async ({ id }) => {
-      await queryClient.cancelQueries({ queryKey: ['leaguesLogo'] });
+      await queryClient.cancelQueries({ queryKey: ["leaguesLogo"] });
 
       const previousData = queryClient.getQueryData<TLeagueDto[]>([
-        'leaguesLogo',
+        "leaguesLogo",
       ]);
 
       queryClient.setQueryData(
-        ['leaguesLogo'],
+        ["leaguesLogo"],
         (oldLeagues: TLeagueDto[] | undefined) =>
-          oldLeagues ? oldLeagues.filter((league) => league.id !== id) : []
+          oldLeagues ? oldLeagues.filter((league) => league.id !== id) : [],
       );
       return { previousData, hasShownError: false };
     },
     onSuccess: () => {
-      showSnackbar('League deleted successfully', 'success');
+      showSnackbar("League deleted successfully", "success");
     },
     onError: (
       err,
       _id,
-      context?: { previousData?: TLeagueDto[]; hasShownError?: boolean }
+      context?: { previousData?: TLeagueDto[]; hasShownError?: boolean },
     ) => {
       if (context?.previousData) {
-        queryClient.setQueryData(['leaguesLogo'], context.previousData);
+        queryClient.setQueryData(["leaguesLogo"], context.previousData);
       }
       if (!context?.hasShownError) {
         if (axios.isAxiosError(err) && err.response?.data?.message) {
-          showSnackbar(err.response.data.message, 'error');
+          showSnackbar(err.response.data.message, "error");
         } else {
-          showSnackbar('Failed to delete league', 'error');
+          showSnackbar("Failed to delete league", "error");
         }
         if (context) {
           context.hasShownError = true;
