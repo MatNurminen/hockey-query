@@ -9,8 +9,13 @@ import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
 import { memo } from "react";
 import { getCountPlayersByNation } from "../../../api/players-stats/queries";
+import { TCountPlayerByNation } from "../../../api/players-stats/types";
 
-const NatsTotal = ({ teamId }: any) => {
+interface Props {
+  teamId: number
+}
+
+const NatsTotal = ({ teamId }: Props) => {
   const { data, isLoading, isError } = getCountPlayersByNation({
     teamId
   });
@@ -30,7 +35,7 @@ const NatsTotal = ({ teamId }: any) => {
         dense={true}
         disablePadding={true}
       >
-        {data.map((nat: any) => (
+        {data.map((nat: TCountPlayerByNation) => (
           <ListItem key={nat.id}>
             <ListItemIcon sx={{ mr: -2 }}>
               <TableFlag src={nat.flag} alt="" />
@@ -38,7 +43,7 @@ const NatsTotal = ({ teamId }: any) => {
             <Link
               underline="hover"
               component={RouterLink}
-              to={"/teams/" + nat.id}
+              to={"/nations/" + nat.id}
             >
               <ListItemText
                 primary={`${nat.count} ${

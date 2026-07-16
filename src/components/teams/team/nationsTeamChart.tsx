@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { getCountPlayersByNation } from "../../../api/players-stats/queries";
 import NationsChart from "../../common/Charts/nationsChart";
 
@@ -24,4 +25,4 @@ const NationsTeamChart = ({ teamId, seasonId, title }: Props) => {
   );
 };
 
-export default NationsTeamChart;
+export default memo(NationsTeamChart);

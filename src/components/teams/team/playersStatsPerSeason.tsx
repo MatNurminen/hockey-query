@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import HeaderMain from "../../common/Table/headerMain";
 import HeaderSection from "../../common/Table/headerSection";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
@@ -13,8 +12,15 @@ import Grid from "@mui/material/Grid2";
 import GreenButton from "../../common/Buttons/greenButton";
 import TableFlag from "../../common/Images/tableFlag";
 import { getPlayersStatsDetail } from "../../../api/players-stats/queries";
+import { TPlayerStatDetail } from "../../../api/players-stats/types";
+import SectionChapter from "../../common/Sections/sectionChapter";
+import { memo } from "react";
 
-const PlayersStatsPerSeason = ({ teamId }: any) => {
+interface Props {
+  teamId: number;
+}
+
+const PlayersStatsPerSeason = ({ teamId }: Props) => {
   const { data, isLoading, isError } = getPlayersStatsDetail({
     teamId,
   });
@@ -25,21 +31,25 @@ const PlayersStatsPerSeason = ({ teamId }: any) => {
   if (isError) return <p>Error</p>;
   if (!players) return <div>No data available</div>;
 
-  const defenders = (players: any) => {
+  const defenders = (players: TPlayerStatDetail[]) => {
     return players
-      .filter((f: any) => f.player_order === 2)
-      .sort((b: any, a: any) => a.goals - b.goals)
+      .filter((f) => f.player_order === 2)
+      .toSorted((b, a) => a.goals - b.goals)
       .slice(0, 5);
   };
 
-  const forwards = (players: any) => {
+  const forwards = (players: TPlayerStatDetail[]) => {
     return players
-      .filter((f: any) => f.player_order === 3)
-      .sort((b: any, a: any) => a.goals - b.goals)
+      .filter((f) => f.player_order === 3)
+      .toSorted((b, a) => a.goals - b.goals)
       .slice(0, 5);
   };
 
-  const items: { sort: number; list: any; name: string }[] = [
+  const items: {
+    sort: number;
+    list: (players: TPlayerStatDetail[]) => TPlayerStatDetail[];
+    name: string;
+  }[] = [
     { sort: 3, list: forwards, name: "forwards" },
     { sort: 2, list: defenders, name: "defensemen" },
   ];
@@ -52,14 +62,13 @@ const PlayersStatsPerSeason = ({ teamId }: any) => {
       alignItems="stretch"
       spacing={2}
     >
-      {items.map((item: any) => (
+      {items.map((item) => (
         <Grid size={{ sm: 12, md: 6 }} key={item.name}>
+          <SectionChapter
+            txtAlign={"left"}
+            content={`Franchise all-time ${item.name} goals per season`}
+          />
           <TableContainer component={Paper}>
-            <Table size="small">
-              <HeaderMain
-                cells={[`Franchise all-time ${item.name} goals per season`]}
-              />
-            </Table>
             <Table size="small">
               <HeaderSection
                 cells={[
@@ -72,39 +81,39 @@ const PlayersStatsPerSeason = ({ teamId }: any) => {
                 ]}
               />
               <TableBody>
-                {item.list(players).map((player: any, key: any) => (
-                  <TableRow key={key}>
-                    <TableCell align="center">{key + 1}</TableCell>
-                    <TableCell>
-                      <Box display="flex" alignItems="center">
-                        <TableFlag src={player.player_flag} alt="" />
-                        <Link
-                          underline="hover"
-                          component={RouterLink}
-                          to={`/players/${player.player_id}`}
-                          ml={1}
-                        >
-                          {player.first_name} {player.last_name} (
-                          {player.player_position})
-                        </Link>
-                      </Box>
-                    </TableCell>
-                    <TableCell align="center">{player.name}</TableCell>
-                    <TableCell>{player.short_name}</TableCell>
-                    <TableCell align="center">{player.games}</TableCell>
-                    <TableCell align="center">{player.goals}</TableCell>
-                  </TableRow>
-                ))}
+                {item
+                  .list(players)
+                  .map((player: TPlayerStatDetail, key: number) => (
+                    <TableRow key={key}>
+                      <TableCell align="center">{key + 1}</TableCell>
+                      <TableCell>
+                        <Box display="flex" alignItems="center">
+                          <TableFlag src={player.player_flag} alt="" />
+                          <Link
+                            underline="hover"
+                            component={RouterLink}
+                            to={`/players/${player.player_id}`}
+                            ml={1}
+                          >
+                            {player.first_name} {player.last_name} (
+                            {player.player_position})
+                          </Link>
+                        </Box>
+                      </TableCell>
+                      <TableCell align="center">{player.name}</TableCell>
+                      <TableCell>{player.short_name}</TableCell>
+                      <TableCell align="center">{player.games}</TableCell>
+                      <TableCell align="center">{player.goals}</TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
-          <Box mt={1}>
-            <GreenButton fullWidth={true} text="Show More" />
-          </Box>
+          <GreenButton fullWidth={true} text="Show More" />
         </Grid>
       ))}
     </Grid>
   );
 };
 
-export default PlayersStatsPerSeason;
+export default memo(PlayersStatsPerSeason);

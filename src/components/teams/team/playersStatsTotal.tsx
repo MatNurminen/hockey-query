@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import HeaderMain from "../../common/Table/headerMain";
 import HeaderSection from "../../common/Table/headerSection";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
@@ -13,11 +12,16 @@ import Grid from "@mui/material/Grid2";
 import GreenButton from "../../common/Buttons/greenButton";
 import TableFlag from "../../common/Images/tableFlag";
 import { getPlayersStatsTotal } from "../../../api/players-stats/queries";
+import { TPlayerStatTotal } from "../../../api/players-stats/types";
+import SectionChapter from "../../common/Sections/sectionChapter";
+import { memo } from "react";
 
-const PlayersStatsTotal = ({ teamId }: any) => {
-  const { data, isLoading, isError } = getPlayersStatsTotal({
-    teamId,
-  });
+interface Props {
+  teamId: number;
+}
+
+const PlayersStatsTotal = ({ teamId }: Props) => {
+  const { data, isLoading, isError } = getPlayersStatsTotal({ teamId });
 
   const players = data?.data;
 
@@ -25,28 +29,32 @@ const PlayersStatsTotal = ({ teamId }: any) => {
   if (isError) return <p>Error</p>;
   if (!players) return <div>No data available</div>;
 
-  const goalkeepers = (players: any) => {
+  const goalkeepers = (players: TPlayerStatTotal[]) => {
     return players
-      .filter((f: any) => f.player_order === 1)
-      .sort((b: any, a: any) => a.goals_t - b.goals_t)
+      .filter((f) => f.player_order === 1)
+      .toSorted((b, a) => a.goals_t - b.goals_t)
       .slice(0, 5);
   };
 
-  const defenders = (players: any) => {
+  const defenders = (players: TPlayerStatTotal[]) => {
     return players
-      .filter((f: any) => f.player_order === 2)
-      .sort((b: any, a: any) => a.goals_t - b.goals_t)
+      .filter((f) => f.player_order === 2)
+      .toSorted((b, a) => a.goals_t - b.goals_t)
       .slice(0, 5);
   };
 
-  const forwards = (players: any) => {
+  const forwards = (players: TPlayerStatTotal[]) => {
     return players
-      .filter((f: any) => f.player_order === 3)
-      .sort((b: any, a: any) => a.goals_t - b.goals_t)
+      .filter((f) => f.player_order === 3)
+      .toSorted((b, a) => a.goals_t - b.goals_t)
       .slice(0, 5);
   };
 
-  const items: { sort: number; list: any; name: string }[] = [
+  const items: {
+    sort: number;
+    list: (players: TPlayerStatTotal[]) => TPlayerStatTotal[];
+    name: string;
+  }[] = [
     { sort: 3, list: forwards, name: "forwards" },
     { sort: 2, list: defenders, name: "defensemen" },
     { sort: 1, list: goalkeepers, name: "goaltending" },
@@ -54,12 +62,13 @@ const PlayersStatsTotal = ({ teamId }: any) => {
 
   return (
     <Grid container direction="row" justifyContent="center" spacing={2}>
-      {items.map((item: any, key: any) => (
-        <Grid size={{ sm: 12, md: 4 }} key={key}>
+      {items.map((item) => (
+        <Grid size={{ sm: 12, md: 4 }} key={item.name}>
+          <SectionChapter
+            txtAlign={"left"}
+            content={`Franchise all-time ${item.name} Stats`}
+          />
           <TableContainer component={Paper}>
-            <Table size="small">
-              <HeaderMain cells={[`Franchise all-time ${item.name} Stats`]} />
-            </Table>
             <Table size="small">
               <HeaderSection
                 cells={[
@@ -70,7 +79,7 @@ const PlayersStatsTotal = ({ teamId }: any) => {
                 ]}
               />
               <TableBody>
-                {item.list(players).map((player: any, key: any) => (
+                {item.list(players).map((player: TPlayerStatTotal, key: number) => (
                   <TableRow key={key}>
                     <TableCell align="center">{key + 1}</TableCell>
                     <TableCell>
@@ -94,13 +103,11 @@ const PlayersStatsTotal = ({ teamId }: any) => {
               </TableBody>
             </Table>
           </TableContainer>
-          <Box mt={1}>
-            <GreenButton fullWidth={true} text="Show More" />
-          </Box>
+          <GreenButton fullWidth={true} text="Show More" />
         </Grid>
       ))}
     </Grid>
   );
 };
 
-export default PlayersStatsTotal;
+export default memo(PlayersStatsTotal);

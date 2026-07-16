@@ -11,13 +11,14 @@ import PlayersStatsTotal from "./playersStatsTotal";
 import PlayersStatsPerSeason from "./playersStatsPerSeason";
 import NatsTotal from "./natsTotal";
 import NationsTeamChart from "./nationsTeamChart";
+import { useLatestSeason } from "../../../hooks/useLatestSeason";
 
 const Team = () => {
   const params = useParams();
   const teamId = Number(params.id);
-
+  const { startYear } = useLatestSeason();
   const [searchParams] = useSearchParams();
-  const seasonId: string = searchParams.get("season") || "2012";
+  const seasonId = Number(searchParams.get("season") || startYear);
 
   const { data: team, isError, isLoading } = getTeam(teamId);
 
@@ -60,11 +61,6 @@ const Team = () => {
       <Paper>
         <NatsTotal teamId={teamId} />
       </Paper>
-      {/* <PlayersStatsAllTime teamId={params.id} />
-      <Divider sx={{ my: 3 }} />
-      <PlayersStatsSeasons teamId={params.id} />
-      <Divider sx={{ my: 3 }} />
-      <Nations teamId={params.id} /> */}
     </Container>
   );
 };

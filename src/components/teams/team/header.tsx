@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import Grid from "@mui/material/Grid2";
 import SectionHeader from "../../common/Sections/sectionHeader";
 import Paper from "@mui/material/Paper";
@@ -17,7 +17,7 @@ import SectionChapter from "../../common/Sections/sectionChapter";
 import { TTeamDto } from "../../../api/teams/types";
 
 interface Props {
-  team: TTeamDto
+  team: TTeamDto;
 }
 
 const Header = ({ team }: Props) => {
@@ -83,7 +83,7 @@ const Header = ({ team }: Props) => {
             spacing={5}
           >
             {team?.logos.map((logo) => (
-              <Box key={team.id} textAlign="center">
+              <Box key={logo.id} textAlign="center">
                 <MainLogo src={logo.logo} alt="" />
                 <Typography variant="body1" gutterBottom>
                   {logo.start_year} - {logo.end_year}
@@ -106,4 +106,4 @@ const Header = ({ team }: Props) => {
   );
 };
 
-export default Header;
+export default memo(Header);

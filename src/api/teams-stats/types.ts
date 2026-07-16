@@ -15,20 +15,20 @@ export type TStandings = {
   name: string;
   season: string;
   logo: string;
-  postseason: Record<string, unknown> | null;
+  postseason: { title: string } | null;
 };
 
 export type StandingsParams = {
   seasonId?: number;
   leagueId?: number[];
   teamId?: number;
-  typeId?: boolean;
+  typeId?: number;
 };
 
 export type TTeamsForNation = {
   season_id: number;
   short_name: string;
-  postseason: string;
+  postseason: { title: string } | null;
   league_id: number;
   team_id: number;
 };
@@ -54,5 +54,5 @@ export type TTeamChampions = {
   season_id: number;
   team_id: number;
   full_name: string;
-  postseason: Record<string, unknown> | null;
+  postseason: { title: string } | null;
 };
