@@ -1,26 +1,30 @@
-import { useState } from 'react';
-import TableContainer from '@mui/material/TableContainer';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import { Link as RouterLink } from 'react-router-dom';
-import Link from '@mui/material/Link';
-import { getTournamentsByLeague } from '../../api/tournaments/queries';
-import HeaderMain from '../common/Table/headerMain';
-import HeaderSection from '../common/Table/headerSection';
-import { useDeleteTournament } from '../../api/tournaments/mutations';
-import AppButton from '../common/Buttons/appButton';
-import DeleteDialog from '../common/Dialogs/deleteDialog';
-import GreenButton from '../common/Buttons/greenButton';
-import TableFlag from '../common/Images/tableFlag';
-import Box from '@mui/material/Box';
-import { TTournamentByLeagueDto } from '../../api/tournaments/types';
+import { memo, useState } from "react";
+import TableContainer from "@mui/material/TableContainer";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableRow from "@mui/material/TableRow";
+import TableCell from "@mui/material/TableCell";
+import { Link as RouterLink } from "react-router-dom";
+import Link from "@mui/material/Link";
+import { getTournamentsByLeague } from "../../api/tournaments/queries";
+import HeaderMain from "../common/Table/headerMain";
+import HeaderSection from "../common/Table/headerSection";
+import { useDeleteTournament } from "../../api/tournaments/mutations";
+import AppButton from "../common/Buttons/appButton";
+import DeleteDialog from "../common/Dialogs/deleteDialog";
+import GreenButton from "../common/Buttons/greenButton";
+import TableFlag from "../common/Images/tableFlag";
+import Box from "@mui/material/Box";
+import { TTournamentByLeagueDto } from "../../api/tournaments/types";
 
-const TournamentsByLeague = ({ leagueId }: any) => {
-  const [selectedTournament, setSelectedTournament] = useState<any | null>(
-    null
+interface Props {
+  leagueId: number;
+}
+
+const TournamentsByLeague = ({ leagueId }: Props) => {
+  const [selectedTournament, setSelectedTournament] = useState<number | null>(
+    null,
   );
   const {
     data: tournaments,
@@ -47,7 +51,7 @@ const TournamentsByLeague = ({ leagueId }: any) => {
         { id: selectedTournament },
         {
           onSuccess: () => setSelectedTournament(null),
-        }
+        },
       );
     }
   };
@@ -61,47 +65,51 @@ const TournamentsByLeague = ({ leagueId }: any) => {
         onConfirm={handleDelete}
       />
       <TableContainer component={Paper} sx={{ my: 4 }}>
-        <Table size='small'>
-          <HeaderMain cells={['tournaments', '', '', '', '']} />
+        <Table size="small">
+          <HeaderMain
+            cells={[
+              { text: "tournaments", colSpan: 5 },
+            ]}
+          />
           <HeaderSection
             cells={[
-              { align: 'center', text: 'ID' },
-              { align: 'center', text: 'Season' },
-              { text: 'League', width: '20%' },
-              { text: '' },
-              { text: '' },
+              { align: "center", text: "ID" },
+              { align: "center", text: "Season" },
+              { text: "League", width: "20%" },
+              { text: "" },
+              { text: "" },
             ]}
           />
           <TableBody>
             {tournaments.map((tournament: TTournamentByLeagueDto) => (
               <TableRow key={tournament.id}>
-                <TableCell width={'10%'} align='center'>
+                <TableCell width={"10%"} align="center">
                   {tournament.id}
                 </TableCell>
-                <TableCell width={'20%'} align='center'>
+                <TableCell width={"20%"} align="center">
                   {tournament.season}
                 </TableCell>
-                <TableCell width={'50%'}>
-                  <Box display='flex' alignItems='center'>
-                    <Box display='flex' sx={{ mr: 1 }}>
-                      <TableFlag src={tournament.logo} />
+                <TableCell width={"50%"}>
+                  <Box display="flex" alignItems="center">
+                    <Box display="flex" sx={{ mr: 1 }}>
+                      <TableFlag alt="" src={tournament.logo} />
                     </Box>
                     {tournament.league}
                   </Box>
                 </TableCell>
-                <TableCell width={'10%'}>
+                <TableCell width={"10%"}>
                   <Link
                     component={RouterLink}
                     to={`/tournaments/${tournament.id}`}
                   >
-                    <GreenButton text='Edit' size='small' iconIndex={1} />
+                    <GreenButton text="Edit" size="small" iconIndex={1} />
                   </Link>
                 </TableCell>
-                <TableCell width={'10%'}>
+                <TableCell width={"10%"}>
                   <AppButton
-                    text='Delete'
-                    size='small'
-                    color='error'
+                    text="Delete"
+                    size="small"
+                    color="error"
                     onClick={() => {
                       handleOpen(tournament.id);
                     }}
@@ -116,4 +124,4 @@ const TournamentsByLeague = ({ leagueId }: any) => {
   );
 };
 
-export default TournamentsByLeague;
+export default memo(TournamentsByLeague);
