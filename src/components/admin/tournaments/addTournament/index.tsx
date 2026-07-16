@@ -21,7 +21,7 @@ import { useLatestSeason } from "../../../../hooks/useLatestSeason";
 export interface AddTournamentDialogProps {
   open: boolean;
   onClose: () => void;
-  leagueId: string;
+  leagueId: number;
 }
 
 const AddTournament = (props: AddTournamentDialogProps) => {
