@@ -15,11 +15,10 @@ export type TTournamentByLeagueDto = {
   description: string;
   season: string;
   league: string;
-  logo: string | null;
+  logo: string | "";
 };
 
 export type TCreateTournamentDto = {
   season_id: number;
   league_id: number;
-  description: string;
 };

@@ -4,9 +4,8 @@ import { createMutation } from '../factories/mutationFactory';
 import queryClient from '../queryClient';
 import { TCreateTournamentDto, TTournamentByLeagueDto } from './types';
 
-export function useAddTournament(leagueId: string | number) {
-  const leagueIdStr = String(leagueId);
-  const queryKey = ['tournamentsByLeague', leagueIdStr];
+export function useAddTournament(leagueId: number) {
+  const queryKey = ['tournamentsByLeague', leagueId];
   const showSnackbar = useShowSnackbar();
 
   return createMutation<
@@ -23,25 +22,7 @@ export function useAddTournament(leagueId: string | number) {
 
       return { previousData, hasShownError: false };
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(
-        queryKey,
-        (oldTournaments: TTournamentByLeagueDto[] | undefined) => {
-          const newTournament: TTournamentByLeagueDto = {
-            id: data.id,
-            season_id: data.season_id,
-            league_id: data.league_id,
-            description: data.description,
-            season: `Season ${data.season_id}`,
-            league: `League ${data.league_id}`,
-            logo: null,
-          };
-          return oldTournaments
-            ? [...oldTournaments, newTournament]
-            : [newTournament];
-        }
-      );
-
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: queryKey,
       });
@@ -71,7 +52,7 @@ export function useAddTournament(leagueId: string | number) {
   });
 }
 
-export function useDeleteTournament(leagueId: string) {
+export function useDeleteTournament(leagueId: number) {
   const showSnackbar = useShowSnackbar();
   const queryKey = ['tournamentsByLeague', leagueId];
 
@@ -112,7 +93,7 @@ export function useDeleteTournament(leagueId: string) {
       }
     ) => {
       if (context?.previousData) {
-        queryClient.setQueryData(['tournamentsByLeague'], context.previousData);
+        queryClient.setQueryData(queryKey, context.previousData);
       }
       if (!context?.hasShownError) {
         if (axios.isAxiosError(err) && err.response?.data?.message) {
