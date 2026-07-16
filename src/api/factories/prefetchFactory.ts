@@ -1,23 +1,20 @@
-import axios from 'axios';
-import { QueryKey, UseQueryOptions } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
-
-import queryClient from '../queryClient';
-//const useClient = useQueryClient();
+import axios from "axios";
+import { QueryKey, UseQueryOptions } from "@tanstack/react-query";
+import { useShowSnackbar } from "../../components/layout/useShowSnackbar";
+import queryClient from "../queryClient";
 
 export function createPrefetchQuery<T, R = T>(
   key: QueryKey,
   url: string,
   transformFn?: (data: T) => R,
-  options?: Omit<UseQueryOptions<R, Error, R, QueryKey>, 'queryKey' | 'queryFn'>
+  options?: Omit<
+    UseQueryOptions<R, Error, R, QueryKey>,
+    "queryKey" | "queryFn"
+  >,
 ) {
-  const { enqueueSnackbar } = useSnackbar();
-  const showErrorSnackbar = (message: string) => {
-    enqueueSnackbar(message, { variant: 'error' });
-  };
+  const showError = useShowSnackbar();
 
   return queryClient.prefetchQuery({
-    //return useClient.prefetchQuery({
     queryKey: key,
     queryFn: async () => {
       try {
@@ -25,11 +22,11 @@ export function createPrefetchQuery<T, R = T>(
         return transformFn ? transformFn(data) : (data as unknown as R);
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.error('Axios error:', error.response?.data || error.message);
-          showErrorSnackbar('Network error: ' + error.message);
+          console.error("Axios error:", error.response?.data || error.message);
+          showError("Network error: " + error.message, "error");
         } else {
-          console.error('Unexpected error:', error);
-          showErrorSnackbar('Unexpected error: ' + error);
+          console.error("Unexpected error:", error);
+          showError("Unexpected error: " + error, "error");
         }
         throw error;
       }

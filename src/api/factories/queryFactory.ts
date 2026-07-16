@@ -1,17 +1,17 @@
-import axios from 'axios';
-import { QueryKey, useQuery, UseQueryOptions } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
+import axios from "axios";
+import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { useShowSnackbar } from "../../components/layout/useShowSnackbar";
 
 export function createQuery<T, R = T>(
   key: QueryKey,
   url: string,
   transformFn?: (data: T) => R,
-  options?: Omit<UseQueryOptions<R, Error, R, QueryKey>, 'queryKey' | 'queryFn'>
+  options?: Omit<
+    UseQueryOptions<R, Error, R, QueryKey>,
+    "queryKey" | "queryFn"
+  >,
 ) {
-  const { enqueueSnackbar } = useSnackbar();
-  const showCancelSnackbar = (message: any) => {
-    enqueueSnackbar(message, { variant: 'error' });
-  };
+  const showError = useShowSnackbar();
 
   return useQuery<R>({
     queryKey: key,
@@ -21,11 +21,11 @@ export function createQuery<T, R = T>(
         return transformFn ? transformFn(data) : (data as unknown as R);
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.error('Axios error:', error.response?.data || error.message);
-          showCancelSnackbar('Network error ' + error.message);
+          console.error("Axios error:", error.response?.data || error.message);
+          showError("Network error " + error.message, "error");
         } else {
-          console.error('Unexpected error:', error);
-          showCancelSnackbar('Unexpected error ' + error);
+          console.error("Unexpected error:", error);
+          showError("Unexpected error " + error, "error");
         }
         throw error;
       }
