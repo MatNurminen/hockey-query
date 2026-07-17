@@ -1,14 +1,16 @@
-import { QueryKey, UseQueryResult } from '@tanstack/react-query';
-import { createQuery } from '../factories/queryFactory';
-import { TTeamDto, TTeamsByLeague } from './types';
+import { QueryKey, UseQueryResult } from "@tanstack/react-query";
+import { createQuery } from "../factories/queryFactory";
+import { TTeamDto, TTeamsByLeague } from "./types";
 
 export const getTeams = (filter?: string, enabled = true) => {
   const trimmedFilter = filter?.trim();
   const url = trimmedFilter
     ? `/api/teams?filter=${encodeURIComponent(trimmedFilter)}`
-    : '/api/teams';
+    : "/api/teams";
 
-  const queryKey: QueryKey = trimmedFilter ? ['teams', trimmedFilter] : ['teams'];
+  const queryKey: QueryKey = trimmedFilter
+    ? ["teams", trimmedFilter]
+    : ["teams"];
 
   return createQuery<TTeamDto[]>(queryKey, url, undefined, {
     enabled,
@@ -17,21 +19,21 @@ export const getTeams = (filter?: string, enabled = true) => {
 };
 
 export const getTeam = (id: number) => {
-  return createQuery<TTeamDto>(['team', id], `/api/teams/${id}`);
+  return createQuery<TTeamDto>(["team", id], `/api/teams/${id}`);
 };
 
 export const getTeamsByLeague = (leagueId: number) => {
   return createQuery<TTeamsByLeague[]>(
-    ['teamsByLeague', leagueId],
-    `/api/teams/league?leagueId=${leagueId}`
+    ["teamsByLeague", leagueId],
+    `/api/teams/league?leagueId=${leagueId}`,
   );
 };
 
 export const getTeamsCountByNation = (
-  nation_id: number
+  nation_id: number,
 ): UseQueryResult<number> => {
   return createQuery(
-    ['teamsByNation', nation_id],
-    `/api/teams/nation/${nation_id}`
+    ["teamsByNation", nation_id],
+    `/api/teams/nation/${nation_id}`,
   );
 };

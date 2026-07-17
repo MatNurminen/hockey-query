@@ -1,5 +1,5 @@
-import { TNationDto } from '../nations/types';
-import { TCreateTeamLogoDto, TTeamLogoDto } from '../team-logos/types';
+import { TNationDto } from "../nations/types";
+import { TCreateTeamLogoDto, TTeamLogoDto } from "../team-logos/types";
 
 export type TTeamDto = {
   id: number;
