@@ -1,18 +1,18 @@
-import axios from 'axios';
-import { useShowSnackbar } from '../../components/layout/useShowSnackbar';
-import { createMutation } from '../factories/mutationFactory';
-import queryClient from '../queryClient';
-import { TCreateTournamentDto, TTournamentByLeagueDto } from './types';
+import axios from "axios";
+import { useShowSnackbar } from "../../components/layout/useShowSnackbar";
+import { createMutation } from "../factories/mutationFactory";
+import queryClient from "../queryClient";
+import { TCreateTournamentDto, TTournamentByLeagueDto } from "./types";
 
 export function useAddTournament(leagueId: number) {
-  const queryKey = ['tournamentsByLeague', leagueId];
+  const queryKey = ["tournamentsByLeague", leagueId];
   const showSnackbar = useShowSnackbar();
 
   return createMutation<
     TTournamentByLeagueDto,
     TCreateTournamentDto,
-    { previousData?: TTournamentByLeagueDto[]; hasShowError?: boolean }
-  >(() => '/api/tournaments', 'POST', {
+    { previousData?: TTournamentByLeagueDto[]; hasShownError?: boolean }
+  >("/api/tournaments", "POST", {
     onMutate: async () => {
       await queryClient.cancelQueries({
         queryKey: queryKey,
@@ -20,7 +20,7 @@ export function useAddTournament(leagueId: number) {
       const previousData =
         queryClient.getQueryData<TTournamentByLeagueDto[]>(queryKey);
 
-      return { previousData, hasShownError: false };
+      return { previousData };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -33,16 +33,16 @@ export function useAddTournament(leagueId: number) {
       context?: {
         previousData?: TTournamentByLeagueDto[];
         hasShownError?: boolean;
-      }
+      },
     ) => {
       if (context?.previousData) {
         queryClient.setQueryData(queryKey, context.previousData);
       }
       if (!context?.hasShownError) {
         if (axios.isAxiosError(err) && err.response?.data?.message) {
-          showSnackbar(err.response.data.message, 'error');
+          showSnackbar(err.response.data.message, "error");
         } else {
-          showSnackbar('Failed to add tournament', 'error');
+          showSnackbar("Failed to add tournament", "error");
         }
         if (context) {
           context.hasShownError = true;
@@ -54,13 +54,13 @@ export function useAddTournament(leagueId: number) {
 
 export function useDeleteTournament(leagueId: number) {
   const showSnackbar = useShowSnackbar();
-  const queryKey = ['tournamentsByLeague', leagueId];
+  const queryKey = ["tournamentsByLeague", leagueId];
 
   return createMutation<
     void,
     { id: number },
     { previousData?: TTournamentByLeagueDto[]; hasShownError?: boolean }
-  >(({ id }) => `/api/tournaments/${id}`, 'DELETE', {
+  >(({ id }) => `/api/tournaments/${id}`, "DELETE", {
     onMutate: async ({ id }) => {
       await queryClient.cancelQueries({
         queryKey: queryKey,
@@ -74,7 +74,7 @@ export function useDeleteTournament(leagueId: number) {
         (oldTournaments: TTournamentByLeagueDto[] | undefined) =>
           oldTournaments
             ? oldTournaments.filter((tournament) => tournament.id !== id)
-            : []
+            : [],
       );
       return { previousData, hasShownError: false };
     },
@@ -82,7 +82,7 @@ export function useDeleteTournament(leagueId: number) {
       queryClient.invalidateQueries({
         queryKey: queryKey,
       });
-      showSnackbar('Tournament deleted successfully', 'success');
+      showSnackbar("Tournament deleted successfully", "success");
     },
     onError: (
       err,
@@ -90,16 +90,16 @@ export function useDeleteTournament(leagueId: number) {
       context?: {
         previousData?: TTournamentByLeagueDto[];
         hasShownError?: boolean;
-      }
+      },
     ) => {
       if (context?.previousData) {
         queryClient.setQueryData(queryKey, context.previousData);
       }
       if (!context?.hasShownError) {
         if (axios.isAxiosError(err) && err.response?.data?.message) {
-          showSnackbar(err.response.data.message, 'error');
+          showSnackbar(err.response.data.message, "error");
         } else {
-          showSnackbar('Failed to delete tournament', 'error');
+          showSnackbar("Failed to delete tournament", "error");
         }
         if (context) {
           context.hasShownError = true;

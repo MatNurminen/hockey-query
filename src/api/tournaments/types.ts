@@ -1,4 +1,4 @@
-import { TLeagueDto } from '../leagues/types';
+import { TLeagueDto } from "../leagues/types";
 
 export type TTournamentDto = {
   id: number;
