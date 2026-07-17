@@ -107,8 +107,7 @@ const TeamGrid = memo(function TeamGrid({
             >
               {params.row.first_name} {params.row.last_name}
             </Link>
-            {rows.length > 0 &&
-              rows[0].type_id === 2 &&
+            {params.row.type_id === 2 &&
               (params.row.club_name
                 ? `/${params.row.club_name}, ${params.row.league_name}/`
                 : "/No club/")}
@@ -162,7 +161,7 @@ const TeamGrid = memo(function TeamGrid({
         ),
       },
     ],
-    [rows],
+    [],
   );
 
   return (
