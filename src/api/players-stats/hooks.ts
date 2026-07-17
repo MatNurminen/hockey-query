@@ -1,5 +1,12 @@
+import { UseQueryResult } from "@tanstack/react-query";
 import { getPlayersStatsDetail, getPlayersStatsTotal } from "./queries";
-import type { PlayersStatsDetailParams, PlayersStatsTotalParams } from "./types";
+import type {
+  PlayersStatsDetailParams,
+  PlayersStatsTotalParams,
+  TPaginatedResponse,
+  TPlayerStatDetail,
+  TPlayerStatTotal,
+} from "./types";
 
 export type MultipleStatsConfig<T> = {
   id: number;
@@ -14,7 +21,10 @@ export function useMultiplePlayersStatsDetail(
     params: PlayersStatsDetailParams;
   }[],
 ) {
-  const results = configs.map((config) => getPlayersStatsDetail(config.params));
+  const results: UseQueryResult<
+    TPaginatedResponse<TPlayerStatDetail>,
+    Error
+  >[] = configs.map((config) => getPlayersStatsDetail(config.params));
 
   const isLoading = results.some((r) => r.isLoading);
   const isError = results.some((r) => r.error);
@@ -41,7 +51,8 @@ export function useMultiplePlayersStatsTotal(
     params: PlayersStatsTotalParams;
   }[],
 ) {
-  const results = configs.map((config) => getPlayersStatsTotal(config.params));
+  const results: UseQueryResult<TPaginatedResponse<TPlayerStatTotal>, Error>[] =
+    configs.map((config) => getPlayersStatsTotal(config.params));
 
   const isLoading = results.some((r) => r.isLoading);
   const isError = results.some((r) => r.error);
