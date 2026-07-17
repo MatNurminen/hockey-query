@@ -49,35 +49,21 @@ const UpdateLeague = ({ open, onClose, leagueId }: UpdateLeagueDialogProps) => {
     enqueueSnackbar("League saved successfully.", { variant: "success" });
   };
 
-  if (isLoading) {
+  if (!league || isLoading || isError) {
     return (
       <Dialog open={open} disableRestoreFocus onClose={() => {}}>
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
-            <CircularProgress />
-          </Box>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Dialog open={open} disableRestoreFocus onClose={() => {}}>
-        <DialogContent>
-          <Box sx={{ p: 2, color: "error.main" }}>
-            Error loading league data
-          </Box>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  if (!league) {
-    return (
-      <Dialog open={open} disableRestoreFocus onClose={() => {}}>
-        <DialogContent>
-          <Box sx={{ p: 2 }}>No data available</Box>
+          {isLoading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : isError ? (
+            <Box sx={{ p: 2, color: "error.main" }}>
+              Error loading league data
+            </Box>
+          ) : (
+            <Box sx={{ p: 2 }}>No data available</Box>
+          )}
         </DialogContent>
       </Dialog>
     );

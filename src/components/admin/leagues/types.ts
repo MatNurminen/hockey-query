@@ -1,7 +1,7 @@
 import type { FormikErrors, FormikTouched } from "formik";
 
 export interface FormLogo {
-  id?: number | null;
+  id?: number;
   start_year: number | null;
   end_year: number | null;
   logo: string;

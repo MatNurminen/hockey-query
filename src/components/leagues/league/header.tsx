@@ -1,17 +1,17 @@
-import Box from '@mui/material/Box';
-import SectionFirst from '../../common/Sections/sectionFirst';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid2';
-import SectionHeader from '../../common/Sections/sectionHeader';
-import MainLogo from '../../common/Images/mainLogo';
-import AppButton from '../../common/Buttons/appButton';
-import { memo, useState } from 'react';
-import UpdateLeague from '../../admin/leagues/updateLeague';
-import { TLeagueDto } from '../../../api/leagues/types';
+import Box from "@mui/material/Box";
+import SectionFirst from "../../common/Sections/sectionFirst";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid2";
+import SectionHeader from "../../common/Sections/sectionHeader";
+import MainLogo from "../../common/Images/mainLogo";
+import AppButton from "../../common/Buttons/appButton";
+import { memo, useState } from "react";
+import UpdateLeague from "../../admin/leagues/updateLeague";
+import { TLeagueDto } from "../../../api/leagues/types";
 
-interface Props{
+interface Props {
   league: TLeagueDto;
-};
+}
 
 const Header = ({ league }: Props) => {
   const [open, setOpen] = useState(false);
@@ -27,43 +27,45 @@ const Header = ({ league }: Props) => {
     <>
       <Grid
         container
-        direction='row'
-        justifyContent='space-around'
-        alignItems='center'
+        direction="row"
+        justifyContent="space-around"
+        alignItems="center"
       >
         <Grid size={{ xs: 6 }}>
-          <SectionHeader txtAlign='left' content={league.name} />
+          <SectionHeader txtAlign="left" content={league.name} />
         </Grid>
-        <Grid size={{ xs: 6 }} container justifyContent='flex-end'>
+        <Grid size={{ xs: 6 }} container justifyContent="flex-end">
           <AppButton
-            text='Edit League'
+            text="Edit League"
             onClick={handleOpen}
-            size='small'
-            color='success'
-            iconName='edit'
+            size="small"
+            color="success"
+            iconName="edit"
           />
         </Grid>
       </Grid>
 
       <Box mt={-3}>
-        <SectionFirst txtAlign='left' content={league.short_name} />
+        <SectionFirst txtAlign="left" content={league.short_name} />
       </Box>
 
       <Grid
         container
-        direction='row'
-        justifyContent='flex-start'
-        alignItems='center'
-        textAlign='center'
+        direction="row"
+        justifyContent="flex-start"
+        alignItems="center"
+        textAlign="center"
       >
-        {league.logos.map((logo) => (
-          <Grid key={logo.id} size={{ xs: 2 }}>
-            <MainLogo alt='' src={logo.logo} />
-            <Typography variant='body1' gutterBottom>
-              {logo.start_year} - {logo.end_year}
-            </Typography>
-          </Grid>
-        ))}
+        {league.logos
+          .toSorted((a, b) => a.start_year - b.start_year)
+          .map((logo) => (
+            <Grid key={logo.id} size={{ xs: 2 }}>
+              <MainLogo alt="" src={logo.logo} />
+              <Typography variant="body1" gutterBottom>
+                {logo.start_year} - {logo.end_year}
+              </Typography>
+            </Grid>
+          ))}
       </Grid>
       <UpdateLeague leagueId={league.id} open={open} onClose={handleClose} />
     </>
