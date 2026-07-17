@@ -59,33 +59,19 @@ const UpdateTeam = ({ open, onClose, teamId }: UpdateTeamDialogProps) => {
     enqueueSnackbar("Team saved successfully.", { variant: "success" });
   };
 
-  if (isLoading) {
+  if (!team || isLoading || isError) {
     return (
       <Dialog open={open} disableRestoreFocus onClose={() => {}}>
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
-            <CircularProgress />
-          </Box>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Dialog open={open} disableRestoreFocus onClose={() => {}}>
-        <DialogContent>
-          <Box sx={{ p: 2, color: "error.main" }}>Error loading team data</Box>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  if (!team) {
-    return (
-      <Dialog open={open} disableRestoreFocus onClose={() => {}}>
-        <DialogContent>
-          <Box sx={{ p: 2 }}>No data available</Box>
+          {isLoading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : isError ? (
+            <Box sx={{ p: 2, color: "error.main" }}>Error loading team data</Box>
+          ) : (
+            <Box sx={{ p: 2 }}>No data available</Box>
+          )}
         </DialogContent>
       </Dialog>
     );
