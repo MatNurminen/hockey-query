@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { pdf } from "@react-pdf/renderer";
 import PDFDocument from "../../../reportsPDF/worksheet";
 import BlueButton from "../../common/Buttons/blueButton";
@@ -69,4 +69,4 @@ const Header = ({ players }: Props) => {
   );
 };
 
-export default Header;
+export default memo(Header);

@@ -137,7 +137,7 @@ const TeamGrid = memo(function TeamGrid({
         headerClassName: "header-bc",
         field: "postseason",
         headerName: "POSTSEASON",
-        editable: true,
+        editable: false,
         flex: 1,
       },
       {
@@ -229,19 +229,19 @@ function buildTeamRows(
 
   const map = new Map<number, TPlayerStatDetail[]>();
   for (const [teamId, rows] of groups) {
-    rows.sort(
+    const sorted = rows.toSorted(
       (a: TPlayerStatDetail, b: TPlayerStatDetail) =>
         a.player_order - b.player_order,
     );
     const prev = prevMap.get(teamId);
     if (
       prev &&
-      prev.length === rows.length &&
-      prev.every((p, i) => p.id === rows[i].id)
+      prev.length === sorted.length &&
+      prev.every((p, i) => p.id === sorted[i].id)
     ) {
       map.set(teamId, prev);
     } else {
-      map.set(teamId, rows);
+      map.set(teamId, sorted);
     }
   }
   return map;
@@ -254,7 +254,12 @@ interface Props {
   seasonId: number;
 }
 
-const Players = ({ players: initialPlayers, teams, leagueId, seasonId }: Props) => {
+const Players = ({
+  players: initialPlayers,
+  teams,
+  leagueId,
+  seasonId,
+}: Props) => {
   const prevMapRef = useRef<Map<number, TPlayerStatDetail[]>>(new Map());
   const teamRows = useMemo(() => {
     const map = buildTeamRows(initialPlayers, prevMapRef.current);

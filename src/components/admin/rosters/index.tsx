@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import Container from "@mui/material/Container";
 import Players from "./players";
 import Selects from "./selects";
@@ -9,10 +8,7 @@ import { getStandings } from "../../../api/teams-stats/queries";
 
 const AdmRosters = () => {
   const [searchParams] = useSearchParams();
-  const leagueId = useMemo(
-    () => [Number(searchParams.get("league"))],
-    [searchParams],
-  );
+  const leagueId = [Number(searchParams.get("league"))];
   const seasonId = Number(searchParams.get("season"));
 
   const {
