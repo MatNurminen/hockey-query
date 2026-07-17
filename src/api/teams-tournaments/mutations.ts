@@ -16,13 +16,13 @@ export function useAddTeamTournament(tournamentId: number) {
     TTeamByTournamentDto,
     TCreateTeamTournamentDto,
     { previousData?: TTeamByTournamentDto[]; hasShownError?: boolean }
-  >(() => "/api/teams-tournaments", "POST", {
+  >("/api/teams-tournaments", "POST", {
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: queryKey });
       const previousData =
         queryClient.getQueryData<TTeamByTournamentDto[]>(queryKey);
 
-      return { previousData, hasShownError: false };
+      return { previousData };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -111,9 +111,6 @@ export function useDeleteTeamTournament(tournamentId: number) {
           oldTeams ? oldTeams.filter((team) => team.id !== id) : [],
       );
       return { previousData, hasShownError: false };
-    },
-    onSuccess: () => {
-      // optimistic update already removed the team in onMutate
     },
     onError: (
       err,
