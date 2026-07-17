@@ -1,5 +1,5 @@
-import { TNationDto } from '../nations/types';
-import { TTeamDto } from '../teams/types';
+import { TNationDto } from "../nations/types";
+import { TTeamDto } from "../teams/types";
 
 export type TPlayerDto = {
   id: number;
@@ -84,9 +84,4 @@ export type TDraftDetail = {
 export type DraftDetailParams = {
   nationId?: number;
   teamId?: number;
-};
-
-export type PlayersQueryOptions = {
-  filter?: string;
-  enabled?: boolean;
 };
