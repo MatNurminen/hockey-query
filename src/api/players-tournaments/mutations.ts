@@ -1,13 +1,13 @@
-import axios from 'axios';
-import { useShowSnackbar } from '../../components/layout/useShowSnackbar';
-import { createMutation } from '../factories/mutationFactory';
-import { TPaginatedResponse, TPlayerStatDetail } from '../players-stats/types';
-import queryClient from '../queryClient';
-import { TCreatePlayerTournamentDto, TPlayerTournamentDto } from './types';
+import axios from "axios";
+import { useShowSnackbar } from "../../components/layout/useShowSnackbar";
+import { createMutation } from "../factories/mutationFactory";
+import { TPaginatedResponse, TPlayerStatDetail } from "../players-stats/types";
+import queryClient from "../queryClient";
+import { TCreatePlayerTournamentDto, TPlayerTournamentDto } from "./types";
 
 export function useAddPlayerTournament(leagueId: number, seasonId: number) {
   const showSnackbar = useShowSnackbar();
-  const queryKey = ['playersStatsDetail', { leagueId: [leagueId], seasonId }];
+  const queryKey = ["playersStatsDetail", { leagueId: [leagueId], seasonId }];
 
   return createMutation<
     TPlayerStatDetail,
@@ -16,31 +16,16 @@ export function useAddPlayerTournament(leagueId: number, seasonId: number) {
       previousData?: TPaginatedResponse<TPlayerStatDetail>;
       hasShownError?: boolean;
     }
-  >(() => '/api/players-tournaments', 'POST', {
+  >("/api/players-tournaments", "POST", {
     onMutate: () => {
       const previousData =
-        queryClient.getQueryData<
-          TPaginatedResponse<TPlayerStatDetail>
-        >(queryKey);
+        queryClient.getQueryData<TPaginatedResponse<TPlayerStatDetail>>(
+          queryKey,
+        );
 
-      return { previousData, hasShownError: false };
+      return { previousData };
     },
-    onSuccess: (data) => {
-      queryClient.setQueryData(
-        queryKey,
-        (
-          oldData: TPaginatedResponse<TPlayerStatDetail> | undefined,
-        ) => {
-          if (!oldData) {
-            return { data: [data], total: 1, limit: 0, offset: 0 };
-          }
-          return {
-            ...oldData,
-            data: [...oldData.data, data],
-            total: oldData.total + 1,
-          };
-        },
-      );
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });
     },
     onError: (
@@ -49,16 +34,16 @@ export function useAddPlayerTournament(leagueId: number, seasonId: number) {
       context?: {
         previousData?: TPaginatedResponse<TPlayerStatDetail>;
         hasShownError?: boolean;
-      }
+      },
     ) => {
       if (context?.previousData) {
         queryClient.setQueryData(queryKey, context.previousData);
       }
       if (!context?.hasShownError) {
         if (axios.isAxiosError(err) && err.response?.data?.message) {
-          showSnackbar(err.response.data.message, 'error');
+          showSnackbar(err.response.data.message, "error");
         } else {
-          showSnackbar('Failed to add player into tournament', 'error');
+          showSnackbar("Failed to add player into tournament", "error");
         }
         if (context) {
           context.hasShownError = true;
@@ -75,14 +60,14 @@ export function useUpdatePlayerTournament(
   const showSnackbar = useShowSnackbar();
   const queryKey =
     leagueId && seasonId
-      ? ['playersStatsDetail', { leagueId: [leagueId], seasonId }]
+      ? ["playersStatsDetail", { leagueId: [leagueId], seasonId }]
       : undefined;
 
   return createMutation<
     TPlayerTournamentDto,
     TCreatePlayerTournamentDto & { id: number },
     { previousData?: TPlayerTournamentDto[]; hasShownError?: boolean }
-  >(({ id }) => `/api/players-tournaments/${id}`, 'PATCH', {
+  >(({ id }) => `/api/players-tournaments/${id}`, "PATCH", {
     transformBody: (variables: TCreatePlayerTournamentDto & { id: number }) => {
       const { id, ...bodyData } = variables;
       return bodyData;
@@ -91,7 +76,7 @@ export function useUpdatePlayerTournament(
       if (queryKey) {
         queryClient.invalidateQueries({ queryKey });
       }
-      showSnackbar('Player Tournament updated successfully', 'success');
+      showSnackbar("Player Tournament updated successfully", "success");
     },
     onError: (
       err,
@@ -99,13 +84,13 @@ export function useUpdatePlayerTournament(
       context?: {
         previousData?: TPlayerTournamentDto[];
         hasShownError?: boolean;
-      }
+      },
     ) => {
       if (!context?.hasShownError) {
         if (axios.isAxiosError(err) && err.response?.data?.message) {
-          showSnackbar(err.response.data.message, 'error');
+          showSnackbar(err.response.data.message, "error");
         } else {
-          showSnackbar('Failed to update player tournament', 'error');
+          showSnackbar("Failed to update player tournament", "error");
         }
         if (context) {
           context.hasShownError = true;
@@ -117,7 +102,7 @@ export function useUpdatePlayerTournament(
 
 export function useDeletePlayerTournament(leagueId: number, seasonId: number) {
   const showSnackbar = useShowSnackbar();
-  const queryKey = ['playersStatsDetail', { leagueId: [leagueId], seasonId }];
+  const queryKey = ["playersStatsDetail", { leagueId: [leagueId], seasonId }];
 
   return createMutation<
     void,
@@ -126,14 +111,14 @@ export function useDeletePlayerTournament(leagueId: number, seasonId: number) {
       previousData?: TPaginatedResponse<TPlayerStatDetail>;
       hasShownError?: boolean;
     }
-  >(({ id }) => `/api/players-tournaments/${id}`, 'DELETE', {
+  >(({ id }) => `/api/players-tournaments/${id}`, "DELETE", {
     onMutate: async ({ id }) => {
       await queryClient.cancelQueries({ queryKey });
 
       const previousData =
-        queryClient.getQueryData<
-          TPaginatedResponse<TPlayerStatDetail>
-        >(queryKey);
+        queryClient.getQueryData<TPaginatedResponse<TPlayerStatDetail>>(
+          queryKey,
+        );
 
       queryClient.setQueryData(
         queryKey,
@@ -153,7 +138,7 @@ export function useDeletePlayerTournament(leagueId: number, seasonId: number) {
     },
 
     onSuccess: () => {
-      showSnackbar('Player of Tournament deleted successfully', 'success');
+      showSnackbar("Player of Tournament deleted successfully", "success");
     },
 
     onError: (
@@ -162,7 +147,7 @@ export function useDeletePlayerTournament(leagueId: number, seasonId: number) {
       context?: {
         previousData?: TPaginatedResponse<TPlayerStatDetail>;
         hasShownError?: boolean;
-      }
+      },
     ) => {
       if (context?.previousData) {
         queryClient.setQueryData(queryKey, context.previousData);
@@ -172,9 +157,9 @@ export function useDeletePlayerTournament(leagueId: number, seasonId: number) {
         const message =
           axios.isAxiosError(err) && err.response?.data?.message
             ? err.response.data.message
-            : 'Failed to delete player of tournament';
+            : "Failed to delete player of tournament";
 
-        showSnackbar(message, 'error');
+        showSnackbar(message, "error");
         if (context) {
           context.hasShownError = true;
         }
