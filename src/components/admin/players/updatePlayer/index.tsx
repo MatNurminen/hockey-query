@@ -29,7 +29,7 @@ const UpdatePlayer = ({ open, onClose, playerId }: UpdatePlayerDialogProps) => {
     height: player?.height ?? undefined,
     weight: player?.weight ?? undefined,
     start_year: player?.start_year ?? startYear,
-    end_year: player?.end_year ?? null,
+    end_year: player?.end_year ?? undefined,
     nation_id: player?.nation_id ?? 1,
     draft_team_id: player?.draft_team_id ?? undefined,
   };
@@ -43,35 +43,21 @@ const UpdatePlayer = ({ open, onClose, playerId }: UpdatePlayerDialogProps) => {
     });
   };
 
-  if (isLoading) {
+  if (!player || isLoading || isError) {
     return (
       <Dialog open={open} disableRestoreFocus onClose={() => {}}>
         <DialogContent>
-          <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
-            <CircularProgress />
-          </Box>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Dialog open={open} disableRestoreFocus onClose={() => {}}>
-        <DialogContent>
-          <Box sx={{ p: 2, color: "error.main" }}>
-            Error loading player data
-          </Box>
-        </DialogContent>
-      </Dialog>
-    );
-  }
-
-  if (!player) {
-    return (
-      <Dialog open={open} disableRestoreFocus onClose={() => {}}>
-        <DialogContent>
-          <Box sx={{ p: 2 }}>No data available</Box>
+          {isLoading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : isError ? (
+            <Box sx={{ p: 2, color: "error.main" }}>
+              Error loading player data
+            </Box>
+          ) : (
+            <Box sx={{ p: 2 }}>No data available</Box>
+          )}
         </DialogContent>
       </Dialog>
     );

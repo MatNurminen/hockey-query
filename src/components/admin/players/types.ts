@@ -5,10 +5,10 @@ export interface FormValues {
   player_position: string;
   player_order: number;
   birth_year: number;
-  height: number | undefined;
-  weight: number | undefined;
+  height?: number;
+  weight?: number;
   start_year: number;
-  end_year: number | null;
+  end_year?: number;
   nation_id: number;
-  draft_team_id: number | null | undefined;
+  draft_team_id?: number;
 }

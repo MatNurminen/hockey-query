@@ -24,7 +24,7 @@ const AddPlayer = ({ open, onClose }: AddPlayerDialogProps) => {
     height: undefined,
     weight: undefined,
     start_year: startYear,
-    end_year: null,
+    end_year: undefined,
     nation_id: 1,
     draft_team_id: undefined,
   };
