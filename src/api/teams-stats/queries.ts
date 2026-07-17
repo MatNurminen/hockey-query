@@ -16,7 +16,7 @@ export const getStandings = (params: StandingsParams) => {
     queryString ? `?${queryString}` : ""
   }`;
 
-  return createQuery<TStandings[], TStandings[]>(["standings", params], url);
+  return createQuery<TStandings[]>(["standings", params], url);
 };
 
 export const getPrefetchStandings = (leagueId: number, seasonId: number) => {
@@ -30,10 +30,7 @@ export const getTeamsForNation = (params: TeamsForNationParams) => {
   const queryString = buildQueryString(params);
   const url = `/api/teams-stats/teams${queryString ? `?${queryString}` : ""}`;
 
-  return createQuery<TTeamsForNation[], TTeamsForNation[]>(
-    ["teamsForNation", params],
-    url,
-  );
+  return createQuery<TTeamsForNation[]>(["teamsForNation", params], url);
 };
 
 export const getTeamFacts = (leagueId: number, seasonId: number) => {

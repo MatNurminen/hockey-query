@@ -1,5 +1,5 @@
-import { getStandings } from './queries';
-import { StandingsParams, TStandings } from './types';
+import { getStandings } from "./queries";
+import { StandingsParams, TStandings } from "./types";
 
 export interface StandingsConfig {
   id: number;
