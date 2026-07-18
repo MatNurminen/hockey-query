@@ -80,14 +80,14 @@ const TeamForm = ({
             ...(typeof l.id === "number" ? { id: l.id } : {}),
             logo: `${bucketPath}${toKey}`,
             start_year: l.start_year as number,
-            ...(l.end_year != null ? { end_year: l.end_year } : {}),
+            end_year: l.end_year ?? null,
           };
         }
         return {
           ...(typeof l.id === "number" ? { id: l.id } : {}),
           logo: l.logo === noImage ? rawKey : `${bucketPath}${rawKey}`,
           start_year: l.start_year as number,
-          ...(l.end_year != null ? { end_year: l.end_year } : {}),
+          end_year: l.end_year ?? null,
         };
       });
     return Promise.all(tasks);
