@@ -82,14 +82,16 @@ const Header = ({ team }: Props) => {
             alignItems="center"
             spacing={5}
           >
-            {team?.logos.map((logo) => (
-              <Box key={logo.id} textAlign="center">
-                <MainLogo src={logo.logo} alt="" />
-                <Typography variant="body1" gutterBottom>
-                  {logo.start_year} - {logo.end_year}
-                </Typography>
-              </Box>
-            ))}
+            {team?.logos
+              .toSorted((a, b) => a.start_year - b.start_year)
+              .map((logo) => (
+                <Box key={logo.id} textAlign="center">
+                  <MainLogo src={logo.logo} alt="" />
+                  <Typography variant="body1" gutterBottom>
+                    {logo.start_year} - {logo.end_year}
+                  </Typography>
+                </Box>
+              ))}
           </Stack>
         </Grid>
         <Grid textAlign="right" size={{ xs: 12 }} sx={{ mb: 1 }}>
