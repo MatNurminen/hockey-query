@@ -78,30 +78,32 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
     updatedRow.pts = updatedRow.wins * 2 + updatedRow.ties;
     updatedRow.gd = updatedRow.goals_for - updatedRow.goals_against;
 
-    if (typeof updatedRow.postseason === "string") {
-      updatedRow.postseason = updatedRow.postseason
-        ? { award: updatedRow.postseason }
-        : null;
-    }
-
     const changedFields = (
       Object.keys(updatedRow) as (keyof TStandings)[]
     ).filter((key) => key !== "id" && updatedRow[key] !== oldRow[key]);
 
     if (changedFields.length === 0) return oldRow;
 
-    await updateTeamTournament({
-      id: updatedRow.id,
-      tournament_id: updatedRow.tournament_id,
-      team_id: updatedRow.team_id,
-      games: updatedRow.games,
-      wins: updatedRow.wins,
-      ties: updatedRow.ties,
-      losts: updatedRow.losts,
-      goals_for: updatedRow.goals_for,
-      goals_against: updatedRow.goals_against,
-      postseason: updatedRow.postseason,
-    });
+    const requiredKeys: (keyof TStandings)[] = ["tournament_id", "team_id"];
+    const updatableKeys: (keyof TStandings)[] = [
+      "games",
+      "wins",
+      "ties",
+      "losts",
+      "goals_for",
+      "goals_against",
+      "postseason",
+    ];
+    const payload: Record<string, unknown> = { id: updatedRow.id };
+    for (const key of requiredKeys) {
+      payload[key] = updatedRow[key];
+    }
+    for (const key of updatableKeys) {
+      if (changedFields.includes(key)) {
+        payload[key] = updatedRow[key];
+      }
+    }
+    await updateTeamTournament(payload as any);
 
     setTeamsState((prev) =>
       prev.map((row) => (row.id === updatedRow.id ? updatedRow : row)),
@@ -223,6 +225,12 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
       headerName: "POSTSEASON",
       editable: true,
       flex: 1,
+      valueGetter: (_value, row) => row.postseason?.award ?? "",
+      valueSetter: (newValue, row) => {
+        const newRow = { ...row };
+        newRow.postseason = newValue ? { award: String(newValue) } : null;
+        return newRow;
+      },
       renderCell: (params) => (
         <span>{String(params.row.postseason?.award ?? "") || "-"}</span>
       ),
