@@ -17,6 +17,7 @@ export function useAddTeamTournament(tournamentId: number) {
     TCreateTeamTournamentDto,
     { previousData?: TTeamByTournamentDto[]; hasShownError?: boolean }
   >("/api/teams-tournaments", "POST", {
+    transformBody: (variables: TCreateTeamTournamentDto) => variables,
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: queryKey });
       const previousData =

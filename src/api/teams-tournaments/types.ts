@@ -1,5 +1,5 @@
 type Postseason = {
-  title: string;
+  award: string;
 };
 
 export type TTeamTournamentDto = {
@@ -24,7 +24,7 @@ export type TCreateTeamTournamentDto = {
   losts?: number;
   goals_for?: number;
   goals_against?: number;
-  postseason?: Postseason;
+  postseason?: Postseason | null;
 };
 
 export type TTeamByTournamentDto = {

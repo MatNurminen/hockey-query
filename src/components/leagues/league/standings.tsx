@@ -80,7 +80,7 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
 
     if (typeof updatedRow.postseason === "string") {
       updatedRow.postseason = updatedRow.postseason
-        ? { title: updatedRow.postseason }
+        ? { award: updatedRow.postseason }
         : null;
     }
 
@@ -224,7 +224,7 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
       editable: true,
       flex: 1,
       renderCell: (params) => (
-        <span>{String(params.row.postseason?.title ?? "") || "-"}</span>
+        <span>{String(params.row.postseason?.award ?? "") || "-"}</span>
       ),
     },
   ];
