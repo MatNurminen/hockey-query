@@ -46,14 +46,12 @@ const AddTournament = (props: AddTournamentDialogProps) => {
       setSaving(true);
       try {
         const result = await addTournament(values);
-        if (result.id) {
-          enqueueSnackbar(
-            `Tournament added successfully with id: ${result.id}`,
-            { variant: "success" },
-          );
-          formik.resetForm();
-          onClose();
-        }
+        enqueueSnackbar(
+          `Tournament added successfully with id: ${result.id}`,
+          { variant: "success" },
+        );
+        formik.resetForm();
+        onClose();
       } catch (e) {
         enqueueSnackbar("Failed to save tournament.", { variant: "error" });
       } finally {
