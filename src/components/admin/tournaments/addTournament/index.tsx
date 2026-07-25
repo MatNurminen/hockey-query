@@ -97,7 +97,7 @@ const AddTournament = (props: AddTournamentDialogProps) => {
                   <CircularProgress />
                 </Box>
               )}
-              <Box component="form" noValidate autoComplete="off">
+              <Box component="form" noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
                 <Grid container spacing={2} rowSpacing={3}>
                   <Grid size={{ xs: 6 }}>
                     <SelectLeague
@@ -131,7 +131,7 @@ const AddTournament = (props: AddTournamentDialogProps) => {
           <GreenButton
             text="Save"
             size="small"
-            onClick={() => formik.handleSubmit()}
+            onClick={formik.submitForm}
             iconIndex={1}
             disabled={saving}
           />
