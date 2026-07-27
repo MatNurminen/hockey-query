@@ -1,7 +1,7 @@
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import Checkbox from "@mui/material/Checkbox";
+import Radio from "@mui/material/Radio";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -44,7 +44,7 @@ const ListTournamentTeams = ({
               role="listitem"
               onClick={handleToggle(team.id)}
             >
-              <Checkbox
+              <Radio
                 checked={checked.indexOf(team.id) !== -1}
                 tabIndex={-1}
                 disableRipple

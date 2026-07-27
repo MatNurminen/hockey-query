@@ -33,15 +33,7 @@ const Tournament = () => {
   if (!tournament) return <p>No data available</p>;
 
   const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-    setChecked(newChecked);
+    setChecked((prev) => (prev[0] === value ? [] : [value]));
   };
 
   const handleCheckedRemove = (id: number) => {

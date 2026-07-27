@@ -3,7 +3,7 @@ import Paper from "@mui/material/Paper";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import Checkbox from "@mui/material/Checkbox";
+import Radio from "@mui/material/Radio";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
@@ -92,7 +92,7 @@ const ListAllTeams = ({ handleToggle, checked }: Props) => {
                 role="listitem"
                 onClick={handleToggle(team.id)}
               >
-                <Checkbox
+                <Radio
                   checked={checked.indexOf(team.id) !== -1}
                   tabIndex={-1}
                   disableRipple
