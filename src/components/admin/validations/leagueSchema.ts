@@ -20,7 +20,7 @@ const leagueSchema = object({
         end_year: endYearSchema(),
       }),
     )
-    .required("At least one logo is required"),
+    .min(1, "At least one logo is required"),
 });
 
 export default leagueSchema;
