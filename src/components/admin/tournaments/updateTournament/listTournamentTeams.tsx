@@ -7,6 +7,8 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { getTeamsByTournament } from "../../../../api/teams-tournaments/queries";
 import { TTeamByTournamentDto } from "../../../../api/teams-tournaments/types";
+import TableFlag from "../../../common/Images/tableFlag";
+import { memo } from "react";
 
 interface Props {
   tournamentId: number;
@@ -50,6 +52,9 @@ const ListTournamentTeams = ({
                   "aria-labelledby": team.id?.toString(),
                 }}
               />
+              <Box display="flex" sx={{ mr: 1 }}>
+                <TableFlag src={team.flag} alt={`${team.full_name} flag`} />
+              </Box>
               <ListItemText id={team.id?.toString()} primary={team.full_name} />
             </ListItem>
           ))}
@@ -64,4 +69,4 @@ const ListTournamentTeams = ({
   );
 };
 
-export default ListTournamentTeams;
+export default memo(ListTournamentTeams);

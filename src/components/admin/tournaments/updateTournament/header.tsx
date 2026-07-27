@@ -2,6 +2,7 @@ import SectionHeader from "../../../common/Sections/sectionHeader";
 import { TTournamentDto } from "../../../../api/tournaments/types";
 import Stack from "@mui/material/Stack";
 import AppButton from "../../../common/Buttons/appButton";
+import { memo } from "react";
 
 interface Props {
   tournament: TTournamentDto;
@@ -33,4 +34,4 @@ const Header = ({ tournament, leagueId }: Props) => {
   );
 };
 
-export default Header;
+export default memo(Header);
