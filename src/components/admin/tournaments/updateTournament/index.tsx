@@ -25,7 +25,7 @@ const Tournament = () => {
   const { data: tournament, isLoading, isError } = getTournament(tournamentId);
 
   const { mutateAsync: addTeamTournament } = useAddTeamTournament(tournamentId);
-  const { mutate: deleteTeamTournament } =
+  const { mutateAsync: deleteTeamTournament } =
     useDeleteTeamTournament(tournamentId);
 
   if (isLoading) return <p>Loading...</p>;
@@ -36,25 +36,19 @@ const Tournament = () => {
     setChecked((prev) => (prev[0] === value ? [] : [value]));
   };
 
-  const handleCheckedRemove = (id: number) => {
+  const handleCheckedRemove = async (id: number) => {
     if (!Number.isFinite(id)) return;
-    deleteTeamTournament({ id });
+    await deleteTeamTournament({ id });
     setChecked([]);
   };
 
-  const handleCheckedAdd = (id: number) => {
+  const handleCheckedAdd = async (id: number) => {
     if (!Number.isFinite(id)) return;
-    addTeamTournament(
-      {
-        tournament_id: tournamentId,
-        team_id: id,
-      },
-      {
-        onSuccess: () => {
-          setChecked([]);
-        },
-      },
-    );
+    await addTeamTournament({
+      tournament_id: tournamentId,
+      team_id: id,
+    });
+    setChecked([]);
   };
 
   return (
