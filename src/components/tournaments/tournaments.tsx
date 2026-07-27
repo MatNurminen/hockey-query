@@ -100,7 +100,7 @@ const TournamentsByLeague = ({ leagueId }: Props) => {
                 <TableCell width={"10%"}>
                   <Link
                     component={RouterLink}
-                    to={`/tournaments/${tournament.id}`}
+                    to={`/tournaments/${tournament.id}?league=${leagueId}`}
                   >
                     <GreenButton text="Edit" size="small" iconIndex={1} />
                   </Link>

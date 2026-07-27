@@ -46,10 +46,9 @@ const AddTournament = (props: AddTournamentDialogProps) => {
       setSaving(true);
       try {
         const result = await addTournament(values);
-        enqueueSnackbar(
-          `Tournament added successfully with id: ${result.id}`,
-          { variant: "success" },
-        );
+        enqueueSnackbar(`Tournament added successfully with id: ${result.id}`, {
+          variant: "success",
+        });
         formik.resetForm();
         onClose();
       } catch (e) {
@@ -67,7 +66,7 @@ const AddTournament = (props: AddTournamentDialogProps) => {
   };
 
   return (
-    <Dialog open={open} fullWidth>
+    <Dialog open={open} fullWidth disableRestoreFocus onClose={() => {}}>
       <DialogContent>
         {seasonsLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
@@ -95,7 +94,12 @@ const AddTournament = (props: AddTournamentDialogProps) => {
                   <CircularProgress />
                 </Box>
               )}
-              <Box component="form" noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
+              <Box
+                component="form"
+                noValidate
+                autoComplete="off"
+                onSubmit={formik.handleSubmit}
+              >
                 <Grid container spacing={2} rowSpacing={3}>
                   <Grid size={{ xs: 6 }}>
                     <SelectLeague

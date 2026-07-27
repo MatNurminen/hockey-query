@@ -1,7 +1,7 @@
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid2";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import Header from "./header";
 import ListAllTeams from "./listAllTeams";
 import ListTournamentTeams from "./listTournamentTeams";
@@ -17,7 +17,11 @@ import { getTournament } from "../../../../api/tournaments/queries";
 const Tournament = () => {
   const [checked, setChecked] = useState<readonly number[]>([]);
   const params = useParams();
+  const [searchParams] = useSearchParams();
   const tournamentId: number = Number(params.id);
+  const leagueId: number | undefined = searchParams.has("league")
+    ? Number(searchParams.get("league"))
+    : undefined;
   const { data: tournament, isLoading, isError } = getTournament(tournamentId);
 
   const { mutateAsync: addTeamTournament } = useAddTeamTournament(tournamentId);
@@ -63,7 +67,7 @@ const Tournament = () => {
 
   return (
     <Container>
-      <Header tournament={tournament} />
+      <Header tournament={tournament} leagueId={leagueId} />
       <Grid container alignItems="center" mt={-3}>
         <Grid size={{ xs: 5 }}>
           <ListAllTeams handleToggle={handleToggle} checked={checked} />
