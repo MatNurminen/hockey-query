@@ -30,16 +30,19 @@ type AppButtonPropsBase = {
     | "pdf"
     | "cloudUpload"
     | "delete"
-    | "remove";
+    | "remove"
+    | "reset";
   startIcon?: ReactNode;
+  children?: ReactNode;
   sx?: ButtonProps["sx"];
-} & Omit<ButtonProps, "startIcon" | "sx" | "onClick">;
+} & Omit<ButtonProps, "startIcon" | "sx" | "onClick" | "children">;
 
 type AppButtonProps = AppButtonPropsBase &
   (
     | { to: string; href?: never; onClick?: never }
     | { href: string; to?: never; onClick?: never }
     | { onClick: ButtonProps["onClick"]; to?: never; href?: never }
+    | { to?: never; href?: never; onClick?: never }
   );
 
 const predefinedIcons: Record<string, ReactNode> = {
@@ -71,6 +74,7 @@ const AppButton = memo(
     to,
     href,
     sx,
+    children,
     ...other
   }: AppButtonProps) => {
     const resolvedStartIcon =
@@ -84,12 +88,13 @@ const AppButton = memo(
       sx: { textTransform: "uppercase", ...sx },
       startIcon: resolvedStartIcon,
       disabled,
-      children: text,
       ...other,
     };
 
     return to ? (
-      <Button component={RouterLink} to={to} {...baseProps} />
+      <Button component={RouterLink} to={to} {...baseProps}>
+        {text}{children}
+      </Button>
     ) : href ? (
       <Button
         component="a"
@@ -97,9 +102,13 @@ const AppButton = memo(
         target="_blank"
         rel="noopener noreferrer"
         {...baseProps}
-      />
+      >
+        {text}{children}
+      </Button>
     ) : (
-      <Button onClick={onClick} {...baseProps} />
+      <Button onClick={onClick} {...baseProps}>
+        {text}{children}
+      </Button>
     );
   },
 );

@@ -1,5 +1,5 @@
 import { useSnackbar } from 'notistack';
-import BlueButton from '../Buttons/blueButton';
+import AppButton from '../Buttons/appButton';
 import { styled } from '@mui/material/styles';
 import FormControl from '@mui/material/FormControl';
 import Grid from '@mui/material/Grid2';
@@ -50,9 +50,9 @@ const SbUploadFile = ({ onFileUpload }: SbUploadFileProps) => {
     <Grid container spacing={3} sx={{ mt: 1 }}>
       <Grid size={12} sx={{ textAlign: 'left' }}>
         <FormControl fullWidth size='small'>
-          <BlueButton
+          <AppButton
             text={isPending ? 'Uploading...' : 'Upload file'}
-            iconIndex={1}
+            iconName='cloudUpload'
             size='small'
             component='label'
             disabled={isPending}
@@ -62,7 +62,7 @@ const SbUploadFile = ({ onFileUpload }: SbUploadFileProps) => {
               onChange={handleFileChange}
               //disabled={isPending}
             />
-          </BlueButton>
+          </AppButton>
         </FormControl>
       </Grid>
     </Grid>

@@ -1,10 +1,10 @@
 import { memo, useState } from "react";
 import { pdf } from "@react-pdf/renderer";
 import PDFDocument from "../../../reportsPDF/worksheet";
-import BlueButton from "../../common/Buttons/blueButton";
 import SectionHeader from "../../common/Sections/sectionHeader";
 import Stack from "@mui/material/Stack";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
+import AppButton from "../../common/Buttons/appButton";
 
 interface Props {
   players: TPlayerStatDetail[];
@@ -50,15 +50,22 @@ const Header = ({ players }: Props) => {
           alignItems: "center",
         }}
       >
-        <BlueButton
+        {/* <BlueButton
           iconIndex={3}
           size="small"
           text={isBusy ? "Generation..." : "WRKS Players"}
           onClick={() => handleOpenPdf(false)}
           disabled={isBusy}
+        /> */}
+        <AppButton
+          iconName="pdf"
+          size="small"
+          text={isBusy ? "Generation..." : "WRKS Players"}
+          onClick={() => handleOpenPdf(false)}
+          disabled={isBusy}
         />
-        <BlueButton
-          iconIndex={3}
+        <AppButton
+          iconName="pdf"
           size="small"
           text={isBusy ? "Generation..." : "WRKS Goalies"}
           onClick={() => handleOpenPdf(true)}
