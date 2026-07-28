@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import SectionHeader from "../../common/Sections/sectionHeader";
 import DialogActions from "@mui/material/DialogActions";
-import GreenButton from "../../common/Buttons/greenButton";
+import AppButton from "../../common/Buttons/appButton";
 import { useFormik } from "formik";
 import GrayButton from "../../common/Buttons/grayButton";
 import Stack from "@mui/material/Stack";
@@ -376,12 +376,13 @@ const PlayerForm = ({
       </DialogContent>
       <DialogActions sx={{ mb: 2, mr: 2 }}>
         <Stack direction="row" spacing={2}>
-          <GreenButton
+          <AppButton
             text="Save"
             size="small"
             onClick={formik.submitForm}
-            iconIndex={1}
+            iconName="edit"
             disabled={saving}
+            color="success"
           />
           <GrayButton
             text="Cancel"

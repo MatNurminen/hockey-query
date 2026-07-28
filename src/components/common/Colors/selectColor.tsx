@@ -4,7 +4,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { ChromePicker, ColorResult } from "react-color";
-import GreenButton from "../Buttons/greenButton";
+import AppButton from "../Buttons/appButton";
 import GrayButton from "../Buttons/grayButton";
 
 export interface SelectColorProps {
@@ -78,11 +78,12 @@ const SelectColor = ({
         />
       </DialogContent>
       <DialogActions sx={{ mb: 2, mr: 2 }}>
-        <GreenButton
+        <AppButton
           text="Select"
           size="small"
-          iconIndex={5}
+          iconName="check"
           onClick={handleSelect}
+          color="success"
         />
         <GrayButton text="Cancel" size="small" onClick={handleCancel} />
       </DialogActions>

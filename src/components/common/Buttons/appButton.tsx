@@ -12,6 +12,7 @@ import PaletteIcon from "@mui/icons-material/Palette";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import RemoveIcon from "@mui/icons-material/Remove";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { type ReactNode, memo } from "react";
 
 type AppButtonPropsBase = {
@@ -54,6 +55,7 @@ const predefinedIcons: Record<string, ReactNode> = {
   cloudUpload: <CloudUploadIcon />,
   delete: <DeleteForeverIcon />,
   remove: <RemoveIcon />,
+  reset: <RestartAltIcon />,
 };
 
 const AppButton = memo(

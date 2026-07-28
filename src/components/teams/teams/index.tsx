@@ -16,7 +16,7 @@ import TableCell from "@mui/material/TableCell";
 import { getTeams } from "../../../api/teams/queries";
 import { useMemo, useState } from "react";
 import { useLatestSeason } from "../../../hooks/useLatestSeason";
-import GreenButton from "../../common/Buttons/greenButton";
+import AppButton from "../../common/Buttons/appButton";
 import AddTeam from "../../admin/teams/addTeam";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
@@ -57,11 +57,12 @@ const Teams = () => {
           <SectionHeader txtAlign="left" content="Teams" />
         </Grid>
         <Grid size={4} textAlign="end">
-          <GreenButton
+          <AppButton
             onClick={handleOpen}
             text="Add Team"
             size="small"
-            iconIndex={0}
+            iconName="add"
+            color="success"
           />
         </Grid>
       </Grid>

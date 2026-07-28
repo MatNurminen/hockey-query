@@ -6,7 +6,6 @@ import Header from "./header";
 import ListAllTeams from "./listAllTeams";
 import ListTournamentTeams from "./listTournamentTeams";
 import Stack from "@mui/material/Stack";
-import GreenButton from "../../../common/Buttons/greenButton";
 import AppButton from "../../../common/Buttons/appButton";
 import {
   useAddTeamTournament,
@@ -65,13 +64,14 @@ const Tournament = () => {
             alignItems="center"
             spacing={1}
           >
-            <GreenButton
+            <AppButton
               text=">"
               size="small"
               onClick={() => {
                 handleCheckedAdd(Number(checked[0]));
               }}
-              iconIndex={0}
+              iconName="add"
+              color="success"
             />
             <AppButton
               text="<"

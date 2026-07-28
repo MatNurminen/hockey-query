@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import SectionHeader from "../../common/Sections/sectionHeader";
 import DialogActions from "@mui/material/DialogActions";
-import GreenButton from "../../common/Buttons/greenButton";
+import AppButton from "../../common/Buttons/appButton";
 import { useFormik } from "formik";
 import GrayButton from "../../common/Buttons/grayButton";
 import Stack from "@mui/material/Stack";
@@ -17,7 +17,6 @@ import {
   useDeleteAllFromTmp,
   useMoveCfFile,
 } from "../../../api/cloudflare/mutations";
-import AppButton from "../../common/Buttons/appButton";
 import Logos from "../../common/Images/logos";
 import SelectNation from "../../common/Selects/selectNation";
 import { TCreateTeamLogoDto } from "../../../api/team-logos/types";
@@ -319,12 +318,13 @@ const TeamForm = ({
                         ))}
                       </Grid>
                       <Box sx={{ mt: 1 }}>
-                        <GreenButton
+                        <AppButton
                           text="Add logo"
                           size="small"
                           onClick={handleAddLogo}
-                          iconIndex={3}
+                          iconName="photo"
                           disabled={saving}
+                          color="success"
                         />
                       </Box>
                     </BorderedBox>
@@ -401,12 +401,13 @@ const TeamForm = ({
       </DialogContent>
       <DialogActions sx={{ mb: 2, mr: 5 }}>
         <Stack direction="row" spacing={2}>
-          <GreenButton
+          <AppButton
             text="Save"
             size="small"
             onClick={formik.submitForm}
-            iconIndex={1}
+            iconName="edit"
             disabled={saving}
+            color="success"
           />
           <GrayButton
             text="Cancel"

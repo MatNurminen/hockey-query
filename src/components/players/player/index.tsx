@@ -9,7 +9,7 @@ import { getPlayer } from '../../../api/players/queries';
 import Grid from '@mui/material/Grid2';
 import StatsTotal from './statsTotal';
 import Highlights from './highlights';
-import GreenButton from '../../common/Buttons/greenButton';
+import AppButton from '../../common/Buttons/appButton';
 import UpdatePlayer from '../../admin/players/updatePlayer';
 import { TPlayerStatDetail } from '../../../api/players-stats/types';
 
@@ -50,11 +50,12 @@ const Player = () => {
             </Paper>
           </Grid>
           <Grid size={{ xs: 12 }} textAlign='right'>
-            <GreenButton
+            <AppButton
               text='Edit Player'
               onClick={handleOpen}
               size='small'
-              iconIndex={1}
+              iconName="edit"
+              color="success"
             />
           </Grid>
           <Grid size={{ xs: 12 }}>

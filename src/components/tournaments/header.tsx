@@ -2,7 +2,7 @@ import Grid from "@mui/material/Grid2";
 import { memo, useState } from "react";
 import SectionHeader from "../common/Sections/sectionHeader";
 import SelectLeague from "../common/Selects/selectLeague";
-import GreenButton from "../common/Buttons/greenButton";
+import AppButton from "../common/Buttons/appButton";
 import AddTournament from "../admin/tournaments/addTournament";
 
 type Props = {
@@ -33,11 +33,12 @@ const Header = ({ leagueId }: Props) => {
           <SelectLeague />
         </Grid>
         <Grid>
-          <GreenButton
+          <AppButton
             size="small"
             onClick={handleClickOpen}
-            iconIndex={0}
+            iconName="add"
             text="Add Tournament"
+            color="success"
           />
           <AddTournament
             leagueId={leagueId}

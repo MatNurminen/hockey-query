@@ -14,7 +14,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid2";
 import DialogActions from "@mui/material/DialogActions";
 import Stack from "@mui/material/Stack";
-import GreenButton from "../../../common/Buttons/greenButton";
+import AppButton from "../../../common/Buttons/appButton";
 import GrayButton from "../../../common/Buttons/grayButton";
 import { useLatestSeason } from "../../../../hooks/useLatestSeason";
 
@@ -130,12 +130,13 @@ const AddTournament = (props: AddTournamentDialogProps) => {
       </DialogContent>
       <DialogActions sx={{ mb: 2, mr: 5 }}>
         <Stack direction="row" spacing={2}>
-          <GreenButton
+          <AppButton
             text="Save"
             size="small"
             onClick={formik.submitForm}
-            iconIndex={1}
+            iconName="edit"
             disabled={saving}
+            color="success"
           />
           <GrayButton
             text="Cancel"

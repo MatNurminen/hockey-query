@@ -5,15 +5,12 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
 import { getTournamentsByLeague } from "../../api/tournaments/queries";
 import HeaderMain from "../common/Table/headerMain";
 import HeaderSection from "../common/Table/headerSection";
 import { useDeleteTournament } from "../../api/tournaments/mutations";
 import AppButton from "../common/Buttons/appButton";
 import DeleteDialog from "../common/Dialogs/deleteDialog";
-import GreenButton from "../common/Buttons/greenButton";
 import TableFlag from "../common/Images/tableFlag";
 import Box from "@mui/material/Box";
 import { TTournamentByLeagueDto } from "../../api/tournaments/types";
@@ -98,12 +95,13 @@ const TournamentsByLeague = ({ leagueId }: Props) => {
                   </Box>
                 </TableCell>
                 <TableCell width={"10%"}>
-                  <Link
-                    component={RouterLink}
+                  <AppButton
+                    text="Edit"
+                    size="small"
+                    iconName="edit"
+                    color="success"
                     to={`/tournaments/${tournament.id}?league=${leagueId}`}
-                  >
-                    <GreenButton text="Edit" size="small" iconIndex={1} />
-                  </Link>
+                  />
                 </TableCell>
                 <TableCell width={"10%"}>
                   <AppButton

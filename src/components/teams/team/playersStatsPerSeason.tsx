@@ -9,7 +9,7 @@ import TableCell from "@mui/material/TableCell";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid2";
-import GreenButton from "../../common/Buttons/greenButton";
+import AppButton from "../../common/Buttons/appButton";
 import TableFlag from "../../common/Images/tableFlag";
 import { getPlayersStatsDetail } from "../../../api/players-stats/queries";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
@@ -109,7 +109,7 @@ const PlayersStatsPerSeason = ({ teamId }: Props) => {
               </TableBody>
             </Table>
           </TableContainer>
-          <GreenButton fullWidth={true} text="Show More" />
+          <AppButton fullWidth={true} text="Show More" color="success" />
         </Grid>
       ))}
     </Grid>

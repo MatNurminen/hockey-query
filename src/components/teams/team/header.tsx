@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import MainLogo from "../../common/Images/mainLogo";
-import GreenButton from "../../common/Buttons/greenButton";
+import AppButton from "../../common/Buttons/appButton";
 import UpdateTeam from "../../admin/teams/updateTeam";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import { TTeamDto } from "../../../api/teams/types";
@@ -95,11 +95,12 @@ const Header = ({ team }: Props) => {
           </Stack>
         </Grid>
         <Grid textAlign="right" size={{ xs: 12 }} sx={{ mb: 1 }}>
-          <GreenButton
+          <AppButton
             text="Edit Team"
             onClick={handleOpen}
             size="small"
-            iconIndex={1}
+            iconName="edit"
+            color="success"
           />
         </Grid>
       </Grid>

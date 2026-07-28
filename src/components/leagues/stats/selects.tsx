@@ -6,7 +6,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
-import GreenButton from "../../common/Buttons/greenButton";
+import AppButton from "../../common/Buttons/appButton";
 import { navigateWithParams, deleteParams } from "../../utils/urlHelpers";
 import {
   TPlayerStatByClub,
@@ -203,12 +203,13 @@ const Selects = ({ players }: Props) => {
         </FormControl>
       </Grid>
       <Grid size={{ xs: 3 }} alignContent={"center"} textAlign={"end"}>
-        <GreenButton
+        <AppButton
           size="small"
           text="Reset Filter"
-          iconIndex={6}
+          iconName="reset"
           disabled={!isAnyFilterActive}
           onClick={handleReset}
+          color="success"
         />
       </Grid>
     </Grid>

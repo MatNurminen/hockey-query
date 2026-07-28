@@ -6,7 +6,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { styled } from "@mui/material/styles";
-import GreenButton from "../../common/Buttons/greenButton";
+import AppButton from "../../common/Buttons/appButton";
 import SearchPlayer from "../../common/SearchPlayer";
 import { useAddPlayerTournament } from "../../../api/players-tournaments/mutations";
 import GrayButton from "../../common/Buttons/grayButton";
@@ -51,11 +51,12 @@ const AddPlayerDialog = ({
 
   return (
     <>
-      <GreenButton
+      <AppButton
         size="small"
         text="Add Player"
         onClick={handleOpen}
-        iconIndex={0}
+        iconName="add"
+        color="success"
       />
       <Dialog maxWidth="sm" fullWidth={true} open={open} onClose={handleClose}>
         <DialogContent>
