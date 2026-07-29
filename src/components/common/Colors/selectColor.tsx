@@ -65,6 +65,7 @@ const SelectColor = ({
     <Dialog
       open={open}
       onClose={handleCancel}
+      disableRestoreFocus
       aria-labelledby="color-picker-dialog-title"
       maxWidth="sm"
     >
