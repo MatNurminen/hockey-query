@@ -5,7 +5,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import AppButton from "../Buttons/appButton";
-import GrayButton from "../Buttons/grayButton";
 import Stack from "@mui/material/Stack";
 import DialogContent from "@mui/material/DialogContent";
 import Typography from "@mui/material/Typography";
@@ -65,12 +64,14 @@ export default function DeleteDialog({
       </DialogContent>
       <DialogActions>
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-          <GrayButton
+          <AppButton
             text="Cancel"
             size="small"
             onClick={onClose}
             disabled={loading}
             autoFocus
+            iconName="cancel"
+            color="inherit"
           />
           <AppButton
             text={loading ? "Deleting..." : "Delete"}

@@ -9,7 +9,6 @@ import { styled } from "@mui/material/styles";
 import AppButton from "../../common/Buttons/appButton";
 import SearchPlayer from "../../common/SearchPlayer";
 import { useAddPlayerTournament } from "../../../api/players-tournaments/mutations";
-import GrayButton from "../../common/Buttons/grayButton";
 
 const Img = styled("img")({
   margin: "auto",
@@ -63,7 +62,7 @@ const AddPlayerDialog = ({
           <SearchPlayer onPlayerSelect={addPlayer} />
         </DialogContent>
         <DialogActions sx={{ mr: 3, mb: 3, p: 0 }}>
-          <GrayButton size="small" text="Cancel" onClick={handleClose} />
+          <AppButton size="small" text="Cancel" onClick={handleClose} iconName="cancel" color="inherit" />
         </DialogActions>
       </Dialog>
     </>

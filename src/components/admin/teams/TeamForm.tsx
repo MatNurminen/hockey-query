@@ -8,7 +8,6 @@ import SectionHeader from "../../common/Sections/sectionHeader";
 import DialogActions from "@mui/material/DialogActions";
 import AppButton from "../../common/Buttons/appButton";
 import { useFormik } from "formik";
-import GrayButton from "../../common/Buttons/grayButton";
 import Stack from "@mui/material/Stack";
 import SelectNumber from "../../common/Selects/selectNumber";
 import Grid from "@mui/material/Grid2";
@@ -409,11 +408,13 @@ const TeamForm = ({
             disabled={saving}
             color="success"
           />
-          <GrayButton
+          <AppButton
             text="Cancel"
             size="small"
             onClick={handleCancel}
             disabled={saving}
+            iconName="cancel"
+            color="inherit"
           />
         </Stack>
       </DialogActions>

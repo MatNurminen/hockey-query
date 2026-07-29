@@ -8,7 +8,6 @@ import SectionHeader from "../../common/Sections/sectionHeader";
 import DialogActions from "@mui/material/DialogActions";
 import AppButton from "../../common/Buttons/appButton";
 import { useFormik } from "formik";
-import GrayButton from "../../common/Buttons/grayButton";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid2";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -384,11 +383,13 @@ const PlayerForm = ({
             disabled={saving}
             color="success"
           />
-          <GrayButton
+          <AppButton
             text="Cancel"
             size="small"
             onClick={handleClose}
             disabled={saving}
+            iconName="cancel"
+            color="inherit"
           />
         </Stack>
       </DialogActions>

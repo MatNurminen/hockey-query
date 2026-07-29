@@ -15,7 +15,6 @@ import Grid from "@mui/material/Grid2";
 import DialogActions from "@mui/material/DialogActions";
 import Stack from "@mui/material/Stack";
 import AppButton from "../../../common/Buttons/appButton";
-import GrayButton from "../../../common/Buttons/grayButton";
 import { useLatestSeason } from "../../../../hooks/useLatestSeason";
 
 export interface AddTournamentDialogProps {
@@ -138,11 +137,13 @@ const AddTournament = (props: AddTournamentDialogProps) => {
             disabled={saving}
             color="success"
           />
-          <GrayButton
+          <AppButton
             text="Cancel"
             size="small"
             onClick={handleClose}
             disabled={saving}
+            iconName="cancel"
+            color="inherit"
           />
         </Stack>
       </DialogActions>
