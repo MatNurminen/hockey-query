@@ -2,7 +2,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import { ChromePicker, ColorResult } from "react-color";
 import AppButton from "../Buttons/appButton";
 
@@ -27,7 +27,7 @@ const normalizeColor = (color: string): string => {
   return color;
 };
 
-const SelectColor = ({
+const SelectColor = memo(({
   open,
   onClose,
   onColorChange,
@@ -89,6 +89,6 @@ const SelectColor = ({
       </DialogActions>
     </Dialog>
   );
-};
+});
 
 export default SelectColor;
