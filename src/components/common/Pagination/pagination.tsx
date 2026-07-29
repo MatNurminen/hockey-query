@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
@@ -11,7 +12,7 @@ interface PaginationProps {
   onPageChange: (offset: number) => void;
 }
 
-const Pagination = ({
+const Pagination = memo(({
   offset,
   limit,
   total,
@@ -86,6 +87,6 @@ const Pagination = ({
       </Box>
     </Box>
   );
-};
+});
 
 export default Pagination;
