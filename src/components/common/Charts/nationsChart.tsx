@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import {
@@ -20,12 +20,12 @@ type Props = {
   seasonId: number;
 };
 
-const NationsChart = ({ title, seasonId, players }: Props) => {
+const NationsChart = memo(({ title, seasonId, players }: Props) => {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
   const chartData = players.map((nation) => ({
     name: nation.name,
-    value: Number(nation.count),
+    value: nation.count,
     fill: nation.color,
     flag: nation.flag,
   }));
@@ -213,6 +213,6 @@ const NationsChart = ({ title, seasonId, players }: Props) => {
       ) : null}
     </Box>
   );
-};
+});
 
 export default NationsChart;
