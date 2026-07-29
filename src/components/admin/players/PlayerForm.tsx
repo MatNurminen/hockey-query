@@ -379,7 +379,7 @@ const PlayerForm = ({
             text="Save"
             size="small"
             onClick={formik.submitForm}
-            iconName="edit"
+            iconName="save"
             disabled={saving}
             color="success"
           />

@@ -2,13 +2,12 @@ import Button, { type ButtonProps } from "@mui/material/Button";
 import { Link as RouterLink } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import SaveIcon from "@mui/icons-material/Save";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
-import SearchIcon from "@mui/icons-material/Search";
 import CheckIcon from "@mui/icons-material/Check";
 import CancelIcon from "@mui/icons-material/Cancel";
+import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import PaletteIcon from "@mui/icons-material/Palette";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -23,13 +22,12 @@ type AppButtonPropsBase = {
     | "edit"
     | "save"
     | "photo"
-    | "search"
     | "check"
     | "cancel"
-    | "palette"
     | "pdf"
     | "cloudUpload"
     | "delete"
+    | "deleteForever"
     | "remove"
     | "reset";
   startIcon?: ReactNode;
@@ -48,15 +46,14 @@ type AppButtonProps = AppButtonPropsBase &
 const predefinedIcons: Record<string, ReactNode> = {
   add: <AddIcon />,
   edit: <EditIcon />,
-  save: <SaveAltIcon />,
+  save: <SaveIcon />,
   photo: <AddPhotoAlternateIcon />,
-  search: <SearchIcon />,
   check: <CheckIcon />,
   cancel: <CancelIcon />,
-  palette: <PaletteIcon />,
   pdf: <PictureAsPdfIcon />,
   cloudUpload: <CloudUploadIcon />,
-  delete: <DeleteForeverIcon />,
+  delete: <DeleteIcon />,
+  deleteForever: <DeleteForeverIcon />,
   remove: <RemoveIcon />,
   reset: <RestartAltIcon />,
 };
@@ -93,7 +90,8 @@ const AppButton = memo(
 
     return to ? (
       <Button component={RouterLink} to={to} {...baseProps}>
-        {text}{children}
+        {text}
+        {children}
       </Button>
     ) : href ? (
       <Button
@@ -103,11 +101,13 @@ const AppButton = memo(
         rel="noopener noreferrer"
         {...baseProps}
       >
-        {text}{children}
+        {text}
+        {children}
       </Button>
     ) : (
       <Button onClick={onClick} {...baseProps}>
-        {text}{children}
+        {text}
+        {children}
       </Button>
     );
   },

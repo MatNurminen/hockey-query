@@ -77,6 +77,7 @@ export default function DeleteDialog({
             text={loading ? "Deleting..." : "Delete"}
             size="small"
             color="error"
+            iconName="deleteForever"
             onClick={handleDelete}
             disabled={loading}
           />

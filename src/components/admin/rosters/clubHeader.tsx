@@ -57,12 +57,24 @@ const AddPlayerDialog = ({
         iconName="add"
         color="success"
       />
-      <Dialog maxWidth="sm" fullWidth={true} open={open} onClose={handleClose}>
+      <Dialog
+        maxWidth="sm"
+        fullWidth={true}
+        open={open}
+        onClose={handleClose}
+        disableRestoreFocus
+      >
         <DialogContent>
           <SearchPlayer onPlayerSelect={addPlayer} />
         </DialogContent>
         <DialogActions sx={{ mr: 3, mb: 3, p: 0 }}>
-          <AppButton size="small" text="Cancel" onClick={handleClose} iconName="cancel" color="inherit" />
+          <AppButton
+            size="small"
+            text="Cancel"
+            onClick={handleClose}
+            iconName="cancel"
+            color="inherit"
+          />
         </DialogActions>
       </Dialog>
     </>

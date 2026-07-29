@@ -108,6 +108,7 @@ const TournamentsByLeague = ({ leagueId }: Props) => {
                     text="Delete"
                     size="small"
                     color="error"
+                    iconName="delete"
                     onClick={() => {
                       handleOpen(tournament.id);
                     }}

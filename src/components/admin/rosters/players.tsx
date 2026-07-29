@@ -153,6 +153,7 @@ const TeamGrid = memo(function TeamGrid({
               text="Delete"
               color="error"
               size="small"
+              iconName="deleteForever"
               onClick={() => {
                 handleDelete(Number(params.row.id));
               }}
