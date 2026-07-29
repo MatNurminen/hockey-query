@@ -27,68 +27,76 @@ const normalizeColor = (color: string): string => {
   return color;
 };
 
-const SelectColor = memo(({
-  open,
-  onClose,
-  onColorChange,
-  onCancel,
-  initialColor = "#ffffff",
-  title = "Select color",
-  showAlpha = false,
-}: SelectColorProps) => {
-  const [color, setColor] = useState(normalizeColor(initialColor));
+const SelectColor = memo(
+  ({
+    open,
+    onClose,
+    onColorChange,
+    onCancel,
+    initialColor = "#ffffff",
+    title = "Select color",
+    showAlpha = false,
+  }: SelectColorProps) => {
+    const [color, setColor] = useState(normalizeColor(initialColor));
 
-  const prevOpenRef = useRef(open);
+    const prevOpenRef = useRef(open);
 
-  useEffect(() => {
-    if (open && !prevOpenRef.current) {
-      setColor(normalizeColor(initialColor));
-    }
-    prevOpenRef.current = open;
-  }, [open, initialColor]);
+    useEffect(() => {
+      if (open && !prevOpenRef.current) {
+        setColor(normalizeColor(initialColor));
+      }
+      prevOpenRef.current = open;
+    }, [open, initialColor]);
 
-  const handleColorChange = useCallback((colorResult: ColorResult) => {
-    setColor(colorResult.hex);
-  }, []);
+    const handleColorChange = useCallback((colorResult: ColorResult) => {
+      setColor(colorResult.hex);
+    }, []);
 
-  const handleSelect = useCallback(() => {
-    onColorChange(color);
-    onClose();
-  }, [color, onColorChange, onClose]);
+    const handleSelect = useCallback(() => {
+      onColorChange(color);
+      onClose();
+    }, [color, onColorChange, onClose]);
 
-  const handleCancel = useCallback(() => {
-    if (onCancel) onCancel();
-    onClose();
-  }, [onCancel, onClose]);
+    const handleCancel = useCallback(() => {
+      if (onCancel) onCancel();
+      onClose();
+    }, [onCancel, onClose]);
 
-  return (
-    <Dialog
-      open={open}
-      onClose={handleCancel}
-      disableRestoreFocus
-      aria-labelledby="color-picker-dialog-title"
-      maxWidth="sm"
-    >
-      <DialogTitle id="color-picker-dialog-title">{title}</DialogTitle>
-      <DialogContent>
-        <ChromePicker
-          color={color}
-          onChange={handleColorChange}
-          disableAlpha={!showAlpha}
-        />
-      </DialogContent>
-      <DialogActions sx={{ mb: 2, mr: 2 }}>
-        <AppButton
-          text="Select"
-          size="small"
-          iconName="check"
-          onClick={handleSelect}
-          color="success"
-        />
-        <AppButton text="Cancel" size="small" onClick={handleCancel} iconName="cancel" color="inherit" />
-      </DialogActions>
-    </Dialog>
-  );
-});
+    return (
+      <Dialog
+        open={open}
+        onClose={handleCancel}
+        disableRestoreFocus
+        aria-labelledby="color-picker-dialog-title"
+        maxWidth="sm"
+      >
+        <DialogTitle id="color-picker-dialog-title">{title}</DialogTitle>
+        <DialogContent>
+          <ChromePicker
+            color={color}
+            onChange={handleColorChange}
+            disableAlpha={!showAlpha}
+          />
+        </DialogContent>
+        <DialogActions sx={{ mb: 2, mr: 2 }}>
+          <AppButton
+            text="Select"
+            size="small"
+            iconName="check"
+            onClick={handleSelect}
+            color="success"
+          />
+          <AppButton
+            text="Cancel"
+            size="small"
+            onClick={handleCancel}
+            iconName="cancel"
+            color="inherit"
+          />
+        </DialogActions>
+      </Dialog>
+    );
+  },
+);
 
 export default SelectColor;
