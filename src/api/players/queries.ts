@@ -16,7 +16,7 @@ export const getPlayers = (filter?: string, enabled = true) => {
     ? `/api/players?filter=${encodeURIComponent(trimmedFilter)}`
     : "/api/players";
 
-  return createQuery<TPlayerDto[]>(["players", filter], url, undefined, {
+  return createQuery<TPlayerDto[]>(["players", trimmedFilter], url, undefined, {
     enabled,
     staleTime: 60000,
   });

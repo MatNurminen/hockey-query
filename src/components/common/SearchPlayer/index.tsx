@@ -1,57 +1,61 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useDebounce } from "use-debounce";
 import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
+import SearchOffIcon from "@mui/icons-material/SearchOff";
 import TableFlag from "../../common/Images/tableFlag";
 import { getPlayers } from "../../../api/players/queries";
-import { TPlayerDto } from "../../../api/players/types";
 
 type Props = {
   onPlayerSelect: (playerId: number) => void;
 };
 
 const SearchPlayer = ({ onPlayerSelect }: Props) => {
+  const searchId = useId();
   const [inputValue, setInputValue] = useState("");
-  const [value, setValue] = useState<TPlayerDto | null>(null);
   const [focused, setFocused] = useState(false);
+  const [open, setOpen] = useState(false);
   const [debouncedInput] = useDebounce(inputValue, 400);
   const enabled = debouncedInput.length > 2;
 
-  const { data: players = [], isFetching } = getPlayers(
-    debouncedInput,
-    enabled,
-  );
+  const {
+    data: players = [],
+    isFetching,
+    isError,
+  } = getPlayers(debouncedInput, enabled);
+  const showPopup = enabled && !isFetching && !isError;
 
   return (
     <Autocomplete
-      freeSolo
-      id="player-search"
+      id={searchId}
       options={players}
       loading={isFetching}
       inputValue={inputValue}
       onInputChange={(_, value) => setInputValue(value)}
-      value={value}
-      getOptionLabel={(option) =>
-        typeof option === "string"
-          ? option
-          : `${option.first_name ?? ""} ${option.last_name ?? ""}`
+      value={null}
+      noOptionsText={
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <SearchOffIcon fontSize="small" sx={{ color: "action.active" }} />
+          <span>No results found for &quot;{debouncedInput}&quot;.</span>
+        </Box>
       }
+      getOptionLabel={(option) => `${option.first_name} ${option.last_name}`}
       onChange={(_, newValue) => {
-        if (newValue && typeof newValue !== "string") {
+        if (newValue) {
           onPlayerSelect(newValue.id);
           setInputValue("");
-          setValue(null);
         }
       }}
+      getOptionKey={(option) => option.id}
       renderOption={(props, option) => {
         const { key, ...rest } = props;
         return (
           <Box
             component="li"
-            key={option.id}
+            key={key}
             {...rest}
             sx={{ display: "flex", alignItems: "center" }}
           >
@@ -67,13 +71,16 @@ const SearchPlayer = ({ onPlayerSelect }: Props) => {
         );
       }}
       sx={{ width: "100%", backgroundColor: "background.paper" }}
-      open={enabled && !isFetching && players.length > 0}
+      open={open && showPopup && focused}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
       renderInput={(params) => {
-        const { InputLabelProps, InputProps, ...otherParams } = params;
+        const { InputProps, ...otherParams } = params;
         return (
           <TextField
             {...otherParams}
-            label="Search players"
+            aria-label="Search players"
+            placeholder="Search players"
             size="small"
             slotProps={{
               input: {
@@ -83,13 +90,6 @@ const SearchPlayer = ({ onPlayerSelect }: Props) => {
                     <SearchIcon sx={{ color: "action.active" }} />
                   </InputAdornment>
                 ),
-              },
-              inputLabel: {
-                ...InputLabelProps,
-                shrink: !!(inputValue || focused),
-                sx: {
-                  ...(!(inputValue || focused) ? { ml: 3 } : {}),
-                },
               },
             }}
             onFocus={() => setFocused(true)}
