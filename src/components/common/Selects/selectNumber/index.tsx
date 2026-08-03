@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -34,18 +34,15 @@ const SelectNumber = ({
   onBlur,
   disabled,
 }: Props) => {
-  const toInternal = (v: number | null | undefined) =>
-    nullable && (v === null || v === undefined) ? "NONE" : String(v ?? "");
+  const labelId = useId();
 
-  const [internalValue, setInternalValue] = useState<string>(toInternal(value));
-
-  useEffect(() => {
-    setInternalValue(toInternal(value));
-  }, [value, nullable]);
+  const displayValue =
+    nullable && (value === null || value === undefined)
+      ? "NONE"
+      : String(value ?? "");
 
   const handleChange = (event: SelectChangeEvent) => {
     const newValue = event.target.value;
-    setInternalValue(newValue);
     if (nullable && newValue === "NONE") {
       onChange(null);
     } else {
@@ -54,7 +51,7 @@ const SelectNumber = ({
   };
 
   const items = [];
-  for (let i: number = min; i <= max; i++) {
+  for (let i = min; i <= max; i++) {
     const strValue = String(i);
     items.push(
       <MenuItem key={strValue} value={strValue}>
@@ -65,12 +62,12 @@ const SelectNumber = ({
 
   return (
     <FormControl fullWidth size="small" error={error} disabled={disabled}>
-      <InputLabel id="select-label">{label}</InputLabel>
+      <InputLabel id={labelId}>{label}</InputLabel>
       <Select
-        labelId="label"
+        labelId={labelId}
         id={id}
         name={name}
-        value={internalValue}
+        value={displayValue}
         label={label}
         onChange={handleChange}
         onBlur={onBlur}
@@ -83,7 +80,7 @@ const SelectNumber = ({
         )}
         {items}
       </Select>
-      <FormHelperText>{helperText}</FormHelperText>
+      {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>
   );
 };
