@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { useId } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -20,7 +20,7 @@ export interface Props {
 
 const SelectLeagueType = (props: Props) => {
   const {
-    id = "league-type-select",
+    id: idProp,
     name = "type_id",
     label = "League Type",
     value,
@@ -30,6 +30,9 @@ const SelectLeagueType = (props: Props) => {
     helperText,
     disabled,
   } = props;
+
+  const generatedId = useId();
+  const id = idProp ?? generatedId;
 
   const { data, isLoading, isError } = getLeagueTypes();
 
@@ -65,4 +68,4 @@ const SelectLeagueType = (props: Props) => {
   );
 };
 
-export default memo(SelectLeagueType);
+export default SelectLeagueType;
