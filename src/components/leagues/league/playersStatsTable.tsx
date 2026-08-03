@@ -63,7 +63,7 @@ const PlayersStatsTable = <T extends WithPlayerInfo>({
     >
       {items.map((item) => (
         <Grid size={gridSize} key={item.id}>
-          <SectionChapter content={getHeaderText(item)} txtAlign={"right"} />
+          <SectionChapter content={getHeaderText(item)} />
           <TableContainer component={Paper}>
             <Table size="small">
               <HeaderSection

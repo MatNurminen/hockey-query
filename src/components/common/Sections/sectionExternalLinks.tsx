@@ -6,14 +6,12 @@ import IconButton from "@mui/material/IconButton";
 import LanguageIcon from "@mui/icons-material/Language";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import YouTubeIcon from "@mui/icons-material/YouTube";
-import { memo } from "react";
 
 interface Props {
   title: string;
 }
 
 const IconButtonItem = styled(IconButton)(() => ({
-  size: "small",
   color: "#000",
   backgroundColor: "#eceef3",
   "&:hover": {
@@ -37,17 +35,17 @@ const SectionExternalLinks = ({ title }: Props) => {
         }}
       >
         <Tooltip title="">
-          <IconButtonItem>
+          <IconButtonItem size="small">
             <LanguageIcon />
           </IconButtonItem>
         </Tooltip>
         <Tooltip title="">
-          <IconButtonItem>
+          <IconButtonItem size="small">
             <BarChartIcon />
           </IconButtonItem>
         </Tooltip>
         <Tooltip title="">
-          <IconButtonItem>
+          <IconButtonItem size="small">
             <YouTubeIcon />
           </IconButtonItem>
         </Tooltip>
@@ -56,4 +54,4 @@ const SectionExternalLinks = ({ title }: Props) => {
   );
 };
 
-export default memo(SectionExternalLinks);
+export default SectionExternalLinks;

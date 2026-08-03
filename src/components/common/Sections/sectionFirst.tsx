@@ -1,18 +1,21 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { SectionTextAlign } from "./sectionTypes";
 
-interface SectionFirstProps {
-  txtAlign: "center" | "inherit" | "justify" | "left" | "right";
+interface Props {
+  txtAlign: SectionTextAlign;
   content: string;
 }
 
-const SectionFirst: React.FC<SectionFirstProps> = ({ txtAlign, content }) => {
+const SectionFirst = ({ txtAlign, content }: Props) => {
   return (
     <Box my={3}>
-      <Typography component="span" align={txtAlign} variant="body1">
-        <Box sx={{ fontWeight: "bold", textTransform: "uppercase" }}>
-          {content}
-        </Box>
+      <Typography
+        align={txtAlign}
+        variant="body1"
+        sx={{ fontWeight: "bold", textTransform: "uppercase" }}
+      >
+        {content}
       </Typography>
     </Box>
   );

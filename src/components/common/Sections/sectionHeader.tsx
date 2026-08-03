@@ -1,21 +1,22 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { SectionTextAlign } from "./sectionTypes";
 
-interface SectionHeaderProps {
-  txtAlign: "center" | "inherit" | "justify" | "left" | "right";
+interface Props {
+  txtAlign: SectionTextAlign;
   content: string;
 }
 
-const SectionHeader: React.FC<SectionHeaderProps> = ({ txtAlign, content }) => {
+const SectionHeader = ({ txtAlign, content }: Props) => {
   return (
     <Box my={3}>
       <Typography
-        color="#063950"
-        component="span"
+        color="extra.menuBG"
         align={txtAlign}
         variant="h4"
+        sx={{ fontWeight: "bold", letterSpacing: 1 }}
       >
-        <Box sx={{ fontWeight: "bold", letterSpacing: 1 }}>{content}</Box>
+        {content}
       </Typography>
     </Box>
   );

@@ -135,7 +135,6 @@ const NationsChart = memo(({ title, seasonId, players }: Props) => {
   return (
     <Box my={2}>
       <SectionChapter
-        txtAlign="left"
         content={`${formatSeason(seasonId)} ${title} Demographics`}
       />
       {players.length > 0 ? (

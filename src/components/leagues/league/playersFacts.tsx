@@ -89,10 +89,7 @@ const PlayersFacts = ({ leagueId, seasonId }: Props) => {
 
   return (
     <>
-      <SectionChapter
-        txtAlign={"left"}
-        content={`${formatSeason(seasonId)} Interesting Facts`}
-      />
+      <SectionChapter content={`${formatSeason(seasonId)} Interesting Facts`} />
       <Grid container>
         {items.map((item) => (
           <Grid size={{ sm: 12, md: 4 }} key={item.name}>

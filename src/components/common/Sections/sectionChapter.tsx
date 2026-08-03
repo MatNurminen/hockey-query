@@ -1,20 +1,24 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { SectionTextAlign } from "./sectionTypes";
 
-interface SectionChapterProps {
-  txtAlign: "center" | "inherit" | "justify" | "left" | "right";
+interface Props {
+  txtAlign?: SectionTextAlign;
   content: string;
 }
 
-const SectionChapter: React.FC<SectionChapterProps> = ({
-  txtAlign,
-  content,
-}) => {
+const SectionChapter = ({ txtAlign = "left", content }: Props) => {
   return (
-    <Box sx={{ px: 2, py: 1, backgroundColor: "#093f56", color: "#fff" }}>
+    <Box
+      sx={{
+        px: 2,
+        py: 1,
+        backgroundColor: "ocean.main",
+        color: "ocean.contrastText",
+      }}
+    >
       <Typography
         sx={{ fontWeight: "medium", textTransform: "uppercase" }}
-        component={"span"}
         align={txtAlign}
       >
         {content}
