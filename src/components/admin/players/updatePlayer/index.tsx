@@ -38,8 +38,8 @@ const UpdatePlayer = ({ open, onClose, playerId }: UpdatePlayerDialogProps) => {
     await updatePlayer({
       id: playerId,
       ...values,
-      end_year: values.end_year ?? undefined,
-      draft_team_id: values.draft_team_id ?? undefined,
+      end_year: values.end_year ?? null,
+      draft_team_id: values.draft_team_id ?? null,
     });
   };
 

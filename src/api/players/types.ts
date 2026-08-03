@@ -12,9 +12,9 @@ export type TPlayerDto = {
   height?: number;
   weight?: number;
   start_year: number;
-  end_year?: number;
+  end_year?: number | null;
   nation_id: number;
-  draft_team_id?: number;
+  draft_team_id?: number | null;
   nation: TNationDto;
   team?: TTeamDto;
 };
@@ -29,9 +29,9 @@ export type TCreatePlayerDto = {
   height?: number;
   weight?: number;
   start_year: number;
-  end_year?: number;
+  end_year?: number | null;
   nation_id: number;
-  draft_team_id?: number;
+  draft_team_id?: number | null;
 };
 
 export type TFreeAgentDto = {

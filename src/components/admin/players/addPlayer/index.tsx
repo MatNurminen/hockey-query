@@ -32,8 +32,8 @@ const AddPlayer = ({ open, onClose }: AddPlayerDialogProps) => {
   const handleSave = async (values: FormValues) => {
     const result = await addPlayer({
       ...values,
-      end_year: values.end_year ?? undefined,
-      draft_team_id: values.draft_team_id ?? undefined,
+      end_year: values.end_year ?? null,
+      draft_team_id: values.draft_team_id ?? null,
     });
     enqueueSnackbar(
       `Player added successfully with name: ${result.last_name}`,
