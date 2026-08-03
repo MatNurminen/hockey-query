@@ -2,9 +2,10 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { useSearchParams } from "react-router-dom";
+import { useId } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getLeaguesCurLogo } from "../../../../api/leagues/queries";
-import { TLeagueDto } from "../../../../api/leagues/types";
+import { navigateWithParams } from "../../../utils/urlHelpers";
 
 export interface Props {
   value?: string;
@@ -12,7 +13,9 @@ export interface Props {
 }
 
 const SelectLeague = ({ value, onChange }: Props) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const labelId = useId();
   const { data: leagues, isLoading, isError } = getLeaguesCurLogo();
 
   const leagueFromUrl = searchParams.get("league") || "";
@@ -23,8 +26,7 @@ const SelectLeague = ({ value, onChange }: Props) => {
     if (onChange) {
       onChange(newValue);
     } else {
-      searchParams.set("league", newValue);
-      setSearchParams(searchParams);
+      navigateWithParams(navigate, searchParams, { league: newValue });
     }
   };
 
@@ -34,15 +36,15 @@ const SelectLeague = ({ value, onChange }: Props) => {
 
   return (
     <FormControl fullWidth size="small">
-      <InputLabel id="select-label">League</InputLabel>
+      <InputLabel id={labelId}>League</InputLabel>
       <Select
-        labelId="league-label"
-        id="league-select"
+        labelId={labelId}
+        id={`${labelId}-select`}
         value={currentValue || ""}
         onChange={handleChange}
         label="League"
       >
-        {leagues.map((league: TLeagueDto) => (
+        {leagues.map((league) => (
           <MenuItem key={league.id} value={String(league.id)}>
             {league.name}
           </MenuItem>
