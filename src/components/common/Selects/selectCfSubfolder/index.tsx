@@ -3,7 +3,7 @@ import { getCfSubfolders } from "../../../../api/cloudflare/queries";
 import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import { memo } from "react";
+import { memo, useId } from "react";
 
 interface Props {
   value: string;
@@ -12,6 +12,7 @@ interface Props {
 
 const SelectCfSubfolder = memo(({ value, onChange }: Props) => {
   const { data, isLoading, isError } = getCfSubfolders("teams");
+  const labelId = useId();
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error!</p>;
@@ -22,11 +23,11 @@ const SelectCfSubfolder = memo(({ value, onChange }: Props) => {
   };
 
   return (
-    <FormControl fullWidth size="small">
-      <InputLabel id="select-label">Folder *</InputLabel>
+    <FormControl fullWidth size="small" required>
+      <InputLabel id={labelId}>Folder</InputLabel>
       <Select
-        labelId="select-folder"
-        id="select-folder"
+        labelId={labelId}
+        id={`${labelId}-select`}
         value={value}
         label="Folder"
         onChange={handleChange}
