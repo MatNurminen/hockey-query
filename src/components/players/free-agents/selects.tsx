@@ -4,11 +4,7 @@ import Grid from "@mui/material/Grid2";
 import SelectNation from "../../common/Selects/selectNation";
 import { memo } from "react";
 
-interface Props {
-  nationId: string;
-}
-
-const Selects = ({ nationId }: Props) => {
+const Selects = () => {
   return (
     <Box sx={{ flexGrow: 1, py: 3, pl: 2 }}>
       <Grid container spacing={4}>
@@ -16,7 +12,7 @@ const Selects = ({ nationId }: Props) => {
           <SelectSeason />
         </Grid>
         <Grid size={{ xs: 3 }}>
-          <SelectNation defaultValue={nationId} />
+          <SelectNation />
         </Grid>
       </Grid>
     </Box>

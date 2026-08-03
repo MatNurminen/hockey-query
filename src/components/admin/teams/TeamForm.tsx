@@ -336,7 +336,7 @@ const TeamForm = ({
                       label="Nation *"
                       onChange={handleNationChange}
                       onBlur={formik.handleBlur}
-                      errorId={
+                      error={
                         formik.touched.nation_id &&
                         Boolean(formik.errors.nation_id)
                       }

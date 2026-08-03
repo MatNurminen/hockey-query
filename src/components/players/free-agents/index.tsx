@@ -16,7 +16,7 @@ const FreeAgents = () => {
     <Container sx={{ py: 1 }}>
       <SectionHeader txtAlign="left" content="Free Agents" />
       <Paper sx={{ mt: 2 }}>
-        <Selects nationId={nationId} />
+        <Selects />
       </Paper>
       <Paper sx={{ mt: 2 }}>
         <Players seasonId={Number(seasonId)} nationId={Number(nationId)} />
