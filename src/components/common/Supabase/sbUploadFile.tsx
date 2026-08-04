@@ -25,12 +25,13 @@ const SbUploadFile = ({ onFileUpload }: SbUploadFileProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const { mutate: uploadCfFile, isPending } = useUploadCfFile();
 
-  const handleFileChange = async (
+  const handleFileChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (!event.target.files?.[0]) return;
 
     const file = event.target.files[0];
+    event.target.value = '';
 
     uploadCfFile(
       { file, folder: 'tmp' },
@@ -60,7 +61,6 @@ const SbUploadFile = ({ onFileUpload }: SbUploadFileProps) => {
             <VisuallyHiddenInput
               type='file'
               onChange={handleFileChange}
-              //disabled={isPending}
             />
           </AppButton>
         </FormControl>
