@@ -1,3 +1,4 @@
+import { useId } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -6,7 +7,6 @@ import Box from "@mui/material/Box";
 import TableFlag from "../../Images/tableFlag";
 import FormHelperText from "@mui/material/FormHelperText";
 import { getTeamsByLeague } from "../../../../api/teams/queries";
-import { TTeamsByLeague } from "../../../../api/teams/types";
 
 export interface Props {
   leagueId: number;
@@ -24,7 +24,7 @@ export interface Props {
 const SelectTeam = (props: Props) => {
   const {
     leagueId,
-    id = "team-select",
+    id,
     name = "team",
     label = "Team",
     onChange,
@@ -34,6 +34,10 @@ const SelectTeam = (props: Props) => {
     value,
     disabled,
   } = props;
+
+  const fallbackId = useId();
+  const selectId = id ?? fallbackId;
+  const labelId = `${selectId}-label`;
 
   const { data: teams, isLoading, isError } = getTeamsByLeague(leagueId);
 
@@ -48,10 +52,10 @@ const SelectTeam = (props: Props) => {
 
   return (
     <FormControl fullWidth size="small" error={error}>
-      <InputLabel id={`${id}-label`}>{label}</InputLabel>
+      <InputLabel id={labelId}>{label}</InputLabel>
       <Select
-        labelId={`${id}-label`}
-        id={id}
+        labelId={labelId}
+        id={selectId}
         name={name}
         value={value ?? ""}
         label={label}
@@ -59,10 +63,10 @@ const SelectTeam = (props: Props) => {
         onBlur={onBlur}
         disabled={disabled}
       >
-        <MenuItem value="">
-          <em>NONE</em>
+        <MenuItem key={0} value="">
+          NONE
         </MenuItem>
-        {teams.map((team: TTeamsByLeague) => (
+        {teams.map((team) => (
           <MenuItem key={team.id} value={team.id}>
             <Box display="flex" alignItems="center">
               <Box display="flex" sx={{ mr: 1 }}>
@@ -73,7 +77,7 @@ const SelectTeam = (props: Props) => {
           </MenuItem>
         ))}
       </Select>
-      <FormHelperText>{helperText}</FormHelperText>
+      {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </FormControl>
   );
 };
