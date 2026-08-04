@@ -6,3 +6,5 @@ export interface Cell {
   text: string;
   colSpan?: number;
 }
+
+export type CellValue = string | Cell;

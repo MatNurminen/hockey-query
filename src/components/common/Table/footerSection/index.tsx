@@ -1,20 +1,29 @@
-import TableHead from "@mui/material/TableHead";
+import TableFooter from "@mui/material/TableFooter";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import type { Cell } from "../types";
+import type { CellValue } from "../types";
 
 interface FooterSectionProps {
-  cells: Cell[];
+  cells: CellValue[];
 }
 
 const FooterSection = ({ cells }: FooterSectionProps) => {
+  const normalizedCells = cells.map((cell) =>
+    typeof cell === "string" ? { text: cell } : cell,
+  );
+
   return (
-    <TableHead sx={{ backgroundColor: "#ca3136" }}>
+    <TableFooter sx={{ backgroundColor: "#ca3136" }}>
       <TableRow>
-        {cells.map((cell, index) => (
-          <TableCell key={index} align={cell.align} width={cell.width}>
+        {normalizedCells.map((cell, index) => (
+          <TableCell
+            key={index}
+            align={cell.align}
+            width={cell.width}
+            colSpan={cell.colSpan}
+          >
             <Box>
               <Typography variant="body2" sx={{ color: "#fff" }}>
                 {cell.text}
@@ -23,7 +32,7 @@ const FooterSection = ({ cells }: FooterSectionProps) => {
           </TableCell>
         ))}
       </TableRow>
-    </TableHead>
+    </TableFooter>
   );
 };
 
