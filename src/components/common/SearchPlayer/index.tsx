@@ -4,8 +4,10 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import SearchOffIcon from "@mui/icons-material/SearchOff";
+import ClearIcon from "@mui/icons-material/Clear";
 import TableFlag from "../../common/Images/tableFlag";
 import { getPlayers } from "../../../api/players/queries";
 
@@ -36,6 +38,8 @@ const SearchPlayer = ({ onPlayerSelect }: Props) => {
       inputValue={inputValue}
       onInputChange={(_, value) => setInputValue(value)}
       value={null}
+      clearOnBlur={false}
+      forcePopupIcon={false}
       noOptionsText={
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <SearchOffIcon fontSize="small" sx={{ color: "action.active" }} />
@@ -90,6 +94,18 @@ const SearchPlayer = ({ onPlayerSelect }: Props) => {
                     <SearchIcon sx={{ color: "action.active" }} />
                   </InputAdornment>
                 ),
+                endAdornment: inputValue ? (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      size="small"
+                      onClick={() => setInputValue("")}
+                      aria-label="Clear search"
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ) : null,
               },
             }}
             onFocus={() => setFocused(true)}
