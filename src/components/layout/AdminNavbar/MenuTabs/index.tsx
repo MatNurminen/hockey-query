@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { useTheme } from "@mui/material/styles";
 import Tab from "@mui/material/Tab";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import HowToRegIcon from "@mui/icons-material/HowToReg";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import PostAddIcon from "@mui/icons-material/PostAdd";
+import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import LinkRoute from "../../../common/LinkRoute";
@@ -12,6 +13,7 @@ import AddTeam from "../../../admin/teams/addTeam";
 import AddNation from "../../../admin/nations/addNation";
 import AddPlayer from "../../../admin/players/addPlayer";
 import AddLeague from "../../../admin/leagues/addLeague";
+import AddTournament from "../../../admin/tournaments/addTournament";
 import type { ReactElement } from "react";
 
 interface ActionTabItem {
@@ -29,16 +31,19 @@ interface LinkTabItem {
 type TabItem = ActionTabItem | LinkTabItem;
 
 function MenuTabs() {
+  const theme = useTheme();
   const [openPlayer, setOpenPlayer] = useState(false);
   const [openNation, setOpenNation] = useState(false);
   const [openTeam, setOpenTeam] = useState(false);
   const [openLeague, setOpenLeague] = useState(false);
+  const [openTournment, setOpenTournament] = useState(false);
 
   const handleClose = () => {
     setOpenPlayer(false);
     setOpenNation(false);
     setOpenTeam(false);
     setOpenLeague(false);
+    setOpenTournament(false);
   };
 
   const getTabProps = (tab: TabItem) => {
@@ -75,7 +80,11 @@ function MenuTabs() {
       icon: <PersonAddIcon />,
       onClick: () => setOpenPlayer(true),
     },
-    { label: "Edit Player", path: "/players", icon: <HowToRegIcon /> },
+    {
+      label: "Add Tournament",
+      icon: <AddBusinessIcon />,
+      onClick: () => setOpenTournament(true),
+    },
   ];
 
   return (
@@ -86,7 +95,7 @@ function MenuTabs() {
           <Divider
             orientation="vertical"
             flexItem
-            sx={{ borderColor: "#043950" }}
+            sx={{ borderColor: theme.palette.extra.menuDividerBG }}
           />
         }
         direction="row"
@@ -107,6 +116,7 @@ function MenuTabs() {
       {openNation && <AddNation open onClose={handleClose} />}
       {openTeam && <AddTeam open onClose={handleClose} />}
       {openLeague && <AddLeague open onClose={handleClose} />}
+      {openTournment && <AddTournament leagueId={1} open onClose={handleClose} />}
     </>
   );
 }

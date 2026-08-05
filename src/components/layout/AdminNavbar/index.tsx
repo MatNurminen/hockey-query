@@ -13,7 +13,7 @@ const AdminNavbar = () => {
   return (
     <AppBar
       elevation={0}
-      sx={{ backgroundColor: "#042e41" }}
+      sx={{ backgroundColor: theme.palette.extra.adminMenuBG }}
       position="static"
     >
       <Container>
