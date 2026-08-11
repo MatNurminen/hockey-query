@@ -7,6 +7,7 @@ declare module '@mui/material/styles' {
       adminMenuBG: string;
       menuBG: string;
       menuDividerBG: string;
+      adminMenuText: string;
     };
     ocean: Palette['primary'];
   }
@@ -15,6 +16,7 @@ declare module '@mui/material/styles' {
       adminMenuBG: string;
       menuBG: string;
       menuDividerBG: string;
+      adminMenuText: string;
     };
     ocean?: PaletteOptions['primary'];
   }
@@ -57,6 +59,7 @@ const theme = createTheme({
       adminMenuBG: '#042e41',
       menuBG: '#063950',
       menuDividerBG: '#043950',
+      adminMenuText: '#ccdbe3',
     },
     secondary: {
       main: '#ca3136',
