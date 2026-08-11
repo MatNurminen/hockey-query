@@ -10,6 +10,7 @@ declare module '@mui/material/styles' {
       adminMenuText: string;
       footerBG: string;
       footerTextMuted: string;
+      searchBarBG: string;
     };
     ocean: Palette['primary'];
   }
@@ -21,6 +22,7 @@ declare module '@mui/material/styles' {
       adminMenuText: string;
       footerBG: string;
       footerTextMuted: string;
+      searchBarBG: string;
     };
     ocean?: PaletteOptions['primary'];
   }
@@ -66,6 +68,7 @@ const theme = createTheme({
       adminMenuText: '#ccdbe3',
       footerBG: '#252525',
       footerTextMuted: 'rgba(255,255,255,0.5)',
+      searchBarBG: '#eaecf2',
     },
     secondary: {
       main: '#ca3136',

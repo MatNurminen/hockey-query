@@ -8,7 +8,11 @@ const SearchBar = () => {
   const navigate = useNavigate();
 
   return (
-    <AppBar elevation={0} sx={{ backgroundColor: "#eaecf2" }} position="static">
+    <AppBar
+      elevation={0}
+      sx={{ backgroundColor: (theme) => theme.palette.extra.searchBarBG }}
+      position="static"
+    >
       <Container sx={{ my: 2 }}>
         <Stack direction="row" justifyContent="center">
           <SearchPlayer onPlayerSelect={(id) => navigate(`/players/${id}`)} />
