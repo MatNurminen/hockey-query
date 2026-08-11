@@ -8,6 +8,8 @@ declare module '@mui/material/styles' {
       menuBG: string;
       menuDividerBG: string;
       adminMenuText: string;
+      footerBG: string;
+      footerTextMuted: string;
     };
     ocean: Palette['primary'];
   }
@@ -17,6 +19,8 @@ declare module '@mui/material/styles' {
       menuBG: string;
       menuDividerBG: string;
       adminMenuText: string;
+      footerBG: string;
+      footerTextMuted: string;
     };
     ocean?: PaletteOptions['primary'];
   }
@@ -60,6 +64,8 @@ const theme = createTheme({
       menuBG: '#063950',
       menuDividerBG: '#043950',
       adminMenuText: '#ccdbe3',
+      footerBG: '#252525',
+      footerTextMuted: 'rgba(255,255,255,0.5)',
     },
     secondary: {
       main: '#ca3136',

@@ -1,8 +1,6 @@
-import { memo } from "react";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid2";
-import Link from "@mui/material/Link";
 import LinkRoute from "../../common/LinkRoute";
 
 export interface LinkItem {
@@ -16,33 +14,36 @@ interface LinkColumnProps {
   size?: { xs?: number; md?: number };
 }
 
-const LinkColumn = ({ title, links, size = { xs: 4, md: 3 } }: LinkColumnProps) => (
+const LinkColumn = ({
+  title,
+  links,
+  size = { xs: 4, md: 3 },
+}: LinkColumnProps) => (
   <Grid size={size}>
     <Typography
       variant="subtitle2"
-      sx={{
+      sx={(theme) => ({
         fontWeight: 500,
         textTransform: "uppercase",
         mb: 2,
-        color: "#fff",
-      }}
+        color: theme.palette.common.white,
+      })}
     >
       {title}
     </Typography>
     <Stack spacing={0.5}>
       {links.map((link) => (
-        <Link
+        <LinkRoute
           key={link.to}
-          underline="hover"
-          color="rgba(255,255,255,0.5)"
-          component={LinkRoute}
+          variant="body2"
+          sx={(theme) => ({ color: theme.palette.extra.footerTextMuted })}
           to={link.to}
         >
-          <Typography variant="body2">{link.label}</Typography>
-        </Link>
+          {link.label}
+        </LinkRoute>
       ))}
     </Stack>
   </Grid>
 );
 
-export default memo(LinkColumn);
+export default LinkColumn;

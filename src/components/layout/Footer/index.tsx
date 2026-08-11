@@ -48,13 +48,13 @@ const Footer = () => {
   return (
     <Box
       component="footer"
-      sx={{
-        backgroundColor: "#252525",
-        color: "#fff",
+      sx={(theme) => ({
+        backgroundColor: theme.palette.extra.footerBG,
+        color: theme.palette.common.white,
         mt: 6,
         pt: 6,
         pb: 3,
-      }}
+      })}
     >
       <Container maxWidth="lg">
         <Grid container sx={{ mb: 4, justifyContent: "space-between" }}>
@@ -64,51 +64,56 @@ const Footer = () => {
           <Grid size={{ xs: 12, md: 3 }}>
             <Typography
               variant="subtitle2"
-              sx={{
+              sx={(theme) => ({
                 fontWeight: 500,
                 textTransform: "uppercase",
                 mb: 2,
-                color: "#fff",
-              }}
+                color: theme.palette.common.white,
+              })}
             >
               Connect With Us
             </Typography>
             <Stack spacing={1.5}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <MailOutlineIcon
-                  sx={{
-                    color: "rgba(255,255,255,0.5)",
+                  sx={(theme) => ({
+                    color: theme.palette.extra.footerTextMuted,
                     fontSize: "1.25rem",
-                  }}
+                  })}
                 />
                 <Link
                   href="mailto:contact@hockeyquery.com"
-                  sx={{
-                    color: "rgba(255,255,255,0.7)",
+                  sx={(theme) => ({
+                    color: theme.palette.extra.footerTextMuted,
                     textDecoration: "none",
                     fontSize: "0.875rem",
                     "&:hover": {
                       textDecoration: "underline",
                     },
                     transition: "color 0.2s ease",
-                  }}
+                  })}
                 >
                   contact@hockeyquery.com
                 </Link>
               </Box>
               <Typography
                 variant="body2"
-                sx={{
-                  color: "rgba(255,255,255,0.5)",
+                sx={(theme) => ({
+                  color: theme.palette.extra.footerTextMuted,
                   fontSize: "0.8125rem",
-                }}
+                })}
               >
                 Tampere, Finland
               </Typography>
             </Stack>
           </Grid>
         </Grid>
-        <Divider sx={{ borderColor: "rgba(255,255,255,0.15)", mb: 3 }} />
+        <Divider
+          sx={(theme) => ({
+            borderColor: theme.palette.extra.footerTextMuted,
+            mb: 3,
+          })}
+        />
         <Stack
           direction="row"
           spacing={2}
@@ -117,12 +122,7 @@ const Footer = () => {
             alignItems: "center",
           }}
         >
-          <Link
-            sx={{ width: 80 }}
-            underline="none"
-            component={LinkRoute}
-            to="/"
-          >
+          <LinkRoute sx={{ width: 80 }} underline="none" to="/">
             <img
               src="/img/b_logo.png"
               alt="Logo"
@@ -131,10 +131,13 @@ const Footer = () => {
                 width: "100%",
               }}
             />
-          </Link>
+          </LinkRoute>
           <Typography
             variant="body2"
-            sx={{ color: "rgba(255,255,255,0.5)", fontSize: "0.8125rem" }}
+            sx={(theme) => ({
+              color: theme.palette.extra.footerTextMuted,
+              fontSize: "0.8125rem",
+            })}
           >
             &copy; {new Date().getFullYear()} Hockey Query. All rights reserved.
           </Typography>
