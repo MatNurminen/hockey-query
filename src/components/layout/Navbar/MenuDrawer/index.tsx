@@ -22,13 +22,18 @@ const MenuDrawer = ({ pages }: Props) => {
       <Drawer open={openDrawer} onClose={handleClose}>
         <List>
           {pages.map((page) => (
-            <ListItemButton key={page.label} component={LinkRoute} to={page.to} onClick={handleClose}>
+            <ListItemButton
+              key={page.label}
+              component={LinkRoute}
+              to={page.to}
+              onClick={handleClose}
+            >
               <ListItemText primary={page.label} />
             </ListItemButton>
           ))}
         </List>
       </Drawer>
-      <IconButton color="inherit" onClick={handleToggle}>
+      <IconButton color="inherit" onClick={handleToggle} aria-label="Open menu">
         <MenuIcon />
       </IconButton>
     </>

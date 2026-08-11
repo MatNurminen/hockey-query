@@ -27,7 +27,11 @@ const NavBar = () => {
   ];
 
   return (
-    <AppBar elevation={0} sx={{ backgroundColor: "#063950" }} position="static">
+    <AppBar
+      elevation={0}
+      sx={{ backgroundColor: theme.palette.extra.menuBG }}
+      position="static"
+    >
       <Container sx={{ my: 2 }}>
         <Toolbar>
           <LinkRoute
@@ -62,14 +66,14 @@ const NavBar = () => {
             </Box>
           ) : (
             <Stack direction="row" sx={{ ml: "auto", alignItems: "center" }}>
-              {pages.map((page, key) => (
+              {pages.map((page) => (
                 <Tab
-                  key={key}
+                  key={page.label}
                   sx={{
                     mx: 4,
                     p: 0,
                     textDecoration: "none",
-                    color: "#fff",
+                    color: theme.palette.common.white,
                     opacity: 1,
                     fontWeight: "bold",
                   }}
