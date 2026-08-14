@@ -4,15 +4,15 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
+import LinkRoute from "../../common/LinkRoute";
 import AppButton from "../../common/Buttons/appButton";
-import HeaderTable from "./headerTable";
 import Stack from "@mui/material/Stack";
 import { useDeleteLeague } from "../../../api/leagues/mutations";
 import { memo, useState } from "react";
 import DeleteDialog from "../../common/Dialogs/deleteDialog";
 import { TLeagueDto } from "../../../api/leagues/types";
+import HeaderMain from "../../common/Table/headerMain";
+import HeaderSection from "../../common/Table/headerSection";
 
 interface Props {
   leagues: TLeagueDto[];
@@ -75,10 +75,20 @@ const LeaguesTable = ({ leagues, seasonId }: Props) => {
         name={name}
         onConfirm={handleDelete}
       />
-      {leagueModes.map((mode, index) => (
-        <TableContainer component={Paper} key={index}>
+      {leagueModes.map((mode) => (
+        <TableContainer component={Paper} key={mode.title}>
           <Table size="small">
-            <HeaderTable title={mode.title} />
+            <HeaderMain cells={[mode.title]} />
+          </Table>
+          <Table size="small">
+            <HeaderSection
+              cells={[
+                { align: "center", text: "Logo" },
+                { text: "Name" },
+                { text: "Short Name" },
+                { text: "" },
+              ]}
+            />
             <TableBody>
               {leagues.filter(mode.condition).map((league) => (
                 <TableRow key={league.id}>
@@ -93,13 +103,9 @@ const LeaguesTable = ({ leagues, seasonId }: Props) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <Link
-                      underline="hover"
-                      component={RouterLink}
-                      to={`/leagues/${league.id}?season=${seasonId}`}
-                    >
+                    <LinkRoute to={`/leagues/${league.id}?season=${seasonId}`}>
                       {league.name}
-                    </Link>
+                    </LinkRoute>
                   </TableCell>
                   <TableCell>{league.short_name}</TableCell>
                   <TableCell align="right">
