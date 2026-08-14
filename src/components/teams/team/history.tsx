@@ -86,7 +86,7 @@ const History = ({ title, teamId }: Props) => {
                       <TableCell align="center">{team.goals_against}</TableCell>
                       <TableCell align="center">{team.gd}</TableCell>
                       <TableCell align="center">{team.pts}</TableCell>
-                      <TableCell>{team.postseason?.title}</TableCell>
+                      {/* <TableCell>{team.postseason?.title}</TableCell> */}
                     </TableRow>
                   ))}
               </TableBody>

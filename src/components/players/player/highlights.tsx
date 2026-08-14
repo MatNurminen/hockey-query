@@ -25,7 +25,7 @@ const items: Item[] = [
   { id: 1, title: "league", headerCells: [{ text: "Awards By League" }] },
 ];
 
-const Highlights = ({ playerName, playerId }: Props) => {
+const Highlights = ({ playerName }: Props) => {
   const [value, setValue] = useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {

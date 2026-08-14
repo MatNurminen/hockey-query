@@ -10,10 +10,10 @@ const Main = () => {
   return (
     <Container sx={{ pt: 4, background: "#fff" }}>
       <Grid container spacing={4}>
-        <Grid size={8}>
+        <Grid size={{ sm: 12, md: 8 }}>
           <Cards />
         </Grid>
-        <Grid size={4}>
+        <Grid size={{ md: 4 }} sx={{ display: { xs: "none", md: "block" } }}>
           <Leagues curSeason={latestSeason} />
         </Grid>
       </Grid>
