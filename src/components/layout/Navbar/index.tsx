@@ -36,10 +36,7 @@ const NavBar = () => {
         <Toolbar>
           <LinkRoute
             to="/"
-            sx={{
-              display: "block",
-              width: "8%",
-            }}
+            sx={{ width: 80 }}
           >
             <img
               src="/img/logo.png"
