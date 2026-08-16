@@ -2,6 +2,7 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid2";
 import LinkRoute from "../../common/LinkRoute";
+import Box from "@mui/material/Box";
 
 export interface LinkItem {
   label: string;
@@ -11,31 +12,27 @@ export interface LinkItem {
 interface LinkColumnProps {
   title: string;
   links: LinkItem[];
-  size?: { xs?: number; md?: number };
+  size?: number;
 }
 
-const LinkColumn = ({
-  title,
-  links,
-  size = { xs: 4, md: 3 },
-}: LinkColumnProps) => (
+const LinkColumn = ({ title, links, size = 3 }: LinkColumnProps) => (
   <Grid size={size}>
-    <Typography
-      variant="subtitle2"
-      sx={(theme) => ({
-        fontWeight: 500,
-        textTransform: "uppercase",
-        mb: 2,
-        color: theme.palette.common.white,
-      })}
-    >
-      {title}
-    </Typography>
+    <Box mb={1}>
+      <Typography
+        variant="caption"
+        sx={(theme) => ({
+          textTransform: "uppercase",
+          color: theme.palette.common.white,
+        })}
+      >
+        {title}
+      </Typography>
+    </Box>
     <Stack spacing={0.5}>
       {links.map((link) => (
         <LinkRoute
           key={link.to}
-          variant="body2"
+          variant="caption"
           sx={(theme) => ({ color: theme.palette.extra.footerTextMuted })}
           to={link.to}
         >

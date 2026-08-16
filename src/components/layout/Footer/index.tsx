@@ -62,17 +62,17 @@ const Footer = () => {
           <LinkColumn title="Popular Leagues" links={leagues} />
           <LinkColumn title="Popular Pages" links={pages} />
           <Grid size={{ xs: 12, md: 3 }}>
-            <Typography
-              variant="subtitle2"
-              sx={(theme) => ({
-                fontWeight: 500,
-                textTransform: "uppercase",
-                mb: 2,
-                color: theme.palette.common.white,
-              })}
-            >
-              Connect With Us
-            </Typography>
+            <Box mb={1} sx={{ mt: { md: 0, xs: 2 } }}>
+              <Typography
+                variant="caption"
+                sx={(theme) => ({
+                  textTransform: "uppercase",
+                  color: theme.palette.common.white,
+                })}
+              >
+                Connect With Us
+              </Typography>
+            </Box>
             <Stack spacing={1.5}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <MailOutlineIcon
@@ -97,10 +97,9 @@ const Footer = () => {
                 </Link>
               </Box>
               <Typography
-                variant="body2"
+                variant="caption"
                 sx={(theme) => ({
                   color: theme.palette.extra.footerTextMuted,
-                  fontSize: "0.8125rem",
                 })}
               >
                 Tampere, Finland
@@ -133,10 +132,9 @@ const Footer = () => {
             />
           </LinkRoute>
           <Typography
-            variant="body2"
+            variant="caption"
             sx={(theme) => ({
               color: theme.palette.extra.footerTextMuted,
-              fontSize: "0.8125rem",
             })}
           >
             &copy; {new Date().getFullYear()} Hockey Query. All rights reserved.
