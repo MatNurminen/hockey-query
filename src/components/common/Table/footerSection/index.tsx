@@ -23,6 +23,7 @@ const FooterSection = ({ cells }: FooterSectionProps) => {
             align={cell.align}
             width={cell.width}
             colSpan={cell.colSpan}
+            sx={cell.sx}
           >
             <Box>
               <Typography

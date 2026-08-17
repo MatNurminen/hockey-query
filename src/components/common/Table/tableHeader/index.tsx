@@ -5,12 +5,15 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import type { CellValue } from "../types";
 
-interface HeaderSectionProps {
+export type TableHeaderBackground = "ocean.main" | "secondary.main";
+
+interface TableHeaderProps {
   cells: CellValue[];
+  background: TableHeaderBackground;
   row?: boolean;
 }
 
-const HeaderSection = ({ cells, row = false }: HeaderSectionProps) => {
+const TableHeader = ({ cells, background, row = false }: TableHeaderProps) => {
   const normalizedCells = cells.map((cell) =>
     typeof cell === "string" ? { text: cell } : cell,
   );
@@ -24,7 +27,7 @@ const HeaderSection = ({ cells, row = false }: HeaderSectionProps) => {
           width={cell.width}
           colSpan={cell.colSpan}
           sx={{
-            backgroundColor: "secondary.main",
+            backgroundColor: background,
             // Cell.sx — объектные стили (массивы/функции не поддерживаются)
             ...(cell.sx && typeof cell.sx === "object" && !Array.isArray(cell.sx)
               ? cell.sx
@@ -49,4 +52,4 @@ const HeaderSection = ({ cells, row = false }: HeaderSectionProps) => {
   return row ? tableRow : <TableHead>{tableRow}</TableHead>;
 };
 
-export default HeaderSection;
+export default TableHeader;

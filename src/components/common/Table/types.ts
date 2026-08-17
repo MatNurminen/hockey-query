@@ -5,6 +5,7 @@ export interface Cell {
   width?: string | number;
   text: string;
   colSpan?: number;
+  sx?: TableCellProps["sx"];
 }
 
 export type CellValue = string | Cell;

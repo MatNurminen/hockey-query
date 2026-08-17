@@ -23,7 +23,13 @@ const HeaderMain = ({ cells, row = false }: HeaderMainProps) => {
           align={cell.align}
           width={cell.width}
           colSpan={cell.colSpan}
-          sx={{ backgroundColor: "ocean.main" }}
+          sx={{
+            backgroundColor: "ocean.main",
+            // Cell.sx — объектные стили (массивы/функции не поддерживаются)
+            ...(cell.sx && typeof cell.sx === "object" && !Array.isArray(cell.sx)
+              ? cell.sx
+              : undefined),
+          }}
         >
           <Box sx={{ textTransform: "uppercase" }}>
             <Typography
