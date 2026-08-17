@@ -1,4 +1,5 @@
 import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -11,8 +12,8 @@ import { useDeleteLeague } from "../../../api/leagues/mutations";
 import { memo, useState } from "react";
 import DeleteDialog from "../../common/Dialogs/deleteDialog";
 import { TLeagueDto } from "../../../api/leagues/types";
-import HeaderMain from "../../common/Table/headerMain";
-import HeaderSection from "../../common/Table/headerSection";
+import TableHeader from "../../common/Table/tableHeader";
+import type { Cell } from "../../common/Table/types";
 
 interface Props {
   leagues: TLeagueDto[];
@@ -42,6 +43,13 @@ const leagueModes = [
   },
 ];
 
+const headerCells: Cell[] = [
+  { align: "center", text: "Logo" },
+  { text: "Name" },
+  { text: "Short Name" },
+  { text: "", sx: { display: { xs: "none", sm: "table-cell" } } },
+];
+
 const LeaguesTable = ({ leagues, seasonId }: Props) => {
   const [selectedLeague, setSelectedLeague] = useState<number | null>(null);
   const [name, setName] = useState("");
@@ -57,7 +65,7 @@ const LeaguesTable = ({ leagues, seasonId }: Props) => {
   };
 
   const handleDelete = () => {
-    if (selectedLeague) {
+    if (selectedLeague !== null) {
       deleteLeague(
         { id: selectedLeague },
         {
@@ -75,57 +83,68 @@ const LeaguesTable = ({ leagues, seasonId }: Props) => {
         name={name}
         onConfirm={handleDelete}
       />
-      {leagueModes.map((mode) => (
-        <TableContainer component={Paper} key={mode.title}>
-          <Table size="small">
-            <HeaderMain cells={[mode.title]} />
-          </Table>
-          <Table size="small">
-            <HeaderSection
-              cells={[
-                { align: "center", text: "Logo" },
-                { text: "Name" },
-                { text: "Short Name" },
-                { text: "" },
-              ]}
-            />
-            <TableBody>
-              {leagues.filter(mode.condition).map((league) => (
-                <TableRow key={league.id}>
-                  <TableCell align="center">
-                    <img
-                      height={30}
-                      alt=""
-                      src={league.logos.at(-1)?.logo}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <LinkRoute to={`/leagues/${league.id}?season=${seasonId}`}>
-                      {league.name}
-                    </LinkRoute>
-                  </TableCell>
-                  <TableCell>{league.short_name}</TableCell>
-                  <TableCell align="right">
-                    <AppButton
-                      text="Delete"
-                      size="small"
-                      color="error"
-                      iconName="delete"
-                      onClick={() => {
-                        handleOpen(league.id);
-                        setName(league.name);
-                      }}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      ))}
+      {leagueModes.map((mode) => {
+        const items = leagues.filter(mode.condition);
+        if (!items.length) return null;
+
+        return (
+          <TableContainer component={Paper} key={mode.title}>
+            <Table size="small">
+              <TableHead>
+                <TableHeader
+                  cells={[{ text: mode.title, colSpan: headerCells.length }]}
+                  background="ocean.main"
+                  row
+                />
+                <TableHeader
+                  cells={headerCells}
+                  background="secondary.main"
+                  row
+                />
+              </TableHead>
+              <TableBody>
+                {items.map((league) => (
+                  <TableRow key={league.id}>
+                    <TableCell align="center">
+                      <img
+                        height={30}
+                        alt=""
+                        src={league.logos.at(-1)?.logo}
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = "none";
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <LinkRoute
+                        to={`/leagues/${league.id}?season=${seasonId}`}
+                      >
+                        {league.name}
+                      </LinkRoute>
+                    </TableCell>
+                    <TableCell>{league.short_name}</TableCell>
+                    <TableCell
+                      align="right"
+                      sx={{ display: { xs: "none", sm: "table-cell" } }}
+                    >
+                      <AppButton
+                        text="Delete"
+                        size="small"
+                        color="error"
+                        iconName="delete"
+                        onClick={() => {
+                          handleOpen(league.id);
+                          setName(league.name);
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        );
+      })}
     </Stack>
   );
 };

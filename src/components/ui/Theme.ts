@@ -11,6 +11,8 @@ declare module '@mui/material/styles' {
       footerBG: string;
       footerTextMuted: string;
       searchBarBG: string;
+      headerPositionBG: string;
+      zebraBG: string;
     };
     ocean: Palette['primary'];
   }
@@ -23,6 +25,8 @@ declare module '@mui/material/styles' {
       footerBG: string;
       footerTextMuted: string;
       searchBarBG: string;
+      headerPositionBG: string;
+      zebraBG: string;
     };
     ocean?: PaletteOptions['primary'];
   }
@@ -43,20 +47,20 @@ const theme = createTheme({
     },
     MuiTableRow: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           '&:nth-of-type(even)': {
-            backgroundColor: '#eceef3',
+            backgroundColor: theme.palette.extra.zebraBG,
           },
-        },
+        }),
       },
     },
     MuiDataGrid: {
       styleOverrides: {
-        row: {
+        row: ({ theme }) => ({
           '&:nth-of-type(even)': {
-            backgroundColor: '#eceef3',
+            backgroundColor: theme.palette.extra.zebraBG,
           },
-        },
+        }),
       },
     },
   },
@@ -69,6 +73,8 @@ const theme = createTheme({
       footerBG: '#252525',
       footerTextMuted: 'rgba(255,255,255,0.5)',
       searchBarBG: '#eaecf2',
+      headerPositionBG: '#8abed2',
+      zebraBG: '#eceef3',
     },
     secondary: {
       main: '#ca3136',
