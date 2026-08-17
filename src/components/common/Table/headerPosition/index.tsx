@@ -11,14 +11,19 @@ interface HeaderPositionProps {
 
 const HeaderPosition = ({ cells, align }: HeaderPositionProps) => {
   return (
-    <TableHead sx={{ backgroundColor: "#8abed2" }}>
+    <TableHead
+      sx={{ backgroundColor: (theme) => theme.palette.extra.headerPositionBG }}
+    >
       <TableRow>
         {cells.map((cell, key) => (
           <TableCell key={key} align={align}>
             <Box sx={{ textTransform: "uppercase" }}>
               <Typography
                 variant="body2"
-                sx={{ fontWeight: "medium", color: "#fff" }}
+                sx={(theme) => ({
+                  fontWeight: "medium",
+                  color: theme.palette.common.white,
+                })}
               >
                 {cell}
               </Typography>

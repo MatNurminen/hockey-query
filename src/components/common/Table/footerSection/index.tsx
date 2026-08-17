@@ -15,7 +15,7 @@ const FooterSection = ({ cells }: FooterSectionProps) => {
   );
 
   return (
-    <TableFooter sx={{ backgroundColor: "#ca3136" }}>
+    <TableFooter sx={{ backgroundColor: "secondary.main" }}>
       <TableRow>
         {normalizedCells.map((cell, index) => (
           <TableCell
@@ -25,7 +25,10 @@ const FooterSection = ({ cells }: FooterSectionProps) => {
             colSpan={cell.colSpan}
           >
             <Box>
-              <Typography variant="body2" sx={{ color: "#fff" }}>
+              <Typography
+                variant="body2"
+                sx={(theme) => ({ color: theme.palette.common.white })}
+              >
                 {cell.text}
               </Typography>
             </Box>
