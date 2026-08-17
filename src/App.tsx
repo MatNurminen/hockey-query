@@ -66,7 +66,7 @@ function App() {
         </Suspense>
         <Footer />
       </ThemeProvider>
-      <ReactQueryDevtools />
+      {/* <ReactQueryDevtools /> */}
     </QueryClientProvider>
   );
 }

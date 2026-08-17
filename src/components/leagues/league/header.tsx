@@ -31,16 +31,17 @@ const Header = ({ league }: Props) => {
         justifyContent="space-around"
         alignItems="center"
       >
-        <Grid size={{ xs: 6 }}>
+        <Grid size={{ sm: 12, md: 7 }}>
           <SectionHeader txtAlign="left" content={league.name} />
         </Grid>
-        <Grid size={{ xs: 6 }} container justifyContent="flex-end">
+        <Grid size={{ md: 5 }} container justifyContent="flex-end">
           <AppButton
             text="Edit League"
             onClick={handleOpen}
             size="small"
             color="success"
             iconName="edit"
+            sx={{ display: { xs: "none", md: "inline-flex" } }}
           />
         </Grid>
       </Grid>
@@ -59,9 +60,9 @@ const Header = ({ league }: Props) => {
         {league.logos
           .toSorted((a, b) => a.start_year - b.start_year)
           .map((logo) => (
-            <Grid key={logo.id} size={{ xs: 2 }}>
+            <Grid key={logo.id} size={{ xs: 4, sm: 2, md: 1.5, lg: 1 }}>
               <MainLogo alt="" src={logo.logo} />
-              <Typography variant="body1" gutterBottom>
+              <Typography variant="body2" gutterBottom>
                 {logo.start_year} - {logo.end_year}
               </Typography>
             </Grid>
