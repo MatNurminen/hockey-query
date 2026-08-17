@@ -16,7 +16,7 @@ const HeaderPosition = ({ cells, align }: HeaderPositionProps) => {
     >
       <TableRow>
         {cells.map((cell, key) => (
-          <TableCell key={key} align={align}>
+          <TableCell key={key} component="th" scope="col" align={align}>
             <Box sx={{ textTransform: "uppercase" }}>
               <Typography
                 variant="body2"

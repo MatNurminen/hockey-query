@@ -23,12 +23,13 @@ const TableHeader = ({ cells, background, row = false }: TableHeaderProps) => {
       {normalizedCells.map((cell, index) => (
         <TableCell
           key={index}
+          component="th"
+          scope={cell.colSpan && cell.colSpan > 1 ? "colgroup" : "col"}
           align={cell.align}
           width={cell.width}
           colSpan={cell.colSpan}
           sx={{
             backgroundColor: background,
-            // Cell.sx — объектные стили (массивы/функции не поддерживаются)
             ...(cell.sx && typeof cell.sx === "object" && !Array.isArray(cell.sx)
               ? cell.sx
               : undefined),
