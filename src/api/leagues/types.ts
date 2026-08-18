@@ -1,10 +1,5 @@
+import { TExternalLinksDto } from "../external-links/types";
 import { TCreateLeagueLogoDto, TLeagueLogoDto } from "../league-logos/types";
-
-type Links = {
-  home: string;
-  stats: string;
-  elite: string;
-};
 
 export type TLeagueDto = {
   id: number;
@@ -14,7 +9,7 @@ export type TLeagueDto = {
   start_year: number;
   end_year?: number;
   type_id: number;
-  links?: Links | null;
+  links?: TExternalLinksDto | null;
   logos: TLeagueLogoDto[];
 };
 
@@ -25,7 +20,7 @@ export type TCreateLeagueDto = {
   start_year: number;
   end_year?: number | null;
   type_id: number;
-  links?: Links | null;
+  links?: TExternalLinksDto | null;
   logos?: TCreateLeagueLogoDto[];
 };
 
