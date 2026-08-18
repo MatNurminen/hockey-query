@@ -1,5 +1,11 @@
 import { TCreateLeagueLogoDto, TLeagueLogoDto } from "../league-logos/types";
 
+type Links = {
+  home: string;
+  stats: string;
+  elite: string;
+};
+
 export type TLeagueDto = {
   id: number;
   name: string;
@@ -8,6 +14,7 @@ export type TLeagueDto = {
   start_year: number;
   end_year?: number;
   type_id: number;
+  links?: Links | null;
   logos: TLeagueLogoDto[];
 };
 
@@ -18,6 +25,7 @@ export type TCreateLeagueDto = {
   start_year: number;
   end_year?: number | null;
   type_id: number;
+  links?: Links | null;
   logos?: TCreateLeagueLogoDto[];
 };
 
