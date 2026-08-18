@@ -27,6 +27,7 @@ const Header = () => {
             size="small"
             color="success"
             iconName="add"
+            sx={{ display: { xs: "none", md: "inline-flex" } }}
           />
         </Grid>
       </Grid>

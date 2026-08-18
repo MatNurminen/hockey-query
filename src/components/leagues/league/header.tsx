@@ -45,11 +45,9 @@ const Header = ({ league }: Props) => {
           />
         </Grid>
       </Grid>
-
       <Box mt={-3}>
         <SectionFirst txtAlign="left" content={league.short_name} />
       </Box>
-
       <Grid
         container
         direction="row"

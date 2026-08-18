@@ -40,7 +40,7 @@ const League = () => {
         <Header league={league} />
       </Paper>
       <Paper sx={{ mt: 2, py: 1 }}>
-        <SectionExternalLinks title={title} />
+        <SectionExternalLinks title={league.short_name} links={league.links} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
         <Teams leagueId={leagueId} title={title} />
