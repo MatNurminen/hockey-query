@@ -5,11 +5,9 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import TableFlag from "../../common/Images/tableFlag";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
+import LinkRoute from "../../common/LinkRoute";
 import { getTeamsByLeague } from "../../../api/teams/queries";
 import { memo } from "react";
-import { TTeamsByLeague } from "../../../api/teams/types";
 
 interface Props {
   leagueId: number;
@@ -25,24 +23,20 @@ const Teams = ({ leagueId, title }: Props) => {
 
   return (
     <Box my={2}>
-      <SectionChapter txtAlign="left" content={title + " teams list"} />
+      <SectionChapter content={`${title} teams list`} />
       <List
         sx={{ columns: { sm: 2, md: 3, lg: 4 }, pb: 1 }}
         dense={true}
         disablePadding={true}
       >
-        {data.map((team: TTeamsByLeague) => (
+        {data.map((team) => (
           <ListItem key={team.id}>
-            <ListItemIcon sx={{ mr: -2 }}>
+            <ListItemIcon sx={{ minWidth: "auto", mr: 1 }}>
               <TableFlag alt="" src={team.flag} />
             </ListItemIcon>
-            <Link
-              underline="hover"
-              component={RouterLink}
-              to={"/teams/" + team.id}
-            >
+            <LinkRoute to={`/teams/${team.id}`}>
               <ListItemText primary={team.full_name} />
-            </Link>
+            </LinkRoute>
           </ListItem>
         ))}
       </List>

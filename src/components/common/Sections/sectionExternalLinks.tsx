@@ -4,7 +4,7 @@ import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import LanguageIcon from "@mui/icons-material/Language";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import SportsHockeyIcon from '@mui/icons-material/SportsHockey';
+import SportsHockeyIcon from "@mui/icons-material/SportsHockey";
 import type { TExternalLinksDto } from "../../../api/external-links/types";
 
 interface Props {
@@ -13,19 +13,14 @@ interface Props {
 }
 
 const SectionExternalLinks = ({ title, links }: Props) => {
-  if (!links) return null;
-
   const linkItems = [
-    { id: 0, icon: <LanguageIcon />, href: links.home },
-    { id: 1, icon: <BarChartIcon />, href: links.stats },
-    { id: 2, icon: <SportsHockeyIcon />, href: links.elite },
+    { id: 0, icon: <LanguageIcon />, href: links?.home },
+    { id: 1, icon: <BarChartIcon />, href: links?.stats },
+    { id: 2, icon: <SportsHockeyIcon />, href: links?.elite },
   ].filter(({ href }) => Boolean(href));
-
-  if (!linkItems.length) return null;
 
   return (
     <>
-      :
       <Typography align="center" variant="body2">
         {title} external links
       </Typography>
