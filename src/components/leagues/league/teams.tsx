@@ -26,8 +26,8 @@ const Teams = ({ leagueId, title }: Props) => {
       <SectionChapter content={`${title} teams list`} />
       <List
         sx={{ columns: { sm: 2, md: 3, lg: 4 }, pb: 1 }}
-        dense={true}
-        disablePadding={true}
+        dense
+        disablePadding
       >
         {data.map((team) => (
           <ListItem key={team.id}>

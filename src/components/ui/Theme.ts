@@ -13,6 +13,8 @@ declare module '@mui/material/styles' {
       searchBarBG: string;
       headerPositionBG: string;
       zebraBG: string;
+      updatedCellBG: string;
+      errorCellBG: string;
     };
     ocean: Palette['primary'];
   }
@@ -27,6 +29,8 @@ declare module '@mui/material/styles' {
       searchBarBG: string;
       headerPositionBG: string;
       zebraBG: string;
+      updatedCellBG: string;
+      errorCellBG: string;
     };
     ocean?: PaletteOptions['primary'];
   }
@@ -75,6 +79,8 @@ const theme = createTheme({
       searchBarBG: '#eaecf2',
       headerPositionBG: '#8abed2',
       zebraBG: '#eceef3',
+      updatedCellBG: '#d0ffd0',
+      errorCellBG: '#f96b52',
     },
     secondary: {
       main: '#ca3136',

@@ -64,9 +64,11 @@ export function useUpdateTeamTournament() {
   >(({ id }) => `/api/teams-tournaments/${id}`, "PATCH", {
     transformBody: (variables: TCreateTeamTournamentDto & { id: number }) => {
       const { id, ...bodyData } = variables;
+      void id;
       return bodyData;
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["standings"] });
       showSnackbar("Team Tournament updated successfully", "success");
     },
     onError: (

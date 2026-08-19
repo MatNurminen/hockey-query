@@ -3,7 +3,7 @@ import "./App.css";
 import { ThemeProvider } from "@mui/material/styles";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route } from "react-router";
-//import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import theme from "./components/ui/Theme";
 import Main from "./components/main";
@@ -66,7 +66,7 @@ function App() {
         </Suspense>
         <Footer />
       </ThemeProvider>
-      {/* <ReactQueryDevtools /> */}
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }

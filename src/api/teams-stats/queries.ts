@@ -1,4 +1,3 @@
-import { createPrefetchQuery } from "../factories/prefetchFactory";
 import { createQuery } from "../factories/queryFactory";
 import { buildQueryString } from "../factories/queryUtils";
 import {
@@ -17,13 +16,6 @@ export const getStandings = (params: StandingsParams) => {
   }`;
 
   return createQuery<TStandings[]>(["standings", params], url);
-};
-
-export const getPrefetchStandings = (leagueId: number, seasonId: number) => {
-  createPrefetchQuery<TStandings[]>(
-    ["standings", leagueId, seasonId],
-    `/api/teams-stats/standings?leagueId=${leagueId}&seasonId=${seasonId}`,
-  );
 };
 
 export const getTeamsForNation = (params: TeamsForNationParams) => {

@@ -1,18 +1,15 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { formatSeason } from "../../utils/formatSeason";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
-import {
-  getPrefetchStandings,
-  getStandings,
-} from "../../../api/teams-stats/queries";
+import { getStandings } from "../../../api/teams-stats/queries";
 import TableFlag from "../../common/Images/tableFlag";
 import AppButton from "../../common/Buttons/appButton";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useUpdateTeamTournament } from "../../../api/teams-tournaments/mutations";
 import Paper from "@mui/material/Paper";
 import { TStandings } from "../../../api/teams-stats/types";
+import { TCreateTeamTournamentDto } from "../../../api/teams-tournaments/types";
 import SectionChapter from "../../common/Sections/sectionChapter";
+import LinkRoute from "../../common/LinkRoute";
 
 interface Props {
   leagueId: number;
@@ -20,9 +17,110 @@ interface Props {
   title: string;
 }
 
-const Standings = ({ leagueId, seasonId, title }: Props) => {
-  getPrefetchStandings(leagueId, seasonId - 1);
+const columns: GridColDef<TStandings>[] = [
+  {
+    field: "rank",
+    headerName: "#",
+    width: 50,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "fullName",
+    headerName: "TEAM",
+    flex: 1,
+    sortable: false,
+    minWidth: 200,
+    renderCell: (params) => (
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        {params.row.logo && <TableFlag alt="" src={params.row.logo} />}
+        <LinkRoute to={`/teams/${params.row.team_id}`}>
+          {params.row.full_name}
+        </LinkRoute>
+      </div>
+    ),
+  },
+  {
+    field: "games",
+    headerName: "GP",
+    editable: true,
+    align: "center",
+    headerAlign: "center",
+    width: 60,
+  },
+  {
+    field: "wins",
+    headerName: "W",
+    editable: true,
+    align: "center",
+    headerAlign: "center",
+    width: 60,
+  },
+  {
+    field: "ties",
+    headerName: "T",
+    editable: true,
+    align: "center",
+    headerAlign: "center",
+    width: 60,
+  },
+  {
+    field: "losts",
+    headerName: "L",
+    editable: true,
+    align: "center",
+    headerAlign: "center",
+    width: 60,
+  },
+  {
+    field: "goals_for",
+    headerName: "GF",
+    editable: true,
+    align: "center",
+    headerAlign: "center",
+    width: 60,
+  },
+  {
+    field: "goals_against",
+    headerName: "GA",
+    editable: true,
+    align: "center",
+    headerAlign: "center",
+    width: 60,
+  },
+  {
+    field: "gd",
+    headerName: "+/-",
+    align: "center",
+    headerAlign: "center",
+    width: 60,
+  },
+  {
+    field: "pts",
+    headerName: "PTS",
+    align: "center",
+    headerAlign: "center",
+    width: 60,
+  },
+  {
+    field: "postseason",
+    headerName: "POSTSEASON",
+    editable: true,
+    flex: 1,
+    minWidth: 200,
+    valueGetter: (_value, row) => row.postseason?.award ?? "",
+    valueSetter: (newValue, row) => {
+      const newRow = { ...row };
+      newRow.postseason = newValue ? { award: String(newValue) } : null;
+      return newRow;
+    },
+    renderCell: (params) => (
+      <span>{String(params.row.postseason?.award ?? "") || "-"}</span>
+    ),
+  },
+];
 
+const Standings = ({ leagueId, seasonId, title }: Props) => {
   const {
     data: teams = [],
     isError,
@@ -37,12 +135,12 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
 
   useEffect(() => {
     const currentKey = `${leagueId}-${seasonId}`;
-    if (currentKey !== prevParamsRef.current && teams.length > 0) {
+    if (!isLoading && currentKey !== prevParamsRef.current) {
       prevParamsRef.current = currentKey;
       setTeamsState(teams);
       setUpdatedCells(new Set());
     }
-  }, [teams, leagueId, seasonId]);
+  }, [teams, leagueId, seasonId, isLoading]);
 
   const rowsWithRank = useMemo(() => {
     const sortedTeams = [...teamsState].sort((a, b) => {
@@ -51,7 +149,7 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
     });
     return sortedTeams.map((team, index) => ({
       ...team,
-      key: index + 1,
+      rank: index + 1,
     }));
   }, [teamsState]);
 
@@ -84,26 +182,28 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
 
     if (changedFields.length === 0) return oldRow;
 
-    const requiredKeys: (keyof TStandings)[] = ["tournament_id", "team_id"];
-    const updatableKeys: (keyof TStandings)[] = [
+    const numericKeys = [
       "games",
       "wins",
       "ties",
       "losts",
       "goals_for",
       "goals_against",
-      "postseason",
-    ];
-    const payload: Record<string, unknown> = { id: updatedRow.id };
-    for (const key of requiredKeys) {
-      payload[key] = updatedRow[key];
-    }
-    for (const key of updatableKeys) {
+    ] as const;
+    const payload: TCreateTeamTournamentDto & { id: number } = {
+      id: updatedRow.id,
+      tournament_id: updatedRow.tournament_id,
+      team_id: updatedRow.team_id,
+    };
+    for (const key of numericKeys) {
       if (changedFields.includes(key)) {
         payload[key] = updatedRow[key];
       }
     }
-    await updateTeamTournament(payload as any);
+    if (changedFields.includes("postseason")) {
+      payload.postseason = updatedRow.postseason;
+    }
+    await updateTeamTournament(payload);
 
     setTeamsState((prev) =>
       prev.map((row) => (row.id === updatedRow.id ? updatedRow : row)),
@@ -120,130 +220,10 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
     return updatedRow;
   };
 
-  const columns: GridColDef<(typeof teams)[number]>[] = [
-    {
-      headerClassName: "header-bc",
-      field: "key",
-      headerName: "#",
-      width: 80,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      headerClassName: "header-bc",
-      field: "fullName",
-      headerName: "TEAM",
-      flex: 1,
-      sortable: false,
-      renderCell: (params) => (
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          {params.row.logo && <TableFlag alt="" src={params.row.logo} />}
-          <Link
-            underline="hover"
-            component={RouterLink}
-            to={`/teams/${params.row.team_id}`}
-          >
-            {params.row.full_name}
-          </Link>
-        </div>
-      ),
-    },
-    {
-      headerClassName: "header-bc",
-      field: "games",
-      headerName: "GP",
-      editable: true,
-      align: "center",
-      headerAlign: "center",
-      width: 80,
-    },
-    {
-      headerClassName: "header-bc",
-      field: "wins",
-      headerName: "W",
-      editable: true,
-      align: "center",
-      headerAlign: "center",
-      width: 80,
-    },
-    {
-      headerClassName: "header-bc",
-      field: "ties",
-      headerName: "T",
-      editable: true,
-      align: "center",
-      headerAlign: "center",
-      width: 80,
-    },
-    {
-      headerClassName: "header-bc",
-      field: "losts",
-      headerName: "L",
-      editable: true,
-      align: "center",
-      headerAlign: "center",
-      width: 80,
-    },
-    {
-      headerClassName: "header-bc",
-      field: "goals_for",
-      headerName: "GF",
-      editable: true,
-      align: "center",
-      headerAlign: "center",
-      width: 80,
-    },
-    {
-      headerClassName: "header-bc",
-      field: "goals_against",
-      headerName: "GA",
-      editable: true,
-      align: "center",
-      headerAlign: "center",
-      width: 80,
-    },
-    {
-      headerClassName: "header-bc",
-      field: "gd",
-      headerName: "+/-",
-      editable: true,
-      align: "center",
-      headerAlign: "center",
-      width: 80,
-    },
-    {
-      headerClassName: "header-bc",
-      field: "pts",
-      headerName: "PTS",
-      align: "center",
-      headerAlign: "center",
-      width: 80,
-    },
-    {
-      headerClassName: "header-bc",
-      field: "postseason",
-      headerName: "POSTSEASON",
-      editable: true,
-      flex: 1,
-      valueGetter: (_value, row) => row.postseason?.award ?? "",
-      valueSetter: (newValue, row) => {
-        const newRow = { ...row };
-        newRow.postseason = newValue ? { award: String(newValue) } : null;
-        return newRow;
-      },
-      renderCell: (params) => (
-        <span>{String(params.row.postseason?.award ?? "") || "-"}</span>
-      ),
-    },
-  ];
-
   return (
     <>
       <Paper>
-        <SectionChapter
-          txtAlign={"left"}
-          content={`${formatSeason(seasonId)} ${title} Standings`}
-        />
+        <SectionChapter content={`${formatSeason(seasonId)} ${title} Standings`} />
         <DataGrid
           rows={rowsWithRank}
           columns={columns}
@@ -253,6 +233,7 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
           columnHeaderHeight={36}
           rowHeight={36}
           processRowUpdate={handleProcessRowUpdate}
+          onProcessRowUpdateError={() => {}}
           getCellClassName={(params) => {
             const key = `${params.id}-${params.field}`;
             const row = params.row;
@@ -266,12 +247,12 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
 
             return "";
           }}
-          sx={{
-            "& .header-bc": {
-              backgroundColor: "#ca3136",
+          sx={(theme) => ({
+            "& .MuiDataGrid-columnHeader": {
+              backgroundColor: theme.palette.secondary.main,
             },
             "& .MuiDataGrid-columnHeaderTitle": {
-              color: "#fff",
+              color: theme.palette.common.white,
               fontSize: "16px",
             },
             "& .MuiDataGrid-columnSeparator": {
@@ -279,15 +260,15 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
             },
             "& .MuiDataGrid-columnHeader:focus-within .MuiDataGrid-sortIcon, \
                 & .MuiDataGrid-columnHeader:hover .MuiDataGrid-sortIcon": {
-              color: "#fff",
+              color: theme.palette.common.white,
             },
             "& .updated-cell": {
-              backgroundColor: "#d0ffd0 !important",
+              backgroundColor: `${theme.palette.extra.updatedCellBG} !important`,
               fontWeight: "medium",
               fontStyle: "italic",
             },
             "& .error-cell": {
-              backgroundColor: "#f96b52 !important",
+              backgroundColor: `${theme.palette.extra.errorCellBG} !important`,
             },
             "& .MuiDataGrid-cell": {
               backgroundColor: "inherit",
@@ -295,7 +276,7 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
             "& .MuiDataGrid-row": {
               backgroundColor: "inherit",
             },
-          }}
+          })}
         />
       </Paper>
       <AppButton
