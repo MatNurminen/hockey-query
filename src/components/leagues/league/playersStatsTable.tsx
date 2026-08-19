@@ -1,18 +1,17 @@
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
-import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
-import { Link as RouterLink } from "react-router-dom";
 import type { ReactNode } from "react";
 import AppButton from "../../common/Buttons/appButton";
 import HeaderSection from "../../common/Table/headerSection";
 import TableFlag from "../../common/Images/tableFlag";
 import SectionChapter from "../../common/Sections/sectionChapter";
+import LinkRoute from "../../common/LinkRoute";
 
 export type WithPlayerInfo = {
   player_id: number;
@@ -80,18 +79,13 @@ const PlayersStatsTable = <T extends WithPlayerInfo>({
                 {item.list.map((player, index) => (
                   <TableRow key={`${player.player_id}-${index}`}>
                     <TableCell align="center">{index + 1}</TableCell>
-                    <TableCell>
+                    <TableCell sx={{ minWidth: 160 }}>
                       <Box display="flex" alignItems="center">
                         <TableFlag alt="" src={player.player_flag} />
-                        <Link
-                          underline="hover"
-                          component={RouterLink}
-                          to={`/players/${player.player_id}`}
-                          ml={1}
-                        >
+                        <LinkRoute to={`/players/${player.player_id}`} ml={1}>
                           {player.first_name} {player.last_name} (
                           {player.player_position})
-                        </Link>
+                        </LinkRoute>
                       </Box>
                     </TableCell>
                     {columns.map((col) => (
