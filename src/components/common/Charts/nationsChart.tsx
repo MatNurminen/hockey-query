@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, useRef, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import {
@@ -22,6 +22,35 @@ type Props = {
 
 const NationsChart = memo(({ title, seasonId, players }: Props) => {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [containerWidth, setContainerWidth] = useState(800);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new ResizeObserver((entries) => {
+      const width = entries[0]?.contentRect.width;
+      if (width) setContainerWidth(width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Пропорциональное масштабирование относительно эталонной ширины 800px.
+  const scale = Math.min(1, containerWidth / 800);
+
+  // На очень узких экранах внешние подписи не помещаются — вместо них легенда.
+  const showLegend = containerWidth < 480;
+
+  const innerRadius = 100 * scale;
+  const outerRadius = 150 * scale;
+  const labelGap = 38 * scale;
+  const labelLength = 28 * scale;
+  const labelTextOffset = 10 * scale;
+  const labelFontSize = Math.max(8, 13 * scale);
+  const chartHeight = Math.max(showLegend ? 170 : 240, 460 * scale);
+  const infoBoxSize = Math.max(80, 100 * scale);
 
   const chartData = players.map((nation) => ({
     name: nation.name,
@@ -91,11 +120,11 @@ const NationsChart = memo(({ title, seasonId, players }: Props) => {
     const sx = cx + (outerRadius + 2) * cos;
     const sy = cy + (outerRadius + 2) * sin;
 
-    const mx = cx + (outerRadius + 38) * cos;
-    const my = cy + (outerRadius + 38) * sin;
+    const mx = cx + (outerRadius + labelGap) * cos;
+    const my = cy + (outerRadius + labelGap) * sin;
 
     const offsetX = cos >= 0 ? 1 : -1;
-    const ex = mx + offsetX * 28;
+    const ex = mx + offsetX * labelLength;
     const ey = my;
 
     const isRight = cos >= 0;
@@ -106,12 +135,12 @@ const NationsChart = memo(({ title, seasonId, players }: Props) => {
       <g opacity={opacity}>
         <path d={path} stroke={fill} fill="none" strokeWidth={1.5} />
         <text
-          x={ex + (isRight ? 10 : -4)}
+          x={ex + (isRight ? labelTextOffset : -4)}
           y={ey}
           textAnchor={textAnchor}
           dominantBaseline="central"
           fill="#333"
-          fontSize={13}
+          fontSize={labelFontSize}
           fontFamily="Exo, sans-serif"
           fontWeight={600}
         >
@@ -133,79 +162,122 @@ const NationsChart = memo(({ title, seasonId, players }: Props) => {
     activeIndex !== undefined ? chartData[activeIndex] : undefined;
 
   return (
-    <Box my={2}>
+    <Box my={{ xs: 0.5, sm: 2 }}>
       <SectionChapter
         content={`${formatSeason(seasonId)} ${title} Demographics`}
       />
       {players.length > 0 ? (
         <Box
-          display="flex"
-          justifyContent="center"
+          ref={containerRef}
           sx={{
             width: "100%",
             maxWidth: 800,
             mx: "auto",
-            position: "relative",
           }}
         >
-          <ResponsiveContainer width="100%" height={460}>
-            <PieChart>
-              <Pie
-                data={chartData}
-                cx={"50%"}
-                cy={"50%"}
-                innerRadius={100}
-                outerRadius={150}
-                dataKey="value"
-                paddingAngle={0.5}
-                cornerRadius={4}
-                isAnimationActive={false}
-                label={renderCustomLabel}
-                shape={renderShape}
-                onMouseEnter={onPieEnter}
-                onMouseLeave={onPieLeave}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+          <Box sx={{ position: "relative" }}>
+            <ResponsiveContainer width="100%" height={chartHeight}>
+              <PieChart>
+                <Pie
+                  data={chartData}
+                  cx={"50%"}
+                  cy={"50%"}
+                  innerRadius={innerRadius}
+                  outerRadius={outerRadius}
+                  dataKey="value"
+                  paddingAngle={0.5}
+                  cornerRadius={4}
+                  isAnimationActive={false}
+                  label={showLegend ? false : renderCustomLabel}
+                  shape={renderShape}
+                  onMouseEnter={onPieEnter}
+                  onMouseLeave={onPieLeave}
+                />
+              </PieChart>
+            </ResponsiveContainer>
 
-          {activeEntry && (
+            {activeEntry && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  bgcolor: "white",
+                  border: "1px solid #e0e0e0",
+                  borderRadius: "8px",
+                  zIndex: 1,
+                  width: infoBoxSize,
+                  height: infoBoxSize,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 0.5,
+                }}
+              >
+                <Typography fontWeight={700} fontSize={12} color="#333">
+                  {activeEntry.name}
+                </Typography>
+                {activeEntry.flag && (
+                  <Box
+                    component="img"
+                    src={activeEntry.flag}
+                    alt=""
+                    width={35}
+                    height={25}
+                  />
+                )}
+                <Typography fontWeight={600} fontSize={18} color="#555">
+                  {((activeEntry.value / total) * 100).toFixed(1)}%
+                </Typography>
+                <Typography fontWeight={700} fontSize={12} color="#333">
+                  {activeEntry.value} players
+                </Typography>
+              </Box>
+            )}
+          </Box>
+
+          {showLegend && (
             <Box
               sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                bgcolor: "white",
-                border: "1px solid #e0e0e0",
-                borderRadius: "8px",
-                zIndex: 1,
-                width: 100,
-                height: 100,
                 display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
+                flexWrap: "wrap",
                 justifyContent: "center",
-                gap: 0.5,
+                gap: 1.5,
+                mt: { xs: 0.5, sm: 2 },
+                pb: { xs: 2, sm: 0 },
+                width: "100%",
               }}
             >
-              <Typography fontWeight={700} fontSize={12} color="#333">
-                {activeEntry.name}
-              </Typography>
-              {activeEntry.flag && (
+              {chartData.map((nation) => (
                 <Box
-                  component="img"
-                  src={activeEntry.flag}
-                  alt=""
-                  width={35}
-                  height={25}
-                />
-              )}
-              <Typography fontWeight={600} fontSize={18} color="#555">
-                {((activeEntry.value / total) * 100).toFixed(1)}%
-              </Typography>
-              <Typography fontWeight={700} fontSize={12} color="#333">
-                {activeEntry.value} players
-              </Typography>
+                  key={nation.name}
+                  sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                >
+                  <Box
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      bgcolor: nation.fill,
+                      flexShrink: 0,
+                    }}
+                  />
+                  {nation.flag && (
+                    <Box
+                      component="img"
+                      src={nation.flag}
+                      alt=""
+                      width={20}
+                      height={14}
+                    />
+                  )}
+                  <Typography fontSize={12} color="#333" fontWeight={600}>
+                    {nation.name} ({((nation.value / total) * 100).toFixed(1)}%)
+                  </Typography>
+                </Box>
+              ))}
             </Box>
           )}
         </Box>

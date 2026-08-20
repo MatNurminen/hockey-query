@@ -155,7 +155,6 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
-  if (teams.length === 0) return <h3>No data available</h3>;
 
   const handleProcessRowUpdate = async (
     newRow: TStandings,
