@@ -61,7 +61,7 @@ const PlayersStatsTable = <T extends WithPlayerInfo>({
       alignItems={gridAlignItems}
     >
       {items.map((item) => (
-        <Grid size={gridSize} key={item.id}>
+        <Grid size={gridSize} key={item.id} sx={{ width: "100%" }}>
           <SectionChapter content={getHeaderText(item)} />
           <TableContainer component={Paper}>
             <Table size="small">
