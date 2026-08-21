@@ -1,19 +1,18 @@
-import HeaderSection from "../../common/Table/headerSection";
-import TableContainer from "@mui/material/TableContainer";
+import { memo } from "react";
+import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
 import { getTeamFacts } from "../../../api/teams-stats/queries";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import TableFlag from "../../common/Images/tableFlag";
-import { TTeamFact } from "../../../api/teams-stats/types";
-import { formatSeason } from "../../utils/formatSeason";
+import HeaderSection from "../../common/Table/headerSection";
+import LinkRoute from "../../common/LinkRoute";
 import SectionChapter from "../../common/Sections/sectionChapter";
+import TableFlag from "../../common/Images/tableFlag";
+import { formatSeason } from "../../utils/formatSeason";
 
 interface Props {
   leagueId: number;
@@ -26,12 +25,11 @@ const CompareTeams = ({ leagueId, seasonId, title }: Props) => {
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
-  if (data?.length === 0) return null;
+  if (!data || data.length === 0) return null;
 
   return (
-    <>
+    <Stack sx={{ width: "100%" }}>
       <SectionChapter
-        txtAlign={"left"}
         content={`${formatSeason(seasonId)} ${title} Team Comparison`}
       />
       <TableContainer component={Paper}>
@@ -47,36 +45,34 @@ const CompareTeams = ({ leagueId, seasonId, title }: Props) => {
             ]}
           />
           <TableBody>
-            {data?.map((team: TTeamFact, index) => (
+            {data.map((team, index) => (
               <TableRow key={team.team_id}>
                 <TableCell align="center">{index + 1}</TableCell>
-                <TableCell>
-                  <Stack direction="row" alignItems="center" spacing={2}>
-                    <Box width={40} display="flex" justifyContent="center">
-                      <TableFlag alt="" src={team.logo} />
-                    </Box>
-                    <Box>
-                      <Link
-                        underline="hover"
-                        component={RouterLink}
-                        to={`/teams/${team.team_id}`}
-                      >
-                        {team.full_name}
-                      </Link>
-                    </Box>
-                  </Stack>
+                <TableCell sx={{ minWidth: 180 }}>
+                  <Box display="flex" alignItems="center">
+                    <TableFlag alt="" src={team.logo} />
+                    <LinkRoute to={`/teams/${team.team_id}`} ml={1}>
+                      {team.full_name}
+                    </LinkRoute>
+                  </Box>
                 </TableCell>
                 <TableCell align="center">{team.plrs}</TableCell>
-                <TableCell align="center">{team.avheight} cm</TableCell>
-                <TableCell align="center">{team.avweight} kg</TableCell>
-                <TableCell align="center">{team.avage}</TableCell>
+                <TableCell align="center" sx={{ minWidth: 100 }}>
+                  {team.avheight} cm
+                </TableCell>
+                <TableCell align="center" sx={{ minWidth: 100 }}>
+                  {team.avweight} kg
+                </TableCell>
+                <TableCell align="center" sx={{ minWidth: 70 }}>
+                  {team.avage}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-    </>
+    </Stack>
   );
 };
 
-export default CompareTeams;
+export default memo(CompareTeams);

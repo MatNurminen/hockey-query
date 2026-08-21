@@ -1,3 +1,4 @@
+import { keepPreviousData } from "@tanstack/react-query";
 import { createQuery } from "../factories/queryFactory";
 import { buildQueryString } from "../factories/queryUtils";
 import {
@@ -29,6 +30,8 @@ export const getTeamFacts = (leagueId: number, seasonId: number) => {
   return createQuery<TTeamFact[]>(
     ["teamfacts", leagueId, seasonId],
     `/api/teams-stats/facts?leagueId=${leagueId}&seasonId=${seasonId}`,
+    undefined,
+    { placeholderData: keepPreviousData },
   );
 };
 
@@ -36,5 +39,7 @@ export const getTeamChampions = (leagueId: number) => {
   return createQuery<TTeamChampions[]>(
     ["champions", leagueId],
     `/api/teams-stats/champions?leagueId=${leagueId}`,
+    undefined,
+    { placeholderData: keepPreviousData },
   );
 };
