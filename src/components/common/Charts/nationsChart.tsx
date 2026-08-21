@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import { formatSeason } from "../../utils/formatSeason";
-import { TCountPlayerByNation } from "../../../api/players-stats/types";
+import type { TCountPlayerByNation } from "../../../api/players-stats/types";
 
 type Props = {
   players: TCountPlayerByNation[];

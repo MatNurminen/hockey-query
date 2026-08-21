@@ -17,11 +17,7 @@ const NationsLeagueChart = ({ leagueId, seasonId, title }: Props) => {
   if (isError) return <h3>Error!</h3>;
   if (!data) return <h3>No data available</h3>;
 
-  return (
-    <>
-      <NationsChart players={data} seasonId={seasonId} title={title} />
-    </>
-  );
+  return <NationsChart players={data} seasonId={seasonId} title={title} />;
 };
 
 export default NationsLeagueChart;

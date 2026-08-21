@@ -61,6 +61,8 @@ export const getCountPlayersByNation = (params: CountPlayerByNationParams) => {
   return createQuery<TCountPlayerByNation[], TCountPlayerByNation[]>(
     ["countPlayersByNation", params],
     url,
+    undefined,
+    { placeholderData: keepPreviousData },
   );
 };
 
