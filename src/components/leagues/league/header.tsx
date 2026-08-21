@@ -28,7 +28,6 @@ const Header = ({ league }: Props) => {
       <Grid
         container
         direction="row"
-        justifyContent="space-around"
         alignItems="center"
       >
         <Grid size={{ sm: 12, md: 7 }}>
