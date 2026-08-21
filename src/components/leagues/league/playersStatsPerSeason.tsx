@@ -31,6 +31,7 @@ const PlayersStatsPerSeason = ({ leagueId, seasonId }: Props) => {
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
+  if (!items) return <h3>sxsxsxsxsx</h3>;
 
   return (
     <PlayersStatsTable<TPlayerStatDetail>

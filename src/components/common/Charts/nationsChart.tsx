@@ -37,10 +37,8 @@ const NationsChart = memo(({ title, seasonId, players }: Props) => {
     return () => observer.disconnect();
   }, []);
 
-  // Пропорциональное масштабирование относительно эталонной ширины 800px.
   const scale = Math.min(1, containerWidth / 800);
-
-  // На очень узких экранах внешние подписи не помещаются — вместо них легенда.
+  
   const showLegend = containerWidth < 480;
 
   const innerRadius = 100 * scale;
@@ -274,7 +272,8 @@ const NationsChart = memo(({ title, seasonId, players }: Props) => {
                     />
                   )}
                   <Typography fontSize={12} color="#333" fontWeight={600}>
-                    {nation.name} ({((nation.value / total) * 100).toFixed(1)}%)
+                    {nation.name} {nation.value} (
+                    {((nation.value / total) * 100).toFixed(1)}%)
                   </Typography>
                 </Box>
               ))}

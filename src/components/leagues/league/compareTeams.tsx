@@ -26,7 +26,7 @@ const CompareTeams = ({ leagueId, seasonId, title }: Props) => {
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
-  if (!data) return <h3>No data available</h3>;
+  if (data?.length === 0) return null;
 
   return (
     <>
@@ -47,7 +47,7 @@ const CompareTeams = ({ leagueId, seasonId, title }: Props) => {
             ]}
           />
           <TableBody>
-            {data.map((team: TTeamFact, index) => (
+            {data?.map((team: TTeamFact, index) => (
               <TableRow key={team.team_id}>
                 <TableCell align="center">{index + 1}</TableCell>
                 <TableCell>
