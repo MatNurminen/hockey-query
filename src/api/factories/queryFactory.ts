@@ -2,18 +2,22 @@ import axios from "axios";
 import { QueryKey, useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { useShowSnackbar } from "../../components/layout/useShowSnackbar";
 
-export function createQuery<T, R = T>(
+type ShowError = (
+  message: string,
+  variant: "success" | "error" | "warning" | "info",
+) => void;
+
+export function buildQueryOptions<T, R = T>(
   key: QueryKey,
   url: string,
-  transformFn?: (data: T) => R,
-  options?: Omit<
+  transformFn: ((data: T) => R) | undefined,
+  options: Omit<
     UseQueryOptions<R, Error, R, QueryKey>,
     "queryKey" | "queryFn"
-  >,
+  > | undefined,
+  showError: ShowError,
 ) {
-  const showError = useShowSnackbar();
-
-  return useQuery<R>({
+  return {
     queryKey: key,
     queryFn: async () => {
       try {
@@ -31,5 +35,19 @@ export function createQuery<T, R = T>(
       }
     },
     ...options,
-  });
+  };
+}
+
+export function createQuery<T, R = T>(
+  key: QueryKey,
+  url: string,
+  transformFn?: (data: T) => R,
+  options?: Omit<
+    UseQueryOptions<R, Error, R, QueryKey>,
+    "queryKey" | "queryFn"
+  >,
+) {
+  const showError = useShowSnackbar();
+
+  return useQuery(buildQueryOptions(key, url, transformFn, options, showError));
 }

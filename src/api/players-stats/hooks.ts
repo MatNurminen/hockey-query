@@ -1,5 +1,7 @@
-import { UseQueryResult } from "@tanstack/react-query";
-import { getPlayersStatsDetail, getPlayersStatsTotal } from "./queries";
+import { keepPreviousData, useQueries } from "@tanstack/react-query";
+import { buildQueryOptions } from "../factories/queryFactory";
+import { buildQueryString } from "../factories/queryUtils";
+import { useShowSnackbar } from "../../components/layout/useShowSnackbar";
 import type {
   PlayersStatsDetailParams,
   PlayersStatsTotalParams,
@@ -15,16 +17,25 @@ export type MultipleStatsConfig<T> = {
 };
 
 export function useMultiplePlayersStatsDetail(
-  configs: {
-    id: number;
-    name: string;
-    params: PlayersStatsDetailParams;
-  }[],
+  configs: MultipleStatsConfig<PlayersStatsDetailParams>[],
 ) {
-  const results: UseQueryResult<
-    TPaginatedResponse<TPlayerStatDetail>,
-    Error
-  >[] = configs.map((config) => getPlayersStatsDetail(config.params));
+  const showError = useShowSnackbar();
+
+  const results = useQueries({
+    queries: configs.map((config) => {
+      const queryString = buildQueryString(config.params);
+      const url = `/api/players-stats/detail${
+        queryString ? `?${queryString}` : ""
+      }`;
+      return buildQueryOptions<TPaginatedResponse<TPlayerStatDetail>>(
+        ["playersStatsDetail", config.params],
+        url,
+        undefined,
+        { placeholderData: keepPreviousData },
+        showError,
+      );
+    }),
+  });
 
   const isLoading = results.some((r) => r.isLoading);
   const isError = results.some((r) => r.error);
@@ -45,14 +56,25 @@ export function useMultiplePlayersStatsDetail(
 }
 
 export function useMultiplePlayersStatsTotal(
-  configs: {
-    id: number;
-    name: string;
-    params: PlayersStatsTotalParams;
-  }[],
+  configs: MultipleStatsConfig<PlayersStatsTotalParams>[],
 ) {
-  const results: UseQueryResult<TPaginatedResponse<TPlayerStatTotal>, Error>[] =
-    configs.map((config) => getPlayersStatsTotal(config.params));
+  const showError = useShowSnackbar();
+
+  const results = useQueries({
+    queries: configs.map((config) => {
+      const queryString = buildQueryString(config.params);
+      const url = `/api/players-stats/total${
+        queryString ? `?${queryString}` : ""
+      }`;
+      return buildQueryOptions<TPaginatedResponse<TPlayerStatTotal>>(
+        ["playersStatsTotal", config.params],
+        url,
+        undefined,
+        { placeholderData: keepPreviousData },
+        showError,
+      );
+    }),
+  });
 
   const isLoading = results.some((r) => r.isLoading);
   const isError = results.some((r) => r.error);
