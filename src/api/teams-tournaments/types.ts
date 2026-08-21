@@ -1,5 +1,5 @@
 type Postseason = {
-  award: string;
+  title: string;
 };
 
 export type TTeamTournamentDto = {

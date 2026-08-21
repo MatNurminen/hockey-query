@@ -108,14 +108,14 @@ const columns: GridColDef<TStandings>[] = [
     editable: true,
     flex: 1,
     minWidth: 200,
-    valueGetter: (_value, row) => row.postseason?.award ?? "",
+    valueGetter: (_value, row) => row.postseason?.title ?? "",
     valueSetter: (newValue, row) => {
       const newRow = { ...row };
-      newRow.postseason = newValue ? { award: String(newValue) } : null;
+      newRow.postseason = newValue ? { title: String(newValue) } : null;
       return newRow;
     },
     renderCell: (params) => (
-      <span>{String(params.row.postseason?.award ?? "") || "-"}</span>
+      <span>{String(params.row.postseason?.title ?? "") || "-"}</span>
     ),
   },
 ];
@@ -222,7 +222,9 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
   return (
     <>
       <Paper>
-        <SectionChapter content={`${formatSeason(seasonId)} ${title} Standings`} />
+        <SectionChapter
+          content={`${formatSeason(seasonId)} ${title} Standings`}
+        />
         <DataGrid
           rows={rowsWithRank}
           columns={columns}
