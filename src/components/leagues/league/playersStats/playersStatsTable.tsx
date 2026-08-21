@@ -7,11 +7,11 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import type { ReactNode } from "react";
-import AppButton from "../../common/Buttons/appButton";
-import HeaderSection from "../../common/Table/headerSection";
-import TableFlag from "../../common/Images/tableFlag";
-import SectionChapter from "../../common/Sections/sectionChapter";
-import LinkRoute from "../../common/LinkRoute";
+import AppButton from "../../../common/Buttons/appButton";
+import HeaderSection from "../../../common/Table/headerSection";
+import TableFlag from "../../../common/Images/tableFlag";
+import SectionChapter from "../../../common/Sections/sectionChapter";
+import LinkRoute from "../../../common/LinkRoute";
 
 export type WithPlayerInfo = {
   player_id: number;

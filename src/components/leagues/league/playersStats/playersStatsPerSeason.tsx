@@ -1,12 +1,16 @@
+import { useMemo } from "react";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import {
   useMultiplePlayersStatsDetail,
   type MultipleStatsConfig,
-} from "../../../api/players-stats/hooks";
-import type { PlayersStatsDetailParams } from "../../../api/players-stats/types";
-import type { TPlayerStatDetail } from "../../../api/players-stats/types";
+} from "../../../../api/players-stats/hooks";
+import type {
+  PlayersStatsDetailParams,
+  TPlayerStatDetail,
+} from "../../../../api/players-stats/types";
 import PlayersStatsTable from "./playersStatsTable";
+import { STAT_SECTIONS } from "./sections";
 
 interface Props {
   leagueId: number;
@@ -14,24 +18,21 @@ interface Props {
 }
 
 const PlayersStatsPerSeason = ({ leagueId, seasonId }: Props) => {
-  const configs: MultipleStatsConfig<PlayersStatsDetailParams>[] = [
-    {
-      id: 3,
-      name: "forwards",
-      params: { leagueId, playerOrd: [3], limit: 5 },
-    },
-    {
-      id: 2,
-      name: "defenders",
-      params: { leagueId, playerOrd: [2], limit: 5 },
-    },
-  ];
+  // В per-season показываем только полевых игроков (без goaltending).
+  const configs = useMemo<MultipleStatsConfig<PlayersStatsDetailParams>[]>(
+    () =>
+      STAT_SECTIONS.filter(({ id }) => id !== 1).map(({ id, name, playerOrd }) => ({
+        id,
+        name,
+        params: { leagueId, playerOrd, limit: 5 },
+      })),
+    [leagueId],
+  );
 
   const { data: items, isLoading, isError } = useMultiplePlayersStatsDetail(configs);
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
-  if (!items) return <h3>sxsxsxsxsx</h3>;
 
   return (
     <PlayersStatsTable<TPlayerStatDetail>

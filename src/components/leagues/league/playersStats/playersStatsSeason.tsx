@@ -1,11 +1,15 @@
+import { useMemo } from "react";
 import {
   useMultiplePlayersStatsDetail,
   type MultipleStatsConfig,
-} from "../../../api/players-stats/hooks";
-import type { PlayersStatsDetailParams } from "../../../api/players-stats/types";
-import type { TPlayerStatDetail } from "../../../api/players-stats/types";
+} from "../../../../api/players-stats/hooks";
+import type {
+  PlayersStatsDetailParams,
+  TPlayerStatDetail,
+} from "../../../../api/players-stats/types";
 import PlayersStatsTable from "./playersStatsTable";
-import { formatSeason } from "../../utils/formatSeason";
+import { STAT_SECTIONS } from "./sections";
+import { formatSeason } from "../../../utils/formatSeason";
 
 interface Props {
   leagueId: number;
@@ -14,25 +18,21 @@ interface Props {
 }
 
 const PlayersStatsSeason = ({ leagueId, seasonId, title }: Props) => {
-  const configs: MultipleStatsConfig<PlayersStatsDetailParams>[] = [
-    {
-      id: 3,
-      name: "forwards",
-      params: { leagueId, seasonId, playerOrd: [3], limit: 5 },
-    },
-    {
-      id: 2,
-      name: "defenders",
-      params: { leagueId, seasonId, playerOrd: [2], limit: 5 },
-    },
-    {
-      id: 1,
-      name: "goaltending",
-      params: { leagueId, seasonId, playerOrd: [1], limit: 5 },
-    },
-  ];
+  const configs = useMemo<MultipleStatsConfig<PlayersStatsDetailParams>[]>(
+    () =>
+      STAT_SECTIONS.map(({ id, name, playerOrd }) => ({
+        id,
+        name,
+        params: { leagueId, seasonId, playerOrd, limit: 5 },
+      })),
+    [leagueId, seasonId],
+  );
 
-  const { data: items, isLoading, isError } = useMultiplePlayersStatsDetail(configs);
+  const {
+    data: items,
+    isLoading,
+    isError,
+  } = useMultiplePlayersStatsDetail(configs);
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
