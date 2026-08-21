@@ -36,7 +36,7 @@ export interface PlayersStatsTableProps<T extends WithPlayerInfo> {
   getHeaderText: (item: { id: number; name: string }) => string;
   columns: ColumnDef<T>[];
   getShowMorePath: (item: { id: number; name: string }) => string;
-  gridSize: { sm: number; md: number };
+  gridSize: { xs: number; md: number };
   gridDirection?: "row" | "row-reverse" | "column" | "column-reverse";
   gridJustifyContent?: string;
   gridAlignItems?: string;
@@ -61,7 +61,7 @@ const PlayersStatsTable = <T extends WithPlayerInfo>({
       alignItems={gridAlignItems}
     >
       {items.map((item) => (
-        <Grid size={gridSize} key={item.id} sx={{ width: "100%" }}>
+        <Grid size={gridSize} key={item.id}>
           <SectionChapter content={getHeaderText(item)} />
           <TableContainer component={Paper}>
             <Table size="small">

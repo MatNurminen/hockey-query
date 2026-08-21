@@ -50,7 +50,7 @@ const PlayersStatsSeason = ({ leagueId, seasonId, title }: Props) => {
       getShowMorePath={(item) =>
         `/league-stats?league=${leagueId}&season=${seasonId}&playerOrd=${item.id}`
       }
-      gridSize={{ sm: 12, md: 4 }}
+      gridSize={{ xs: 12, md: 4 }}
     />
   );
 };

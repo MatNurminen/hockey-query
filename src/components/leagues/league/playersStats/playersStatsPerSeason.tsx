@@ -18,7 +18,6 @@ interface Props {
 }
 
 const PlayersStatsPerSeason = ({ leagueId, seasonId }: Props) => {
-  // В per-season показываем только полевых игроков (без goaltending).
   const configs = useMemo<MultipleStatsConfig<PlayersStatsDetailParams>[]>(
     () =>
       STAT_SECTIONS.filter(({ id }) => id !== 1).map(({ id, name, playerOrd }) => ({
@@ -63,7 +62,7 @@ const PlayersStatsPerSeason = ({ leagueId, seasonId }: Props) => {
       getShowMorePath={(item) =>
         `/league-stats?league=${leagueId}&season=${seasonId}&playerOrd=${item.id}&tab=three`
       }
-      gridSize={{ sm: 12, md: 6 }}
+      gridSize={{ xs: 12, md: 6 }}
       gridDirection="row"
       gridJustifyContent="center"
       gridAlignItems="stretch"

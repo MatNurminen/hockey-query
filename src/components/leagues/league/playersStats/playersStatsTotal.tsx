@@ -42,7 +42,7 @@ const PlayersStatsTotal = ({ leagueId, seasonId }: Props) => {
       getShowMorePath={(item) =>
         `/league-stats?league=${leagueId}&season=${seasonId}&playerOrd=${item.id}&tab=two`
       }
-      gridSize={{ sm: 12, md: 4 }}
+      gridSize={{ xs: 12, md: 4 }}
       gridDirection="row"
       gridJustifyContent="center"
     />
