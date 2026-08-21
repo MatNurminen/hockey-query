@@ -17,6 +17,12 @@ interface Props {
   title: string;
 }
 
+const stripRank = (row: TStandings & { rank?: number }): TStandings => {
+  const { rank: _rank, ...rowWithoutRank } = row;
+  void _rank;
+  return rowWithoutRank;
+};
+
 const columns: GridColDef<TStandings>[] = [
   {
     field: "rank",
@@ -29,7 +35,6 @@ const columns: GridColDef<TStandings>[] = [
     field: "fullName",
     headerName: "TEAM",
     flex: 1,
-    sortable: false,
     minWidth: 200,
     renderCell: (params) => (
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -133,6 +138,8 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
 
   const { mutateAsync: updateTeamTournament } = useUpdateTeamTournament();
 
+  const saveChainRef = useRef<Promise<unknown>>(Promise.resolve());
+
   useEffect(() => {
     const currentKey = `${leagueId}-${seasonId}`;
     if (!isLoading && currentKey !== prevParamsRef.current) {
@@ -160,16 +167,22 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
     newRow: TStandings,
     oldRow: TStandings,
   ) => {
-    const toNumber = (val: unknown) => Number(val) || 0;
+    const toNumber = (val: unknown, fallback: number): number => {
+      if (val === null || val === undefined) return fallback;
+      const text = String(val).trim();
+      if (text === "") return fallback;
+      const num = Number(text);
+      return Number.isNaN(num) ? fallback : num;
+    };
 
     const updatedRow = {
       ...newRow,
-      games: toNumber(newRow.games),
-      wins: toNumber(newRow.wins),
-      ties: toNumber(newRow.ties),
-      losts: toNumber(newRow.losts),
-      goals_for: toNumber(newRow.goals_for),
-      goals_against: toNumber(newRow.goals_against),
+      games: toNumber(newRow.games, oldRow.games),
+      wins: toNumber(newRow.wins, oldRow.wins),
+      ties: toNumber(newRow.ties, oldRow.ties),
+      losts: toNumber(newRow.losts, oldRow.losts),
+      goals_for: toNumber(newRow.goals_for, oldRow.goals_for),
+      goals_against: toNumber(newRow.goals_against, oldRow.goals_against),
     };
 
     updatedRow.pts = updatedRow.wins * 2 + updatedRow.ties;
@@ -202,10 +215,15 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
     if (changedFields.includes("postseason")) {
       payload.postseason = updatedRow.postseason;
     }
-    await updateTeamTournament(payload);
+    saveChainRef.current = saveChainRef.current
+      .catch(() => undefined)
+      .then(() => updateTeamTournament(payload));
+    await saveChainRef.current;
 
     setTeamsState((prev) =>
-      prev.map((row) => (row.id === updatedRow.id ? updatedRow : row)),
+      prev.map((row) =>
+        row.id === updatedRow.id ? stripRank(updatedRow) : row,
+      ),
     );
 
     setUpdatedCells((prev) => {
@@ -231,6 +249,7 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
           getRowId={(row) => row.id}
           hideFooter
           disableColumnMenu
+          disableColumnSorting
           columnHeaderHeight={36}
           rowHeight={36}
           processRowUpdate={handleProcessRowUpdate}
@@ -258,10 +277,6 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
             },
             "& .MuiDataGrid-columnSeparator": {
               visibility: "hidden",
-            },
-            "& .MuiDataGrid-columnHeader:focus-within .MuiDataGrid-sortIcon, \
-                & .MuiDataGrid-columnHeader:hover .MuiDataGrid-sortIcon": {
-              color: theme.palette.common.white,
             },
             "& .updated-cell": {
               backgroundColor: `${theme.palette.extra.updatedCellBG} !important`,
