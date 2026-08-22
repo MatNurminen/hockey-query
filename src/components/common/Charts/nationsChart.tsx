@@ -23,7 +23,9 @@ type Props = {
 const NationsChart = memo(({ title, seasonId, players }: Props) => {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [containerWidth, setContainerWidth] = useState(800);
+  const [containerWidth, setContainerWidth] = useState(() =>
+    Math.min(window.innerWidth, 800),
+  );
 
   useEffect(() => {
     const el = containerRef.current;
