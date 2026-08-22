@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import {
   useMultiplePlayersStatsTotal,
   type MultipleStatsConfig,
@@ -26,7 +26,11 @@ const PlayersStatsTotal = ({ leagueId, seasonId }: Props) => {
     [leagueId],
   );
 
-  const { data: items, isLoading, isError } = useMultiplePlayersStatsTotal(configs);
+  const {
+    data: items,
+    isLoading,
+    isError,
+  } = useMultiplePlayersStatsTotal(configs);
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
@@ -49,4 +53,4 @@ const PlayersStatsTotal = ({ leagueId, seasonId }: Props) => {
   );
 };
 
-export default PlayersStatsTotal;
+export default memo(PlayersStatsTotal);

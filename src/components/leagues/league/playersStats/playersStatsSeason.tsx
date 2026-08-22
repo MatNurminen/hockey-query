@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import {
   useMultiplePlayersStatsDetail,
   type MultipleStatsConfig,
@@ -55,4 +55,4 @@ const PlayersStatsSeason = ({ leagueId, seasonId, title }: Props) => {
   );
 };
 
-export default PlayersStatsSeason;
+export default memo(PlayersStatsSeason);

@@ -1,6 +1,4 @@
-import { useMemo } from "react";
-import Link from "@mui/material/Link";
-import { Link as RouterLink } from "react-router-dom";
+import { memo, useMemo } from "react";
 import {
   useMultiplePlayersStatsDetail,
   type MultipleStatsConfig,
@@ -11,6 +9,7 @@ import type {
 } from "../../../../api/players-stats/types";
 import PlayersStatsTable from "./playersStatsTable";
 import { STAT_SECTIONS } from "./sections";
+import LinkRoute from "../../../common/LinkRoute";
 
 interface Props {
   leagueId: number;
@@ -20,15 +19,21 @@ interface Props {
 const PlayersStatsPerSeason = ({ leagueId, seasonId }: Props) => {
   const configs = useMemo<MultipleStatsConfig<PlayersStatsDetailParams>[]>(
     () =>
-      STAT_SECTIONS.filter(({ id }) => id !== 1).map(({ id, name, playerOrd }) => ({
-        id,
-        name,
-        params: { leagueId, playerOrd, limit: 5 },
-      })),
+      STAT_SECTIONS.filter(({ id }) => id !== 1).map(
+        ({ id, name, playerOrd }) => ({
+          id,
+          name,
+          params: { leagueId, playerOrd, limit: 5 },
+        }),
+      ),
     [leagueId],
   );
 
-  const { data: items, isLoading, isError } = useMultiplePlayersStatsDetail(configs);
+  const {
+    data: items,
+    isLoading,
+    isError,
+  } = useMultiplePlayersStatsDetail(configs);
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
@@ -45,15 +50,11 @@ const PlayersStatsPerSeason = ({ leagueId, seasonId }: Props) => {
         },
         {
           label: "Team",
+          minWidth: 160,
           renderCell: (p) => (
-            <Link
-              underline="hover"
-              component={RouterLink}
-              to={`/teams/${p.team_id}`}
-              ml={1}
-            >
+            <LinkRoute to={`/teams/${p.team_id}`} ml={1}>
               {p.full_name}
-            </Link>
+            </LinkRoute>
           ),
         },
         { label: "gp", align: "center", renderCell: (p) => p.games },
@@ -70,4 +71,4 @@ const PlayersStatsPerSeason = ({ leagueId, seasonId }: Props) => {
   );
 };
 
-export default PlayersStatsPerSeason;
+export default memo(PlayersStatsPerSeason);

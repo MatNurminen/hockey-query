@@ -24,6 +24,7 @@ export type WithPlayerInfo = {
 export interface ColumnDef<T extends WithPlayerInfo> {
   label: string;
   align?: "center" | "left" | "right";
+  minWidth?: number;
   renderCell: (player: T) => ReactNode;
 }
 
@@ -89,7 +90,11 @@ const PlayersStatsTable = <T extends WithPlayerInfo>({
                       </Box>
                     </TableCell>
                     {columns.map((col) => (
-                      <TableCell key={col.label} align={col.align}>
+                      <TableCell
+                        key={col.label}
+                        align={col.align}
+                        sx={{ minWidth: col.minWidth }}
+                      >
                         {col.renderCell(player)}
                       </TableCell>
                     ))}
