@@ -9,9 +9,8 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
 import { TPlayerStatByClub } from "../../../api/players-stats/types";
+import LinkRoute from "../../common/LinkRoute";
 
 interface Props {
   totalteams: TPlayerStatByClub[];
@@ -44,26 +43,16 @@ const StatsTeam = memo(({ totalteams, offset }: Props) => {
                   <TableCell>
                     <Box display="flex" alignItems="center">
                       <TableFlag alt="" src={player.player_flag} />
-                      <Link
-                        underline="hover"
-                        component={RouterLink}
-                        to={`/players/${player.player_id}`}
-                        ml={1}
-                      >
+                      <LinkRoute to={`/players/${player.player_id}`} ml={1}>
                         {player.first_name} {player.last_name} (
                         {player.player_position})
-                      </Link>
+                      </LinkRoute>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <Link
-                      underline="hover"
-                      component={RouterLink}
-                      to={`/teams/${player.team_id}`}
-                      ml={1}
-                    >
+                    <LinkRoute to={`/teams/${player.team_id}`} ml={1}>
                       {player.full_name}
-                    </Link>
+                    </LinkRoute>
                   </TableCell>
                   <TableCell align="center">{player.games_t}</TableCell>
                   <TableCell align="center">{player.goals_t}</TableCell>

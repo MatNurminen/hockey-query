@@ -2,8 +2,8 @@ import { memo } from "react";
 import Grid from "@mui/material/Grid2";
 import SectionHeader from "../../common/Sections/sectionHeader";
 import SelectLeague from "../../common/Selects/selectLeague";
-import { Link as RouterLink, useSearchParams } from "react-router-dom";
-import Link from "@mui/material/Link";
+import { useSearchParams } from "react-router-dom";
+import LinkRoute from "../../common/LinkRoute";
 
 interface Props {
   league: string;
@@ -36,18 +36,16 @@ const Header = memo(({ league, leagueId, seasonId }: Props) => {
             content={`${league} ${seasonId ? `${seasonId}-${seasonId + 1} Stats` : "All time Stats"}`}
           />
         </Grid>
-        <Grid size={{ xs: 3 }}>
+        <Grid size={{ xs: 5 }}>
           <SelectLeague onChange={handleLeagueChange} />
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <Link
+          <LinkRoute
             variant="subtitle2"
-            underline="hover"
-            component={RouterLink}
             to={`/leagues/${leagueId}?season=${seasonId}`}
           >
             {"League Information and Facts"}
-          </Link>
+          </LinkRoute>
         </Grid>
       </Grid>
     </>
