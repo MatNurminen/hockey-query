@@ -142,7 +142,7 @@ const Selects = ({ players }: Props) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid size={{ xs: 2 }}>
+      <Grid size={{ xs: 4, md: 2 }}>
         <FormControl fullWidth size="small">
           <InputLabel id="positions-label">All Positions</InputLabel>
           <Select
@@ -160,7 +160,7 @@ const Selects = ({ players }: Props) => {
           </Select>
         </FormControl>
       </Grid>
-      <Grid size={{ xs: 4 }}>
+      <Grid size={{ xs: 8, md: 4 }}>
         <FormControl fullWidth size="small">
           <InputLabel id="teams-label">All Teams</InputLabel>
           <Select
@@ -179,7 +179,7 @@ const Selects = ({ players }: Props) => {
           </Select>
         </FormControl>
       </Grid>
-      <Grid size={{ xs: 3 }}>
+      <Grid size={{ xs: 6, md: 3 }}>
         <FormControl fullWidth size="small">
           <InputLabel id="nations-label">All Nationalities</InputLabel>
           <Select
@@ -202,7 +202,7 @@ const Selects = ({ players }: Props) => {
           </Select>
         </FormControl>
       </Grid>
-      <Grid size={{ xs: 3 }} alignContent={"center"} textAlign={"end"}>
+      <Grid size={{ xs: 6, md: 3 }} alignContent={"center"} textAlign={"end"}>
         <AppButton
           size="small"
           text="Reset Filter"

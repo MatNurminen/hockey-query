@@ -110,19 +110,20 @@ const StatsTabs = memo(
         </Grid>
         <Grid size={12}>
           <Paper>
-            <Box sx={{ display: "flex", gap: 2, mb: 2, px: 2, pt: 2 }}>
+            <Grid container direction="row" pl={2} py={3} spacing={2}>
               {tabs.map((tab) => (
-                <Button
-                  key={tab.value}
-                  variant={value === tab.value ? "contained" : "outlined"}
-                  color="ocean"
-                  onClick={() => handleTabChange(tab.value)}
-                  sx={{ borderRadius: "18px" }}
-                >
-                  {tab.label}
-                </Button>
+                <Grid key={tab.value}>
+                  <Button
+                    variant={value === tab.value ? "contained" : "outlined"}
+                    color="ocean"
+                    onClick={() => handleTabChange(tab.value)}
+                    sx={{ borderRadius: "18px" }}
+                  >
+                    {tab.label}
+                  </Button>
+                </Grid>
               ))}
-            </Box>
+            </Grid>
             <Box>
               {value === "one" && (
                 <StatsDetails

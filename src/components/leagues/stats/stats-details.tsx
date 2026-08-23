@@ -11,6 +11,7 @@ import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
 import LinkRoute from "../../common/LinkRoute";
+import SectionChapter from "../../common/Sections/sectionChapter";
 
 interface Props {
   seasonId: number;
@@ -22,10 +23,8 @@ const StatsDetails = memo(({ seasonId, players, offset }: Props) => {
   return (
     <>
       <Paper>
+        <SectionChapter content={`${seasonId}-${seasonId + 1} Player Stats`} />
         <TableContainer>
-          <Table size="small">
-            <HeaderMain cells={[`${seasonId}-${seasonId + 1} Player Stats`]} />
-          </Table>
           <Table size="small">
             <HeaderSection
               cells={[
@@ -40,12 +39,11 @@ const StatsDetails = memo(({ seasonId, players, offset }: Props) => {
             />
             <TableBody>
               {players.map((player, key) => (
-                // may by to do key more...
                 <TableRow
                   key={`${player.player_id}-${player.season_id}-${player.team_id}`}
                 >
                   <TableCell align="center">{offset + key + 1}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ minWidth: 160 }}>
                     <Box display="flex" alignItems="center">
                       <TableFlag alt="" src={player.player_flag} />
                       <LinkRoute to={`/players/${player.player_id}`} ml={1}>
@@ -57,14 +55,16 @@ const StatsDetails = memo(({ seasonId, players, offset }: Props) => {
                   <TableCell align="center">
                     {player.season_id - player.birth_year}
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ minWidth: 160 }}>
                     <LinkRoute to={`/teams/${player.team_id}`} ml={1}>
                       {player.full_name}
                     </LinkRoute>
                   </TableCell>
                   <TableCell align="center">{player.games}</TableCell>
                   <TableCell align="center">{player.goals}</TableCell>
-                  <TableCell>{player.postseason}</TableCell>
+                  <TableCell sx={{ minWidth: 160 }}>
+                    {player.postseason}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

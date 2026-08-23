@@ -25,21 +25,21 @@ const Header = memo(({ league, leagueId, seasonId }: Props) => {
     <>
       <Grid
         container
-        spacing={2}
+        spacing={1}
         direction="row"
         justifyContent="space-between"
         alignItems="center"
       >
-        <Grid size={{ xs: 7 }}>
+        <Grid size={{ xs: 12, sm: 7 }}>
           <SectionHeader
             txtAlign="left"
             content={`${league} ${seasonId ? `${seasonId}-${seasonId + 1} Stats` : "All time Stats"}`}
           />
         </Grid>
-        <Grid size={{ xs: 5 }}>
+        <Grid size={{ xs: 12, sm: 5 }}>
           <SelectLeague onChange={handleLeagueChange} />
         </Grid>
-        <Grid size={{ xs: 12 }}>
+        <Grid size={{ xs: 12 }} mt={2}>
           <LinkRoute
             variant="subtitle2"
             to={`/leagues/${leagueId}?season=${seasonId}`}
