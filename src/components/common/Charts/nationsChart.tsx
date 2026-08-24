@@ -62,7 +62,7 @@ const NationsChart = memo(({ title, seasonId, players }: Props) => {
   const total = chartData.reduce((sum, d) => sum + d.value, 0);
   const RADIAN = Math.PI / 180;
 
-  const renderShape = (props: PieSectorShapeProps, index: number) => {
+  const renderShape = (props: PieSectorShapeProps, index?: string | number) => {
     const {
       cx,
       cy,
@@ -75,7 +75,7 @@ const NationsChart = memo(({ title, seasonId, players }: Props) => {
       isActive,
     } = props;
 
-    const isDimmed = activeIndex !== undefined && index !== activeIndex;
+    const isDimmed = activeIndex !== undefined && Number(index) !== activeIndex;
     const opacity = isDimmed ? 0.2 : 1;
 
     return (

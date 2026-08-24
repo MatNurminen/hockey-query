@@ -2,7 +2,6 @@ import { memo } from "react";
 import Paper from "@mui/material/Paper";
 import TableContainer from "@mui/material/TableContainer";
 import Table from "@mui/material/Table";
-import HeaderMain from "../../common/Table/headerMain";
 import HeaderSection from "../../common/Table/headerSection";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
@@ -11,6 +10,7 @@ import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
 import LinkRoute from "../../common/LinkRoute";
+import SectionChapter from "../../common/Sections/sectionChapter";
 
 interface Props {
   seasons: TPlayerStatDetail[];
@@ -21,10 +21,8 @@ const StatsSeason = memo(({ seasons, offset }: Props) => {
   return (
     <>
       <Paper>
+        <SectionChapter content={`All-time Season Player Stats`} />
         <TableContainer>
-          <Table size="small">
-            <HeaderMain cells={[`All-time Season Player Stats`]} />
-          </Table>
           <Table size="small">
             <HeaderSection
               cells={[
@@ -44,7 +42,7 @@ const StatsSeason = memo(({ seasons, offset }: Props) => {
                   key={`${player.player_id}-${player.season_id}-${player.team_id}`}
                 >
                   <TableCell align="center">{offset + key + 1}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ minWidth: 160 }}>
                     <Box display="flex" alignItems="center">
                       <TableFlag alt="" src={player.player_flag} />
                       <LinkRoute to={`/players/${player.player_id}`} ml={1}>
@@ -57,14 +55,16 @@ const StatsSeason = memo(({ seasons, offset }: Props) => {
                   <TableCell align="center">
                     {player.season_id - player.birth_year}
                   </TableCell>
-                  <TableCell>
+                  <TableCell sx={{ minWidth: 160 }}>
                     <LinkRoute to={`/teams/${player.team_id}`} ml={1}>
                       {player.full_name}
                     </LinkRoute>
                   </TableCell>
                   <TableCell align="center">{player.games}</TableCell>
                   <TableCell align="center">{player.goals}</TableCell>
-                  <TableCell>{player.postseason}</TableCell>
+                  <TableCell sx={{ minWidth: 160 }}>
+                    {player.postseason}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
