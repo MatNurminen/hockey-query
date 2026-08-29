@@ -74,6 +74,7 @@ const SelectNation = (props: Props) => {
         onChange={handleChange}
         onBlur={onBlur}
         disabled={disabled}
+        sx={{backgroundColor: 'white'}}
       >
         {data.map((nat) => (
           <MenuItem key={nat.id} value={String(nat.id)}>

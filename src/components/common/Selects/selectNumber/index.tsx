@@ -72,6 +72,7 @@ const SelectNumber = ({
         onChange={handleChange}
         onBlur={onBlur}
         disabled={disabled}
+        sx={{backgroundColor: 'white'}}
       >
         {nullable && (
           <MenuItem key={0} value="NONE">

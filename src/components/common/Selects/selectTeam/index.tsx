@@ -62,6 +62,7 @@ const SelectTeam = (props: Props) => {
         onChange={handleChange}
         onBlur={onBlur}
         disabled={disabled}
+        sx={{backgroundColor: 'white'}}
       >
         <MenuItem key={0} value="">
           NONE

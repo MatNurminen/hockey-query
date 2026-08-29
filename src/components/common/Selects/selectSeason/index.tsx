@@ -46,6 +46,7 @@ const SelectSeason = ({ value, onChange }: Props) => {
         value={currentValue || ""}
         onChange={handleChange}
         label="Season"
+        sx={{backgroundColor: 'white'}}
       >
         {data.map((season) => (
           <MenuItem key={season.id} value={String(season.id)}>

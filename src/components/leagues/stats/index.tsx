@@ -9,6 +9,7 @@ import {
   getPlayersStatsTotalByTeam,
 } from "../../../api/players-stats/queries";
 import SelectSeason from "../../common/Selects/selectSeason";
+import Box from "@mui/material/Box";
 
 const LIMIT = 50;
 
@@ -112,13 +113,13 @@ const PlayersStats = () => {
 
   return (
     <Container sx={{ py: 1, mt: 2, mb: 10 }}>
-      <Paper sx={{ px: 2, pb: 1 }}>
+      <Box sx={{ px: 2, pb: 1 }}>
         <Header league={league} leagueId={leagueId} seasonId={seasonId} />
-      </Paper>
+      </Box>
       {seasonId && seasonId > 0 ? (
-        <Paper sx={{ mt: 2, p: 2 }}>
+        <Box sx={{ mt: 1, p: 2 }}>
           <SelectSeason />
-        </Paper>
+        </Box>
       ) : null}
       {isLoadingDetail ||
       isLoadingTotal ||
@@ -128,19 +129,19 @@ const PlayersStats = () => {
           <p>Loading...</p>
         </Paper>
       ) : hasData ? (
-          <StatsTabs
-            seasonId={seasonId}
-            players={players}
-            totals={totals}
-            seasons={seasons}
-            totalteams={totalteams}
-            offset={offset}
-            limit={LIMIT}
-            totalDetail={totalDetail}
-            totalStats={totalStats}
-            totalSeasons={totalSeasons}
-            totalTeams={totalTeams}
-          />
+        <StatsTabs
+          seasonId={seasonId}
+          players={players}
+          totals={totals}
+          seasons={seasons}
+          totalteams={totalteams}
+          offset={offset}
+          limit={LIMIT}
+          totalDetail={totalDetail}
+          totalStats={totalStats}
+          totalSeasons={totalSeasons}
+          totalTeams={totalTeams}
+        />
       ) : (
         <Paper sx={{ mt: 2, p: 2 }}>
           <h3>No players stats for this tournament</h3>

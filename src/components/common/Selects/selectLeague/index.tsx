@@ -43,6 +43,7 @@ const SelectLeague = ({ value, onChange }: Props) => {
         value={currentValue || ""}
         onChange={handleChange}
         label="League"
+        sx={{backgroundColor: 'white'}}
       >
         {leagues.map((league) => (
           <MenuItem key={league.id} value={String(league.id)}>

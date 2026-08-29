@@ -1,6 +1,5 @@
 import { memo, useState } from "react";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import StatsDetails from "./stats-details";
 import StatsTotal from "./stats-total";
@@ -16,6 +15,7 @@ import { useSearchParams } from "react-router-dom";
 import { updateSearchParams } from "../../utils/urlHelpers";
 import Pagination from "../../common/Pagination/pagination";
 import Grid from "@mui/material/Grid2";
+import Paper from "@mui/material/Paper";
 
 interface Props {
   seasonId: number;
@@ -104,51 +104,52 @@ const StatsTabs = memo(
     return (
       <Grid container spacing={2}>
         <Grid size={12}>
-          <Paper sx={{ mt: 2, p: 2 }}>
+          <Box sx={{ p: 2 }}>
             <Selects players={currentData} />
-          </Paper>
+          </Box>
         </Grid>
         <Grid size={12}>
-          <Paper>
-            <Grid container direction="row" pl={2} py={3} spacing={2}>
-              {tabs.map((tab) => (
-                <Grid key={tab.value}>
-                  <Button
-                    variant={value === tab.value ? "contained" : "outlined"}
-                    color="ocean"
-                    onClick={() => handleTabChange(tab.value)}
-                    sx={{ borderRadius: "18px" }}
-                  >
-                    {tab.label}
-                  </Button>
-                </Grid>
-              ))}
-            </Grid>
-            <Box>
-              {value === "one" && (
-                <StatsDetails
-                  seasonId={seasonId}
-                  players={players}
-                  offset={offset}
-                />
-              )}
-              {value === "two" && (
-                <StatsTotal totals={totals} offset={offset} />
-              )}
-              {value === "three" && (
-                <StatsSeason seasons={seasons} offset={offset} />
-              )}
-              {value === "four" && (
-                <StatsTeam totalteams={totalteams} offset={offset} />
-              )}
-            </Box>
-            <Pagination
-              offset={offset}
-              limit={limit}
-              total={currentTotal}
-              onPageChange={handlePageChange}
-            />
-          </Paper>
+          <Grid container direction="row" pl={2} pb={3} spacing={2}>
+            {tabs.map((tab) => (
+              <Grid
+                key={tab.value}
+                component={Paper}
+                sx={{ borderRadius: "18px" }}
+                elevation={0}
+              >
+                <Button
+                  variant={value === tab.value ? "contained" : "outlined"}
+                  color="ocean"
+                  onClick={() => handleTabChange(tab.value)}
+                  sx={{ borderRadius: "18px" }}
+                >
+                  {tab.label}
+                </Button>
+              </Grid>
+            ))}
+          </Grid>
+          <Box>
+            {value === "one" && (
+              <StatsDetails
+                seasonId={seasonId}
+                players={players}
+                offset={offset}
+              />
+            )}
+            {value === "two" && <StatsTotal totals={totals} offset={offset} />}
+            {value === "three" && (
+              <StatsSeason seasons={seasons} offset={offset} />
+            )}
+            {value === "four" && (
+              <StatsTeam totalteams={totalteams} offset={offset} />
+            )}
+          </Box>
+          <Pagination
+            offset={offset}
+            limit={limit}
+            total={currentTotal}
+            onPageChange={handlePageChange}
+          />
         </Grid>
       </Grid>
     );

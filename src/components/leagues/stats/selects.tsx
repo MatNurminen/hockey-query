@@ -1,7 +1,6 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Box from "@mui/material/Box";
@@ -41,6 +40,7 @@ interface Nation {
 }
 
 const positions: Position[] = [
+  { id: 0, name: "All Positions" },
   { id: 3, name: "Forward" },
   { id: 2, name: "Defenseman" },
   { id: 1, name: "Goalie" },
@@ -114,21 +114,36 @@ const Selects = ({ players }: Props) => {
   );
 
   const handlePositionChange = (event: SelectChangeEvent<number>) => {
-    navigateWithParams(navigate, searchParams, {
-      playerOrd: event.target.value,
-    });
+    if (event.target.value === 0) {
+      const newParams = deleteParams(searchParams, ["playerOrd"]);
+      navigate(`?${newParams.toString()}`);
+    } else {
+      navigateWithParams(navigate, searchParams, {
+        playerOrd: event.target.value,
+      });
+    }
   };
 
   const handleTeamChange = (event: SelectChangeEvent<number>) => {
-    navigateWithParams(navigate, searchParams, {
-      teamId: event.target.value,
-    });
+    if (Number(event.target.value) === 0) {
+      const newParams = deleteParams(searchParams, ["teamId"]);
+      navigate(`?${newParams.toString()}`);
+    } else {
+      navigateWithParams(navigate, searchParams, {
+        teamId: event.target.value,
+      });
+    }
   };
 
   const handleNationChange = (event: SelectChangeEvent<number>) => {
-    navigateWithParams(navigate, searchParams, {
-      nationId: event.target.value,
-    });
+    if (Number(event.target.value) === 0) {
+      const newParams = deleteParams(searchParams, ["nationId"]);
+      navigate(`?${newParams.toString()}`);
+    } else {
+      navigateWithParams(navigate, searchParams, {
+        nationId: event.target.value,
+      });
+    }
   };
 
   const handleReset = () => {
@@ -144,13 +159,12 @@ const Selects = ({ players }: Props) => {
     <Grid container spacing={2}>
       <Grid size={{ xs: 4, md: 2 }}>
         <FormControl fullWidth size="small">
-          <InputLabel id="positions-label">All Positions</InputLabel>
           <Select
             labelId="positions-label"
             id="positions-select"
-            label="All positions"
-            value={currentPosition || ""}
+            value={currentPosition || 0}
             onChange={handlePositionChange}
+            sx={{ backgroundColor: "white" }}
           >
             {positions.map((position: Position) => (
               <MenuItem key={position.id} value={position.id}>
@@ -162,15 +176,15 @@ const Selects = ({ players }: Props) => {
       </Grid>
       <Grid size={{ xs: 8, md: 4 }}>
         <FormControl fullWidth size="small">
-          <InputLabel id="teams-label">All Teams</InputLabel>
           <Select
-            labelId="teams-label"
             id="teams-select"
-            label="All teams"
-            value={currentTeam || ""}
+            defaultValue={0}
+            value={currentTeam}
             onChange={handleTeamChange}
             disabled={isAllTimeTab}
+            sx={{ backgroundColor: "white" }}
           >
+            <MenuItem value="0">All Teams</MenuItem>
             {teams.map((team: Team) => (
               <MenuItem key={team.id} value={team.id}>
                 {team.name}
@@ -181,14 +195,14 @@ const Selects = ({ players }: Props) => {
       </Grid>
       <Grid size={{ xs: 6, md: 3 }}>
         <FormControl fullWidth size="small">
-          <InputLabel id="nations-label">All Nationalities</InputLabel>
           <Select
-            labelId="nations-label"
             id="nations-select"
-            label="All Nationalities"
-            value={currentNation || ""}
+            defaultValue={0}
+            value={currentNation}
             onChange={handleNationChange}
+            sx={{ backgroundColor: "white" }}
           >
+            <MenuItem value="0">All Nationalities</MenuItem>
             {nations.map((nation: Nation) => (
               <MenuItem key={nation.nation_id} value={nation.nation_id}>
                 <Box display="flex" alignItems="center">
