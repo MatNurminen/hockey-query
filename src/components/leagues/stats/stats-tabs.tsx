@@ -93,19 +93,11 @@ const StatsTabs = memo(
       setValue(tabValue);
     };
 
-    const currentData =
-      {
-        one: players,
-        two: totals,
-        three: seasons,
-        four: totalteams,
-      }[value] ?? [];
-
     return (
       <Grid container spacing={2}>
         <Grid size={12}>
           <Box sx={{ p: 2 }}>
-            <Selects players={currentData} />
+            <Selects />
           </Box>
         </Grid>
         <Grid size={12}>

@@ -8,20 +8,10 @@ import TableFlag from "../../common/Images/tableFlag";
 import AppButton from "../../common/Buttons/appButton";
 import { navigateWithParams, deleteParams } from "../../utils/urlHelpers";
 import {
-  TPlayerStatByClub,
-  TPlayerStatDetail,
-  TPlayerStatTotal,
-} from "../../../api/players-stats/types";
-
-type TPlayerSelectData = (
-  | TPlayerStatDetail
-  | TPlayerStatTotal
-  | TPlayerStatByClub
-) & { team_id?: number; full_name?: string };
-
-interface Props {
-  players: TPlayerSelectData[];
-}
+  getPlayersStatsDetail,
+  getPlayersStatsTotal,
+  getPlayersStatsTotalByTeam,
+} from "../../../api/players-stats/queries";
 
 interface Position {
   id: number;
@@ -46,7 +36,7 @@ const positions: Position[] = [
   { id: 1, name: "Goalie" },
 ];
 
-const Selects = ({ players }: Props) => {
+const Selects = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const currentPosition = Number(searchParams.get("playerOrd"));
@@ -55,63 +45,68 @@ const Selects = ({ players }: Props) => {
   const isAnyFilterActive = currentPosition || currentTeam || currentNation;
   const currentTab = searchParams.get("tab");
   const isAllTimeTab = currentTab === "two";
+  const leagueId = Number(searchParams.get("league"));
+  const seasonId = Number(searchParams.get("season"));
+  const playerOrd = searchParams.get("playerOrd")
+    ? [Number(searchParams.get("playerOrd"))]
+    : undefined;
+  const teamId = Number(searchParams.get("teamId")) || undefined;
+  const nationId = Number(searchParams.get("nationId")) || undefined;
 
-  type NormalizedPlayer = {
-    player_id: number;
-    team_id: number;
-    club_name: string;
-    nation_id: number;
-    player_nation: string;
-    player_flag: string;
-    player_order: number;
-  };
+  const isSeasonTab = currentTab === "one" || currentTab === "three";
+  const isTotalsTab = currentTab === "two";
+  const isTeamTab = currentTab === "four";
+  const seasonParam = currentTab === "one" ? seasonId : undefined;
 
-  const normalizedPlayers: NormalizedPlayer[] = players.map((player) => ({
-    player_id: player.player_id,
-    team_id: player.team_id || 0,
-    club_name: player.full_name || "",
-    nation_id: player.nation_id || 0,
-    player_nation: player.player_nation || "",
-    player_flag: player.player_flag || "",
-    player_order: player.player_order,
-  }));
-
-  const teams: Team[] = [
-    ...new Map(
-      normalizedPlayers.map((player) => [
-        player.team_id,
-        {
-          id: player.team_id,
-          name: player.club_name,
-        },
-      ]),
-    ).values(),
-  ].sort((a, b) => a.name.localeCompare(b.name));
-
-  const nations: Nation[] = Object.values(
-    Array.from(
-      normalizedPlayers
-        .reduce((accByPlayer: Map<number, NormalizedPlayer>, player) => {
-          if (!accByPlayer.has(player.player_id)) {
-            accByPlayer.set(player.player_id, player);
-          }
-          return accByPlayer;
-        }, new Map())
-        .values(),
-    ).reduce((accByNation: Record<number, Nation>, player) => {
-      const { nation_id, player_nation, player_flag } = player;
-      if (nation_id && player_nation) {
-        if (!accByNation[nation_id]) {
-          accByNation[nation_id] = {
-            nation_id,
-            player_nation,
-            player_flag,
-          };
-        }
-      }
-      return accByNation;
-    }, {}),
+  const { data: detailData } = getPlayersStatsDetail(
+    {
+      leagueId: [leagueId],
+      seasonId: seasonParam,
+      playerOrd,
+      teamId,
+      nationId,
+    },
+    { enabled: isSeasonTab },
   );
+  const { data: totalsData } = getPlayersStatsTotal(
+    { leagueId, playerOrd, teamId, nationId },
+    { enabled: isTotalsTab },
+  );
+  const { data: byClubData } = getPlayersStatsTotalByTeam(
+    { leagueId, playerOrd, teamId, nationId },
+    { enabled: isTeamTab },
+  );
+
+  const tabData =
+    currentTab === "four"
+      ? byClubData?.data
+      : currentTab === "two"
+        ? totalsData?.data
+        : detailData?.data;
+
+  const teams: Team[] = Array.from(
+    new Map(
+      (tabData as Array<{ team_id: number; full_name: string }> | undefined ??
+        [])
+        .filter((row) => row.team_id && row.full_name)
+        .map((row): [number, Team] => [
+          row.team_id,
+          { id: row.team_id, name: row.full_name },
+        ]),
+    ).values(),
+  ).sort((a, b) => a.name.localeCompare(b.name));
+
+  const byNation = new Map<number, Nation>();
+  const seenPlayers = new Set<number>();
+  for (const player of tabData ?? []) {
+    const { player_id, nation_id, player_nation, player_flag } = player;
+    if (!nation_id || !player_nation || seenPlayers.has(player_id)) continue;
+    seenPlayers.add(player_id);
+    if (!byNation.has(nation_id)) {
+      byNation.set(nation_id, { nation_id, player_nation, player_flag });
+    }
+  }
+  const nations: Nation[] = Array.from(byNation.values());
 
   const handlePositionChange = (event: SelectChangeEvent<number>) => {
     if (event.target.value === 0) {

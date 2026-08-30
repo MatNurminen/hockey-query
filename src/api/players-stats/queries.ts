@@ -14,7 +14,10 @@ import {
   TPaginatedResponse,
 } from "./types";
 
-export const getPlayersStatsTotal = (params: PlayersStatsTotalParams) => {
+export const getPlayersStatsTotal = (
+  params: PlayersStatsTotalParams,
+  options?: { enabled?: boolean },
+) => {
   const queryString = buildQueryString(params);
   const url = `/api/players-stats/total${queryString ? `?${queryString}` : ""}`;
 
@@ -23,10 +26,14 @@ export const getPlayersStatsTotal = (params: PlayersStatsTotalParams) => {
     TPaginatedResponse<TPlayerStatTotal>
   >(["playersStatsTotal", params], url, undefined, {
     placeholderData: keepPreviousData,
+    ...options,
   });
 };
 
-export const getPlayersStatsTotalByTeam = (params: PlayersStatsTotalParams) => {
+export const getPlayersStatsTotalByTeam = (
+  params: PlayersStatsTotalParams,
+  options?: { enabled?: boolean },
+) => {
   const queryString = buildQueryString(params);
   const url = `/api/players-stats/total-by-team${queryString ? `?${queryString}` : ""}`;
 
@@ -35,10 +42,14 @@ export const getPlayersStatsTotalByTeam = (params: PlayersStatsTotalParams) => {
     TPaginatedResponse<TPlayerStatByClub>
   >(["playersStatsTotalByTeam", params], url, undefined, {
     placeholderData: keepPreviousData,
+    ...options,
   });
 };
 
-export const getPlayersStatsDetail = (params: PlayersStatsDetailParams) => {
+export const getPlayersStatsDetail = (
+  params: PlayersStatsDetailParams,
+  options?: { enabled?: boolean },
+) => {
   const queryString = buildQueryString(params);
   const url = `/api/players-stats/detail${
     queryString ? `?${queryString}` : ""
@@ -49,6 +60,7 @@ export const getPlayersStatsDetail = (params: PlayersStatsDetailParams) => {
     TPaginatedResponse<TPlayerStatDetail>
   >(["playersStatsDetail", params], url, undefined, {
     placeholderData: keepPreviousData,
+    ...options,
   });
 };
 
