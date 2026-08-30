@@ -51,9 +51,6 @@ const Selects = () => {
   const playerOrd = searchParams.get("playerOrd")
     ? [Number(searchParams.get("playerOrd"))]
     : undefined;
-  const teamId = Number(searchParams.get("teamId")) || undefined;
-  const nationId = Number(searchParams.get("nationId")) || undefined;
-
   const isSeasonTab = currentTab === "one" || currentTab === "three";
   const isTotalsTab = currentTab === "two";
   const isTeamTab = currentTab === "four";
@@ -64,17 +61,15 @@ const Selects = () => {
       leagueId: [leagueId],
       seasonId: seasonParam,
       playerOrd,
-      teamId,
-      nationId,
     },
     { enabled: isSeasonTab },
   );
   const { data: totalsData } = getPlayersStatsTotal(
-    { leagueId, playerOrd, teamId, nationId },
+    { leagueId, playerOrd },
     { enabled: isTotalsTab },
   );
   const { data: byClubData } = getPlayersStatsTotalByTeam(
-    { leagueId, playerOrd, teamId, nationId },
+    { leagueId, playerOrd },
     { enabled: isTeamTab },
   );
 
