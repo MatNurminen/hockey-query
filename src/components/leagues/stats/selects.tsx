@@ -27,6 +27,7 @@ interface Nation {
   nation_id: number;
   player_nation: string;
   player_flag: string;
+  count: number;
 }
 
 const positions: Position[] = [
@@ -102,11 +103,21 @@ const Selects = () => {
     const { player_id, nation_id, player_nation, player_flag } = player;
     if (!nation_id || !player_nation || seenPlayers.has(player_id)) continue;
     seenPlayers.add(player_id);
-    if (!byNation.has(nation_id)) {
-      byNation.set(nation_id, { nation_id, player_nation, player_flag });
+    const nation = byNation.get(nation_id);
+    if (nation) {
+      nation.count += 1;
+    } else {
+      byNation.set(nation_id, {
+        nation_id,
+        player_nation,
+        player_flag,
+        count: 1,
+      });
     }
   }
-  const nations: Nation[] = Array.from(byNation.values());
+  const nations: Nation[] = Array.from(byNation.values()).sort((a, b) =>
+    a.player_nation.localeCompare(b.player_nation),
+  );
 
   const handlePositionChange = (event: SelectChangeEvent<number>) => {
     if (event.target.value === 0) {
@@ -204,7 +215,7 @@ const Selects = () => {
                   <Box display="flex" sx={{ mr: 1 }}>
                     <TableFlag alt="" src={nation.player_flag} />
                   </Box>
-                  {nation.player_nation}
+                  {nation.player_nation} ({nation.count})
                 </Box>
               </MenuItem>
             ))}
