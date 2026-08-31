@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
 import FormControl from "@mui/material/FormControl";
@@ -82,8 +83,16 @@ const Selects = () => {
 
   const teams: Team[] = Array.from(
     new Map(
-      (tabData as Array<{ team_id: number; full_name: string }> | undefined ??
-        [])
+      (
+        (tabData as
+          | Array<{
+              team_id: number;
+              full_name: string;
+              nation_id?: number;
+            }>
+          | undefined) ?? []
+      )
+        .filter((row) => !currentNation || row.nation_id === currentNation)
         .filter((row) => row.team_id && row.full_name)
         .map((row): [number, Team] => [
           row.team_id,
@@ -92,9 +101,21 @@ const Selects = () => {
     ).values(),
   ).sort((a, b) => a.name.localeCompare(b.name));
 
+  const nationsSource = (
+    (tabData as
+      | Array<{
+          team_id?: number;
+          player_id: number;
+          nation_id: number;
+          player_nation: string;
+          player_flag: string;
+        }>
+      | undefined) ?? []
+  ).filter((row) => !currentTeam || row.team_id === currentTeam);
+
   const byNation = new Map<number, Nation>();
   const seenPlayers = new Set<number>();
-  for (const player of tabData ?? []) {
+  for (const player of nationsSource) {
     const { player_id, nation_id, player_nation, player_flag } = player;
     if (!nation_id || !player_nation || seenPlayers.has(player_id)) continue;
     seenPlayers.add(player_id);
@@ -113,6 +134,37 @@ const Selects = () => {
   const nations: Nation[] = Array.from(byNation.values()).sort((a, b) =>
     a.player_nation.localeCompare(b.player_nation),
   );
+
+  const safeTeam = teams.some((team) => team.id === currentTeam)
+    ? currentTeam
+    : 0;
+  const safeNation = nations.some(
+    (nation) => nation.nation_id === currentNation,
+  )
+    ? currentNation
+    : 0;
+
+  useEffect(() => {
+    if (
+      tabData &&
+      currentNation &&
+      !nations.some((nation) => nation.nation_id === currentNation)
+    ) {
+      const newParams = deleteParams(searchParams, ["nationId"]);
+      navigate(`?${newParams.toString()}`);
+    }
+  }, [tabData, nations, currentNation, searchParams, navigate]);
+
+  useEffect(() => {
+    if (
+      tabData &&
+      currentTeam &&
+      !teams.some((team) => team.id === currentTeam)
+    ) {
+      const newParams = deleteParams(searchParams, ["teamId"]);
+      navigate(`?${newParams.toString()}`);
+    }
+  }, [tabData, teams, currentTeam, searchParams, navigate]);
 
   const handlePositionChange = (event: SelectChangeEvent<number>) => {
     if (event.target.value === 0) {
@@ -180,7 +232,7 @@ const Selects = () => {
           <Select
             id="teams-select"
             defaultValue={0}
-            value={currentTeam}
+            value={safeTeam}
             onChange={handleTeamChange}
             disabled={isAllTimeTab}
             sx={{ backgroundColor: "white" }}
@@ -199,7 +251,7 @@ const Selects = () => {
           <Select
             id="nations-select"
             defaultValue={0}
-            value={currentNation}
+            value={safeNation}
             onChange={handleNationChange}
             sx={{ backgroundColor: "white" }}
           >
