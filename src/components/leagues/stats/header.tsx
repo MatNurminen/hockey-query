@@ -22,33 +22,31 @@ const Header = memo(({ league, leagueId, seasonId }: Props) => {
   };
 
   return (
-    <>
-      <Grid
-        container
-        spacing={1}
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-      >
-        <Grid size={{ xs: 12, sm: 7 }}>
-          <SectionHeader
-            txtAlign="left"
-            content={`${league} ${seasonId ? `${seasonId}-${seasonId + 1} Stats` : "All time Stats"}`}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 5 }}>
-          <SelectLeague onChange={handleLeagueChange} />
-        </Grid>
-        <Grid size={{ xs: 12 }} mt={2}>
-          <LinkRoute
-            variant="subtitle2"
-            to={`/leagues/${leagueId}?season=${seasonId}`}
-          >
-            {"League Information and Facts"}
-          </LinkRoute>
-        </Grid>
+    <Grid
+      container
+      spacing={1}
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+    >
+      <Grid size={{ xs: 12, sm: 7 }}>
+        <SectionHeader
+          txtAlign="left"
+          content={`${league} ${seasonId ? `${seasonId}-${seasonId + 1} Stats` : "All time Stats"}`}
+        />
       </Grid>
-    </>
+      <Grid size={{ xs: 12, sm: 5 }}>
+        <SelectLeague onChange={handleLeagueChange} />
+      </Grid>
+      <Grid size={{ xs: 12 }} mt={2}>
+        <LinkRoute
+          variant="subtitle2"
+          to={`/leagues/${leagueId}?season=${seasonId}`}
+        >
+          {"League Information and Facts"}
+        </LinkRoute>
+      </Grid>
+    </Grid>
   );
 });
 

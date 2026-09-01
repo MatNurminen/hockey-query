@@ -45,7 +45,7 @@ const Selects = () => {
   const currentTeam = Number(searchParams.get("teamId"));
   const currentNation = Number(searchParams.get("nationId"));
   const isAnyFilterActive = currentPosition || currentTeam || currentNation;
-  const currentTab = searchParams.get("tab");
+  const currentTab = searchParams.get("tab") || "one";
   const isAllTimeTab = currentTab === "two";
   const leagueId = Number(searchParams.get("league"));
   const seasonId = Number(searchParams.get("season"));
