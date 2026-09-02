@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import StatsDetails from "./stats-details";
@@ -58,9 +58,7 @@ const StatsTabs = memo(
     totalTeams,
   }: Props) => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [value, setValue] = useState<Tab["value"]>(
-      (searchParams.get("tab") as Tab["value"]) || "one",
-    );
+    const value = (searchParams.get("tab") as Tab["value"]) || "one";
     const currentTotal =
       {
         one: totalDetail,
@@ -77,7 +75,7 @@ const StatsTabs = memo(
     };
 
     const handleTabChange = (tabValue: Tab["value"]) => {
-      let updates: Record<string, string | null> = {
+      const updates: Record<string, string | null> = {
         tab: tabValue,
         offset: "0",
       };
@@ -90,7 +88,6 @@ const StatsTabs = memo(
         keepTab: false,
       });
       setSearchParams(newParams);
-      setValue(tabValue);
     };
 
     return (

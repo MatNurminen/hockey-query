@@ -1,67 +1,37 @@
 import { memo } from "react";
-import Paper from "@mui/material/Paper";
-import TableContainer from "@mui/material/TableContainer";
-import Table from "@mui/material/Table";
-import HeaderSection from "../../common/Table/headerSection";
-import TableBody from "@mui/material/TableBody";
-import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
-import Box from "@mui/material/Box";
-import TableFlag from "../../common/Images/tableFlag";
-import { TPlayerStatByClub } from "../../../api/players-stats/types";
 import LinkRoute from "../../common/LinkRoute";
-import SectionChapter from "../../common/Sections/sectionChapter";
+import StatsTable, { StatsColumn } from "./statsTable";
+import { TPlayerStatByClub } from "../../../api/players-stats/types";
 
 interface Props {
   totalteams: TPlayerStatByClub[];
   offset: number;
 }
 
+const columns: StatsColumn<TPlayerStatByClub>[] = [
+  {
+    text: "team",
+    sx: { minWidth: 160 },
+    render: (player) => (
+      <LinkRoute to={`/teams/${player.team_id}`} ml={1}>
+        {player.full_name}
+      </LinkRoute>
+    ),
+  },
+  { align: "center", text: "gp", render: (player) => player.games_t },
+  { align: "center", text: "g", render: (player) => player.goals_t },
+  { align: "center", text: "years", render: (player) => player.years },
+];
+
 const StatsTeam = memo(({ totalteams, offset }: Props) => {
   return (
-    <>
-      <Paper>
-        <SectionChapter content={`All-time totals Player Stats`} />
-        <TableContainer>
-          <Table size="small">
-            <HeaderSection
-              cells={[
-                { align: "center", text: "#" },
-                { text: "player" },
-                { text: "team" },
-                { align: "center", text: "gp" },
-                { align: "center", text: "g" },
-                { align: "center", text: "years" },
-              ]}
-            />
-            <TableBody>
-              {totalteams.map((player, key) => (
-                <TableRow key={`${player.player_id}-${player.team_id}`}>
-                  <TableCell align="center">{offset + key + 1}</TableCell>
-                  <TableCell sx={{ minWidth: 160 }}>
-                    <Box display="flex" alignItems="center">
-                      <TableFlag alt="" src={player.player_flag} />
-                      <LinkRoute to={`/players/${player.player_id}`} ml={1}>
-                        {player.first_name} {player.last_name} (
-                        {player.player_position})
-                      </LinkRoute>
-                    </Box>
-                  </TableCell>
-                  <TableCell sx={{ minWidth: 160 }}>
-                    <LinkRoute to={`/teams/${player.team_id}`} ml={1}>
-                      {player.full_name}
-                    </LinkRoute>
-                  </TableCell>
-                  <TableCell align="center">{player.games_t}</TableCell>
-                  <TableCell align="center">{player.goals_t}</TableCell>
-                  <TableCell align="center">{player.years}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-    </>
+    <StatsTable
+      title="All-time team Player Stats"
+      rows={totalteams}
+      columns={columns}
+      rowKey={(player) => `${player.player_id}-${player.team_id}`}
+      offset={offset}
+    />
   );
 });
 
