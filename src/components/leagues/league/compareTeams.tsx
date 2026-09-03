@@ -51,7 +51,10 @@ const CompareTeams = ({ leagueId, seasonId, title }: Props) => {
                 <TableCell sx={{ minWidth: 180 }}>
                   <Box display="flex" alignItems="center">
                     <TableFlag alt="" src={team.logo} />
-                    <LinkRoute to={`/teams/${team.team_id}`} ml={1}>
+                    <LinkRoute
+                      to={`/teams/${team.team_id}?season=${seasonId}`}
+                      ml={1}
+                    >
                       {team.full_name}
                     </LinkRoute>
                   </Box>
