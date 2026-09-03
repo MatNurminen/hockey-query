@@ -5,14 +5,13 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
 import TableFlag from "../common/Images/tableFlag";
 import ClubHeader from "./clubHeader";
 import { TStandings } from "../../api/teams-stats/types";
 import { TPlayerStatDetail } from "../../api/players-stats/types";
 import { useMemo } from "react";
 import { Cell } from "../common/Table/types";
+import LinkRoute from "../common/LinkRoute";
 
 interface Props {
   players: TPlayerStatDetail[];
@@ -43,54 +42,57 @@ const Players = ({ players, teams }: Props) => {
   );
 
   return (
-    <TableContainer component={Paper}>
+    <Paper>
       {sortedTeams.map((team: TStandings) => (
         <div key={team.id}>
           <ClubHeader team={team.full_name} logo={team.logo} />
-          <Table size="small">
-            <HeaderMain cells={columns} />
-            <TableBody>
-              {players
-                .filter(
-                  (player: TPlayerStatDetail) =>
-                    player.team_id === team.team_id,
-                )
-                .toSorted(
-                  (a: TPlayerStatDetail, b: TPlayerStatDetail) =>
-                    a.player_order - b.player_order,
-                )
-                .map((player: TPlayerStatDetail, key: number) => (
-                  <TableRow key={key}>
-                    <TableCell>{player.jersey_number}</TableCell>
-                    <TableCell>{player.player_position}</TableCell>
-                    <TableCell>
-                      <TableFlag src={player.player_flag} alt="" />
-                    </TableCell>
-                    <TableCell>
-                      <Link
-                        underline="hover"
-                        component={RouterLink}
-                        to={`/players/${player.player_id}`}
-                      >
-                        {player.first_name} {player.last_name}
-                      </Link>
-                    </TableCell>
-                    <TableCell>{player.games}</TableCell>
-                    <TableCell>{player.goals}</TableCell>
-                    <TableCell>{player.postseason}</TableCell>
-                    <TableCell>
-                      {player.season_id - player.birth_year}
-                    </TableCell>
-                    <TableCell>{player.birth_year}</TableCell>
-                    <TableCell>{player.height}</TableCell>
-                    <TableCell>{player.weight}</TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
+          <TableContainer component={Paper}>
+            <Table size="small">
+              <HeaderMain cells={columns} />
+              <TableBody>
+                {players
+                  .filter(
+                    (player: TPlayerStatDetail) =>
+                      player.team_id === team.team_id,
+                  )
+                  .toSorted(
+                    (a: TPlayerStatDetail, b: TPlayerStatDetail) =>
+                      a.player_order - b.player_order,
+                  )
+                  .map((player: TPlayerStatDetail) => (
+                    <TableRow key={player.id}>
+                      <TableCell align="center">{player.jersey_number}</TableCell>
+                      <TableCell align="center">{player.player_position}</TableCell>
+                      <TableCell align="center">
+                        <TableFlag src={player.player_flag} alt="" />
+                      </TableCell>
+                      <TableCell sx={{ minWidth: 160 }}>
+                        <LinkRoute
+                          underline="hover"
+                          to={`/players/${player.player_id}`}
+                        >
+                          {player.first_name} {player.last_name}
+                        </LinkRoute>
+                      </TableCell>
+                      <TableCell align="center">{player.games}</TableCell>
+                      <TableCell align="center">{player.goals}</TableCell>
+                      <TableCell sx={{ minWidth: 160 }}>
+                        {player.postseason}
+                      </TableCell>
+                      <TableCell align="center">
+                        {player.season_id - player.birth_year}
+                      </TableCell>
+                      <TableCell align="center">{player.birth_year}</TableCell>
+                      <TableCell align="center">{player.height}</TableCell>
+                      <TableCell align="center">{player.weight}</TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
       ))}
-    </TableContainer>
+    </Paper>
   );
 };
 

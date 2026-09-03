@@ -10,20 +10,21 @@ interface ClubHeaderProps {
 
 const ClubHeader = ({ team, logo }: ClubHeaderProps) => {
   return (
-      <Grid
-        container
-        my={1} ml={2}
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="center"
-      >
-        <Grid size={{xs: 3, sm: 2}}>
-          <MainLogo alt="" src={logo}/>
-        </Grid>
-        <Grid size={{xs: 9, sm: 10}}>
-          <SectionFirst content={team} txtAlign="left" />
-        </Grid>
+    <Grid
+      container
+      ml={2}
+      py={{ xs: 2, md: 3 }}
+      direction="row"
+      justifyContent="flex-start"
+      alignItems="center"
+    >
+      <Grid pl={{ sm: 2 }} size={{ xs: 3, sm: 2 }}>
+        <MainLogo alt="" src={logo} />
       </Grid>
+      <Grid size={{ xs: 9, sm: 10 }}>
+        <SectionFirst content={team} txtAlign="left" />
+      </Grid>
+    </Grid>
   );
 };
 
