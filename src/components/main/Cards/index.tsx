@@ -29,12 +29,13 @@ const Cards = () => {
   if (isError) return <h3>Error!</h3>;
   if (!data?.length) return <h3>No data available</h3>;
 
-  const lastCard = data.length - 1;
+  const seasons = data.slice(0, 16);
+  const lastCard = seasons.length - 1;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <ImageList sx={{ my: 0 }}>
-        {data.map((season: TSeasonDto, index) => {
+        {seasons.map((season: TSeasonDto, index) => {
           const isFeatured =
             index === 0 || (index === lastCard && lastCard % 2 !== 0);
           const cols = isFeatured ? 2 : 1;

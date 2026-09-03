@@ -9,7 +9,6 @@ import LinkRoute from "../../common/LinkRoute";
 import { getLeaguesCurLogo } from "../../../api/leagues/queries";
 import { formatSeason } from "../../utils/formatSeason";
 import { TLeagueDto } from "../../../api/leagues/types";
-import Link from "@mui/material/Link";
 import { memo } from "react";
 
 interface Props {
@@ -31,14 +30,13 @@ const Leagues = ({ curSeason }: Props) => {
       />
       <List>
         <Divider />
-        {data.map((league: TLeagueDto) => (
-          <Link
+        {data.map((league: TLeagueDto, index: number) => (
+          <LinkRoute
             underline="none"
-            component={LinkRoute}
             to={`/rosters?league=${league.id}&season=${curSeason}`}
             key={league.id}
           >
-            <ListItem sx={{ my: 1 }}>
+            <ListItem sx={{ my: 1 }} divider={index < data.length - 1}>
               <ListItemAvatar sx={{ mr: 2 }}>
                 <Avatar
                   alt=""
@@ -48,8 +46,7 @@ const Leagues = ({ curSeason }: Props) => {
               </ListItemAvatar>
               <ListItemText primary={league.name} />
             </ListItem>
-            <Divider />
-          </Link>
+          </LinkRoute>
         ))}
       </List>
     </>

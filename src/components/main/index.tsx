@@ -8,7 +8,7 @@ const Main = () => {
   const { startYear: latestSeason } = useLatestSeason();
 
   return (
-    <Container sx={{ pt: 4, background: "#fff" }}>
+    <Container sx={{ pt: 4, bgcolor: "background.paper" }}>
       <Grid container spacing={4}>
         <Grid size={{ sm: 12, md: 8 }}>
           <Cards />
