@@ -34,7 +34,7 @@ const Champions = ({ title, leagueId }: Props) => {
             >
               <ListItemText
                 slotProps={{ primary: { sx: { fontWeight: 600 } } }}
-                primary={team.season_id}
+                primary={team.season_id + 1}
               />
             </LinkRoute>
             <LinkRoute
