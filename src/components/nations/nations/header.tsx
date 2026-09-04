@@ -1,8 +1,8 @@
-import Grid from '@mui/material/Grid2';
-import SectionHeader from '../../common/Sections/sectionHeader';
-import AppButton from '../../common/Buttons/appButton';
-import { memo, useState } from 'react';
-import AddNation from '../../admin/nations/addNation';
+import Grid from "@mui/material/Grid2";
+import SectionHeader from "../../common/Sections/sectionHeader";
+import AppButton from "../../common/Buttons/appButton";
+import { memo, useState } from "react";
+import AddNation from "../../admin/nations/addNation";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
@@ -13,20 +13,21 @@ const Header = () => {
     <>
       <Grid
         container
-        direction='row'
-        justifyContent='space-between'
-        alignItems='center'
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
       >
         <Grid>
-          <SectionHeader txtAlign='left' content='Nations' />
+          <SectionHeader txtAlign="left" content="Nations" />
         </Grid>
         <Grid>
           <AppButton
             onClick={handleOpen}
-            text='Add Nation'
-            size='small'
-            iconName='add'
-            color='success'
+            text="Add Nation"
+            size="small"
+            iconName="add"
+            color="success"
+            sx={{ display: { xs: "none", md: "inline-flex" } }}
           />
         </Grid>
       </Grid>

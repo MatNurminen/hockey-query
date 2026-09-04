@@ -4,27 +4,34 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
 import AppButton from "../../common/Buttons/appButton";
-import HeaderTable from "./headerTable";
 import Stack from "@mui/material/Stack";
 import { memo, useState } from "react";
 import DeleteDialog from "../../common/Dialogs/deleteDialog";
 import TableFlag from "../../common/Images/tableFlag";
-import { getNations } from "../../../api/nations/queries";
 import { useDeleteNation } from "../../../api/nations/mutations";
 import { TNationDto } from "../../../api/nations/types";
-import { useLatestSeason } from "../../../hooks/useLatestSeason";
+import type { Cell } from "../../common/Table/types";
+import TableHeader from "../../common/Table/tableHeader";
+import LinkRoute from "../../common/LinkRoute";
 
-const NationsTable = () => {
+interface Props {
+  nations: TNationDto[];
+  seasonId: number;
+}
+
+const headerCells: Cell[] = [
+  { align: "center", text: "Flag" },
+  { text: "Name" },
+  { text: "Short Name" },
+  { text: "", sx: { display: { xs: "none", sm: "table-cell" } } },
+];
+
+const NationsTable = ({ nations, seasonId }: Props) => {
   const [selectedNation, setSelectedNation] = useState<number | null>(null);
   const [name, setName] = useState("");
 
-  const { data: nations, isLoading, isError } = getNations();
   const { mutate: deleteNation } = useDeleteNation();
-
-  const { startYear: currentSeason } = useLatestSeason();
 
   const handleOpen = (id: number) => {
     setSelectedNation(id);
@@ -45,10 +52,6 @@ const NationsTable = () => {
     }
   };
 
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-  if (!nations?.length) return <h3>No data available</h3>;
-
   return (
     <Stack spacing={3}>
       <DeleteDialog
@@ -59,7 +62,7 @@ const NationsTable = () => {
       />
       <TableContainer component={Paper}>
         <Table size="small">
-          <HeaderTable />
+          <TableHeader cells={headerCells} background="secondary.main" />
           <TableBody>
             {nations.map((nation: TNationDto) => (
               <TableRow key={nation.id}>
@@ -67,16 +70,18 @@ const NationsTable = () => {
                   <TableFlag alt={nation.name} src={nation.flag} />
                 </TableCell>
                 <TableCell>
-                  <Link
+                  <LinkRoute
                     underline="hover"
-                    component={RouterLink}
-                    to={`/nations/${nation.id}?season=${currentSeason}`}
+                    to={`/nations/${nation.id}?season=${seasonId}`}
                   >
                     {nation.name}
-                  </Link>
+                  </LinkRoute>
                 </TableCell>
                 <TableCell>{nation.short_name}</TableCell>
-                <TableCell align="right">
+                <TableCell
+                  align="right"
+                  sx={{ display: { xs: "none", sm: "table-cell" } }}
+                >
                   <AppButton
                     text="Delete"
                     size="small"
