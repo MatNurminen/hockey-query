@@ -7,11 +7,8 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Box from "@mui/material/Box";
-import HeaderMain from "../../common/Table/headerMain";
 import HeaderSection from "../../common/Table/headerSection";
 import TableFlag from "../../common/Images/tableFlag";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
 import AppButton from "../../common/Buttons/appButton";
 import {
   useMultiplePlayersStatsDetail,
@@ -20,6 +17,8 @@ import {
 import type { PlayersStatsDetailParams } from "../../../api/players-stats/types";
 import { formatSeason } from "../../utils/formatSeason";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
+import LinkRoute from "../../common/LinkRoute";
+import SectionChapter from "../../common/Sections/sectionChapter";
 
 interface Props {
   nationId: number;
@@ -67,86 +66,81 @@ const PlrsStatsSeason = ({ nationId, natName }: Props) => {
 
   return (
     <>
-      {items.map((item: { id: number; name: string; list: TPlayerStatDetail[] }) => (
-        <Box key={item.id}>
-          <TableContainer component={Paper}>
-            <Table size="small">
-              <HeaderMain
-                cells={[
-                  `${formatSeason(seasonId)} Players From ${natName} In ${
-                    item.name
-                  }`,
-                ]}
-              />
-            </Table>
-            <Table size="small">
-              <HeaderSection
-                cells={[
-                  { align: "center", text: "#" },
-                  { text: "Player" },
-                  { text: "Team" },
-                  { text: "League" },
-                  { align: "center", text: "GP" },
-                  { align: "center", text: "G" },
-                ]}
-              />
-              <TableBody>
-                {item.list.map((player: TPlayerStatDetail, index: number) => (
-                  <TableRow key={player.player_id}>
-                    <TableCell align="center">{index + 1}</TableCell>
-                    <TableCell>
-                      <Box display="flex" alignItems="center">
-                        <TableFlag alt="" src={player.player_flag} />
-                        <Link
+      {items.map(
+        (item: { id: number; name: string; list: TPlayerStatDetail[] }) => (
+          <Box key={item.id}>
+            <SectionChapter
+              content={`${formatSeason(seasonId)} Players From ${natName} In ${
+                item.name
+              }`}
+            />
+            <TableContainer component={Paper}>
+              <Table size="small">
+                <HeaderSection
+                  cells={[
+                    { align: "center", text: "#" },
+                    { text: "Player" },
+                    { text: "Team" },
+                    { text: "League" },
+                    { align: "center", text: "GP" },
+                    { align: "center", text: "G" },
+                  ]}
+                />
+                <TableBody>
+                  {item.list.map((player: TPlayerStatDetail, index: number) => (
+                    <TableRow key={player.player_id}>
+                      <TableCell align="center">{index + 1}</TableCell>
+                      <TableCell sx={{ minWidth: 160 }}>
+                        <Box display="flex" alignItems="center">
+                          <TableFlag alt="" src={player.player_flag} />
+                          <LinkRoute
+                            underline="hover"
+                            to={`/players/${player.player_id}`}
+                            ml={1}
+                          >
+                            {player.first_name} {player.last_name} (
+                            {player.player_position})
+                          </LinkRoute>
+                        </Box>
+                      </TableCell>
+                      <TableCell sx={{ minWidth: 160 }}>
+                        <Box display="flex" alignItems="center">
+                          <TableFlag alt="" src={player.team_flag} />
+                          <LinkRoute
+                            underline="hover"
+                            to={`/teams/${player.team_id}`}
+                            ml={1}
+                          >
+                            {player.full_name}
+                          </LinkRoute>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <LinkRoute
                           underline="hover"
-                          component={RouterLink}
-                          to={`/players/${player.player_id}`}
+                          to={`/leagues/${player.league_id}`}
                           ml={1}
                         >
-                          {player.first_name} {player.last_name} (
-                          {player.player_position})
-                        </Link>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Box display="flex" alignItems="center">
-                        <TableFlag alt="" src={player.team_flag} />
-                        <Link
-                          underline="hover"
-                          component={RouterLink}
-                          to={`/teams/${player.team_id}`}
-                          ml={1}
-                        >
-                          {player.full_name}
-                        </Link>
-                      </Box>
-                    </TableCell>
-                    <TableCell>
-                      <Link
-                        underline="hover"
-                        component={RouterLink}
-                        to={`/leagues/${player.league_id}`}
-                        ml={1}
-                      >
-                        {player.short_name}
-                      </Link>
-                    </TableCell>
-                    <TableCell align="center">{player.games}</TableCell>
-                    <TableCell align="center">{player.goals}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <AppButton
-            color="success"
-            fullWidth={true}
-            text="Show more"
-            to={`/nation?nation=${nationId}&season=${seasonId}`}
-            sx={{ mb: 2 }}
-          />
-        </Box>
-      ))}
+                          {player.short_name}
+                        </LinkRoute>
+                      </TableCell>
+                      <TableCell align="center">{player.games}</TableCell>
+                      <TableCell align="center">{player.goals}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <AppButton
+              color="success"
+              fullWidth={true}
+              text="Show more"
+              to={`/nation?nation=${nationId}&season=${seasonId}`}
+              sx={{ mb: 2 }}
+            />
+          </Box>
+        ),
+      )}
     </>
   );
 };

@@ -8,13 +8,12 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import TableFlag from "../../common/Images/tableFlag";
 import ListItemText from "@mui/material/ListItemText";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
 import { getTeamsForNation } from "../../../api/teams-stats/queries";
 import Grid from "@mui/material/Grid2";
 import { memo } from "react";
 import { TNationDto } from "../../../api/nations/types";
 import { TTeamsForNation } from "../../../api/teams-stats/types";
+import LinkRoute from "../../common/LinkRoute";
 
 interface Props {
   nation: TNationDto;
@@ -74,13 +73,12 @@ const International = ({ nation }: Props) => {
                     <TableFlag alt={nation.name} src={nation.flag} />
                   </ListItemIcon>
 
-                  <Link
+                  <LinkRoute
                     underline="hover"
-                    component={RouterLink}
                     to={`/teams/${item.data[0].team_id}`}
                   >
                     <ListItemText primary={item.name} />
-                  </Link>
+                  </LinkRoute>
                 </ListItem>
                 {item.data.map((record) => (
                   <ListItem
@@ -90,14 +88,13 @@ const International = ({ nation }: Props) => {
                     <ListItemText
                       primary={
                         <>
-                          <Link
+                          <LinkRoute
                             underline="hover"
-                            component={RouterLink}
                             to={`/rosters?league=${record.league_id}&season=${record.season_id}`}
                             style={{ marginRight: 4 }}
                           >
                             {record.season_id}
-                          </Link>
+                          </LinkRoute>
                           {record.short_name} {record.postseason}
                         </>
                       }

@@ -50,28 +50,27 @@ const Header = ({ nation, nationId }: Props) => {
 
   return (
     <>
-      <Grid container spacing={2}>
-        <Grid my={3} size={{ md: 6, sm: 12 }}>
+      <Grid container mb={2}>
+        <Grid my={{ md: 2 }} size={{ xs: 12, md: 6 }}>
           <Grid
             container
+            spacing={{ xs: 2, md: 4 }}
             direction="row"
             justifyContent="flex-start"
             alignItems="center"
-            mt={-2}
           >
-            <Grid size={2}>
-              <img alt="" width={60} src={nation.flag} />
+            <Grid>
+              <MainLogo alt="" src={nation.flag} />
             </Grid>
-            <Grid size={10}>
+            <Grid>
               <SectionHeader
                 txtAlign="left"
                 content={nation.name + ", " + nation.short_name}
               />
             </Grid>
           </Grid>
-          <Grid container spacing={2}>
+          <Grid container ml={2} spacing={{ xs: 2, md: 4 }} mt={3}>
             <Grid
-              size={2}
               sx={{
                 display: "flex",
                 justifyContent: "center",
@@ -83,17 +82,17 @@ const Header = ({ nation, nationId }: Props) => {
                   width: 32,
                   height: 32,
                   borderRadius: "50%",
-                  bgcolor: nation.color || "#fff",
+                  bgcolor: nation.color,
                   border: "2px solid #ccc",
                 }}
               />
             </Grid>
-            <Grid size={10}>
+            <Grid>
               <MainLogo alt={nation.name} src={nation.logo} />
             </Grid>
           </Grid>
         </Grid>
-        <Grid my={3} size={{ md: 6, sm: 12 }}>
+        <Grid mt={2} size={{ xs: 12, md: 6 }}>
           <TableContainer component={Paper}>
             <Table size="small">
               <HeaderMain cells={[`DATABASE STATS - ${nation.name}`, ""]} />
@@ -118,13 +117,14 @@ const Header = ({ nation, nationId }: Props) => {
             </Table>
           </TableContainer>
         </Grid>
-        <Grid textAlign="right" size={{ xs: 12 }} sx={{ mb: 1 }}>
+        <Grid textAlign="right" size={{ xs: 12 }}>
           <AppButton
             text="Edit Nation"
             onClick={handleOpen}
             size="small"
             color="success"
             iconName="edit"
+            sx={{ display: { xs: "none", md: "inline-flex" } }}
           />
         </Grid>
       </Grid>

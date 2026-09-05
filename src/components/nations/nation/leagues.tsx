@@ -6,11 +6,10 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import TableFlag from "../../common/Images/tableFlag";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
 import ListItemText from "@mui/material/ListItemText";
 import { TLeagueByNationDto } from "../../../api/leagues/types";
 import { useLatestSeason } from "../../../hooks/useLatestSeason";
+import LinkRoute from "../../common/LinkRoute";
 
 interface Props {
   nationId: number;
@@ -28,7 +27,7 @@ const Leagues = ({ nationId }: Props) => {
     <Box my={2}>
       <SectionChapter txtAlign="left" content="Featured Leagues" />
       <List
-        sx={{ columns: { sm: 2, md: 3, lg: 4 }, pb: 1 }}
+        sx={{ columns: { xs: 2, md: 3, lg: 4 }, pb: 1 }}
         dense={true}
         disablePadding={true}
       >
@@ -37,13 +36,12 @@ const Leagues = ({ nationId }: Props) => {
             <ListItemIcon sx={{ mr: -2 }}>
               <TableFlag alt={league.short_name} src={league.flag} />
             </ListItemIcon>
-            <Link
+            <LinkRoute
               underline="hover"
-              component={RouterLink}
               to={`/leagues/${league.id}?season=${latestSeason}`}
             >
               <ListItemText primary={league.short_name} />
-            </Link>
+            </LinkRoute>
           </ListItem>
         ))}
       </List>
