@@ -89,7 +89,7 @@ const Teams = () => {
                       >
                         {letterTeams.map((team: TTeamDto) => (
                           <ListItem key={team.id}>
-                            <ListItemIcon sx={{ mr: -2 }}>
+                            <ListItemIcon sx={{ minWidth: "auto", mr: 1 }}>
                               <TableFlag
                                 src={team.nation.flag}
                                 alt={team.nation.name}

@@ -33,7 +33,7 @@ const Leagues = ({ nationId }: Props) => {
       >
         {data.map((league: TLeagueByNationDto) => (
           <ListItem key={league.id}>
-            <ListItemIcon sx={{ mr: -2 }}>
+            <ListItemIcon sx={{ minWidth: "auto", mr: 1 }}>
               <TableFlag alt={league.short_name} src={league.flag} />
             </ListItemIcon>
             <LinkRoute

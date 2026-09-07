@@ -37,7 +37,7 @@ const NatsTotal = ({ teamId }: Props) => {
       >
         {data.map((nat: TCountPlayerByNation) => (
           <ListItem key={nat.id}>
-            <ListItemIcon sx={{ mr: -2 }}>
+            <ListItemIcon sx={{ minWidth: "auto", mr: 1 }}>
               <TableFlag src={nat.flag} alt="" />
             </ListItemIcon>
             <Link

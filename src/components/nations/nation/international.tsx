@@ -66,7 +66,7 @@ const International = ({ nation }: Props) => {
             {item.data?.length > 0 && (
               <List dense={true} disablePadding={true}>
                 <ListItem sx={{ py: 0 }}>
-                  <ListItemIcon sx={{ mr: -2 }}>
+                  <ListItemIcon sx={{ minWidth: "auto", mr: 1 }}>
                     <TableFlag alt={nation.name} src={nation.flag} />
                   </ListItemIcon>
 
