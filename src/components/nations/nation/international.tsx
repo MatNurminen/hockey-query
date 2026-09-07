@@ -1,7 +1,5 @@
-import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableContainer from "@mui/material/TableContainer";
-import HeaderMain from "../../common/Table/headerMain";
 import HeaderSection from "../../common/Table/headerSection";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -14,6 +12,7 @@ import { memo } from "react";
 import { TNationDto } from "../../../api/nations/types";
 import { TTeamsForNation } from "../../../api/teams-stats/types";
 import LinkRoute from "../../common/LinkRoute";
+import SectionChapter from "../../common/Sections/sectionChapter";
 
 interface Props {
   nation: TNationDto;
@@ -50,10 +49,8 @@ const International = ({ nation }: Props) => {
 
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table size="small">
-          <HeaderMain cells={["International Record"]} />
-        </Table>
+      <SectionChapter content={`International Record`} />
+      <TableContainer>
         <Table size="small">
           <HeaderSection
             cells={[
