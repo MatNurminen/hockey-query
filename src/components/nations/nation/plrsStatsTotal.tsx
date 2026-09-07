@@ -18,12 +18,14 @@ import type { PlayersStatsTotalParams } from "../../../api/players-stats/types";
 import { TPlayerStatTotal } from "../../../api/players-stats/types";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import LinkRoute from "../../common/LinkRoute";
+import { useLatestSeason } from "../../../hooks/useLatestSeason";
 
 interface Props {
   nationId: number;
 }
 
 const PlrsStatsTotal = ({ nationId }: Props) => {
+  const { startYear } = useLatestSeason();
   const configs: MultipleStatsConfig<PlayersStatsTotalParams>[] = [
     {
       id: 1,
@@ -59,7 +61,10 @@ const PlrsStatsTotal = ({ nationId }: Props) => {
   return (
     <Grid container spacing={3}>
       {items.map(
-        (item: { id: number; name: string; list: TPlayerStatTotal[] }) => (
+        (
+          item: { id: number; name: string; list: TPlayerStatTotal[] },
+          index: number,
+        ) => (
           <Grid key={item.id} size={{ xs: 12, md: 6 }}>
             <SectionChapter content={item.name} />
             <TableContainer component={Paper}>
@@ -76,7 +81,7 @@ const PlrsStatsTotal = ({ nationId }: Props) => {
                   {item.list.map((player: TPlayerStatTotal, index: number) => (
                     <TableRow key={player.player_id}>
                       <TableCell align="center">{index + 1}</TableCell>
-                      <TableCell  sx={{ minWidth: 160 }}>
+                      <TableCell sx={{ minWidth: 160 }}>
                         <Box display="flex" alignItems="center">
                           <TableFlag alt="" src={player.player_flag} />
                           <LinkRoute
@@ -98,9 +103,9 @@ const PlrsStatsTotal = ({ nationId }: Props) => {
             </TableContainer>
             <AppButton
               color="success"
-              fullWidth={true}
+              fullWidth
               text="SHOW MORE"
-              to={`/nation?nation=${nationId}`}
+              to={`/league-stats?league=${configs[index].params.leagueId}&season=${startYear}&tab=two&offset=0&nationId=${nationId}`}
             />
           </Grid>
         ),
