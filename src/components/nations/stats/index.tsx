@@ -1,13 +1,13 @@
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import { useSearchParams } from "react-router-dom";
-import { getNation } from "../../api/nations/queries";
+import { getNation } from "../../../api/nations/queries";
 import Header from "./header";
 import Stats from "./stats";
 import Grid from "@mui/material/Grid2";
 import Divider from "@mui/material/Divider";
-import { useLatestSeason } from "../../hooks/useLatestSeason";
-import { useFirstNation } from "../../hooks/useFirstNation";
+import { useLatestSeason } from "../../../hooks/useLatestSeason";
+import { useFirstNation } from "../../../hooks/useFirstNation";
 
 const NationStats = () => {
   const [searchParams] = useSearchParams();

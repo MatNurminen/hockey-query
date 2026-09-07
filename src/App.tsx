@@ -14,11 +14,12 @@ import Leagues from "./components/leagues/leagues";
 import League from "./components/leagues/league";
 import PlayersStats from "./components/leagues/stats";
 import Nations from "./components/nations/nations";
+import Nation from "./components/nations/nation";
+import NationStats from "./components/nations/stats";
 import Teams from "./components/teams/teams";
 import Loading from "./components/layout/React-query/loading";
 
 import queryClient from "./api/queryClient";
-import Nation from "./components/nations/nation";
 import Team from "./components/teams/team";
 import FreeAgents from "./components/players/free-agents";
 import Drafts from "./components/players/drafts";
@@ -29,7 +30,6 @@ import Tournaments from "./components/tournaments";
 import Tournament from "./components/admin/tournaments/updateTournament";
 import Rosters from "./components/rosters";
 import AdmRosters from "./components/admin/rosters";
-import NationStats from "./components/players-stats";
 import Footer from "./components/layout/Footer";
 
 function App() {

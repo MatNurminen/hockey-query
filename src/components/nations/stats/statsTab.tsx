@@ -1,19 +1,19 @@
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableContainer from "@mui/material/TableContainer";
-import HeaderSection from "../common/Table/headerSection";
-import SelectSeason from "../common/Selects/selectSeason";
-import HeaderPosition from "../common/Table/headerPosition";
+import HeaderSection from "../../common/Table/headerSection";
+import SelectSeason from "../../common/Selects/selectSeason";
+import HeaderPosition from "../../common/Table/headerPosition";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import Box from "@mui/material/Box";
-import TableFlag from "../common/Images/tableFlag";
+import TableFlag from "../../common/Images/tableFlag";
 import { Fragment } from "react";
-import { TPlayerStatDetail } from "../../api/players-stats/types";
-import SectionChapter from "../common/Sections/sectionChapter";
+import { TPlayerStatDetail } from "../../../api/players-stats/types";
+import SectionChapter from "../../common/Sections/sectionChapter";
 
 interface Props {
   tabHeader: string;

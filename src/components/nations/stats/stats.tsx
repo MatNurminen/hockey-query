@@ -1,12 +1,12 @@
 import { useState, useMemo } from "react";
 import Tab from "@mui/material/Tab";
-import StyledTabs from "../common/Tabs/styledTabs";
+import StyledTabs from "../../common/Tabs/styledTabs";
 import StatsTab from "./statsTab";
 import {
   useMultiplePlayersStatsDetail,
   type MultipleStatsConfig,
-} from "../../api/players-stats/hooks";
-import type { PlayersStatsDetailParams } from "../../api/players-stats/types";
+} from "../../../api/players-stats/hooks";
+import type { PlayersStatsDetailParams } from "../../../api/players-stats/types";
 
 interface Props {
   goalies: boolean;

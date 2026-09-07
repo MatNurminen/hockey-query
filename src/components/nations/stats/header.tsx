@@ -1,8 +1,8 @@
 import Grid from "@mui/material/Grid2";
-import SectionHeader from "../common/Sections/sectionHeader";
-import SelectNation from "../common/Selects/selectNation";
+import SectionHeader from "../../common/Sections/sectionHeader";
+import SelectNation from "../../common/Selects/selectNation";
 import Box from "@mui/material/Box";
-import { TNationDto } from "../../api/nations/types";
+import { TNationDto } from "../../../api/nations/types";
 import { memo } from "react";
 
 interface Props {
