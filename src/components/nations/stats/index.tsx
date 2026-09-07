@@ -13,10 +13,14 @@ const NationStats = () => {
   const [searchParams] = useSearchParams();
   const { startYear } = useLatestSeason();
   const { firstNationId } = useFirstNation();
+  const hasNationParam = searchParams.has("nation");
+  const hasSeasonParam = searchParams.has("season");
   const nationId = Number(searchParams.get("nation")) || firstNationId;
   const seasonId = Number(searchParams.get("season")) || startYear;
 
-  const { data: nation, isLoading, isError } = getNation(nationId);
+  const { data: nation, isLoading, isError } = getNation(nationId, {
+    enabled: hasNationParam || firstNationId > 0,
+  });
 
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <h3>Error!</h3>;
@@ -36,6 +40,7 @@ const NationStats = () => {
               goalies={false}
               nationId={nationId}
               seasonId={seasonId}
+              enabled={hasSeasonParam || startYear > 0}
             />
           </Paper>
         </Grid>
@@ -48,6 +53,7 @@ const NationStats = () => {
               goalies={true}
               nationId={nationId}
               seasonId={seasonId}
+              enabled={hasSeasonParam || startYear > 0}
             />
           </Paper>
         </Grid>

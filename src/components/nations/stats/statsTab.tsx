@@ -7,13 +7,12 @@ import HeaderPosition from "../../common/Table/headerPosition";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import Link from "@mui/material/Link";
-import { Link as RouterLink } from "react-router-dom";
 import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
 import { Fragment } from "react";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
 import SectionChapter from "../../common/Sections/sectionChapter";
+import LinkRoute from "../../common/LinkRoute";
 
 interface Props {
   tabHeader: string;
@@ -77,27 +76,25 @@ const StatsTab = ({ tabHeader, players, goalies }: Props) => {
                   <TableBody>
                     {leaguePlayers.map((player) => (
                       <TableRow key={player.id}>
-                        <TableCell>
-                          <Link
+                        <TableCell sx={{ minWidth: 160 }}>
+                          <LinkRoute
                             underline="hover"
-                            component={RouterLink}
                             to={`/players/${player.player_id}`}
                           >
                             {player.first_name} {player.last_name} (
                             {player.player_position})
-                          </Link>
+                          </LinkRoute>
                         </TableCell>
-                        <TableCell>
+                        <TableCell sx={{ minWidth: 160 }}>
                           <Box display="flex" alignItems="center">
                             <TableFlag alt="flag" src={player.team_flag} />
-                            <Link
+                            <LinkRoute
                               underline="hover"
-                              component={RouterLink}
                               to={`/teams/${player.team_id}`}
                               ml={1}
                             >
                               {player.full_name}
-                            </Link>
+                            </LinkRoute>
                           </Box>
                         </TableCell>
                         <TableCell align="center">
@@ -107,7 +104,9 @@ const StatsTab = ({ tabHeader, players, goalies }: Props) => {
                         <TableCell align="center">{player.weight}</TableCell>
                         <TableCell align="center">{player.games}</TableCell>
                         <TableCell align="center">{player.goals}</TableCell>
-                        <TableCell>{player.postseason}</TableCell>
+                        <TableCell sx={{ minWidth: 160 }}>
+                          {player.postseason}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

@@ -12,6 +12,7 @@ interface Props {
   goalies: boolean;
   nationId: number;
   seasonId: number;
+  enabled: boolean;
 }
 
 const items: { id: number; title: string }[] = [
@@ -20,9 +21,9 @@ const items: { id: number; title: string }[] = [
   { id: 2, title: "International" },
 ];
 
-const northAmericaLeagues = [14, 15]
+const northAmericaLeagues = [14, 15];
 
-const Stats = ({ goalies, nationId, seasonId }: Props) => {
+const Stats = ({ goalies, nationId, seasonId, enabled }: Props) => {
   const [value, setValue] = useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -63,7 +64,7 @@ const Stats = ({ goalies, nationId, seasonId }: Props) => {
     [nationId, seasonId],
   );
 
-  const { data: player } = useMultiplePlayersStatsDetail(configs);
+  const { data: player } = useMultiplePlayersStatsDetail(configs, enabled);
 
   return (
     <>

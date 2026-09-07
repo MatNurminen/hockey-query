@@ -27,7 +27,7 @@ const Leagues = ({ nationId }: Props) => {
     <Box my={2}>
       <SectionChapter txtAlign="left" content="Featured Leagues" />
       <List
-        sx={{ columns: { xs: 2, md: 3, lg: 4 }, pb: 1 }}
+        sx={{ columns: { xs: 2, md: 3, lg: 4 }, py: 1 }}
         dense={true}
         disablePadding={true}
       >
