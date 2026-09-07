@@ -2,7 +2,6 @@ import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableContainer from "@mui/material/TableContainer";
 import HeaderSection from "../../common/Table/headerSection";
-import SelectSeason from "../../common/Selects/selectSeason";
 import HeaderPosition from "../../common/Table/headerPosition";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
@@ -13,14 +12,21 @@ import { Fragment } from "react";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import LinkRoute from "../../common/LinkRoute";
+import Selects from "./selects";
+import { tournaments } from "./tournaments";
+import { useSearchParams } from "react-router-dom";
 
 interface Props {
-  tabHeader: string;
+  nation: string;
+  title: string;
   players: TPlayerStatDetail[];
-  goalies: boolean;
 }
 
-const StatsTab = ({ tabHeader, players, goalies }: Props) => {
+const StatsTab = ({ nation, title, players }: Props) => {
+  const [searchParams] = useSearchParams();
+  const tournamentId = Number(searchParams.get("tournament")) || 0;
+  const tournamentName =
+    tournaments.find((t) => t.id === tournamentId)?.name ?? "Europe";
   const leagues = [
     ...new Map(
       players.map((item) => [
@@ -33,11 +39,11 @@ const StatsTab = ({ tabHeader, players, goalies }: Props) => {
   return (
     <>
       <SectionChapter
-        content={`${goalies ? "Goalies" : "Skaters"} in ${tabHeader}`}
+        content={`${nation} ${title} in ${tournamentName}`}
         txtAlign="left"
       />
       <Box m={2}>
-        <SelectSeason />
+        <Selects />
       </Box>
       <TableContainer component={Paper}>
         <Table size="small">
@@ -53,17 +59,13 @@ const StatsTab = ({ tabHeader, players, goalies }: Props) => {
               { text: "Postseason", width: "15%" },
             ]}
           />
+
           {leagues
             .toSorted((a, b) => a.short_name.localeCompare(b.short_name))
             .map((league) => {
               const leaguePlayers = players.filter(
-                (player) =>
-                  player.league_id === league.league_id &&
-                  (goalies
-                    ? player.player_order === 1
-                    : player.player_order !== 1),
+                (player) => player.league_id === league.league_id,
               );
-
               if (leaguePlayers.length === 0) {
                 return null;
               }

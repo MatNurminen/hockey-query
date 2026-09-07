@@ -7,62 +7,83 @@ import {
   type MultipleStatsConfig,
 } from "../../../api/players-stats/hooks";
 import type { PlayersStatsDetailParams } from "../../../api/players-stats/types";
+import { tournaments } from "./tournaments";
+import { useSearchParams } from "react-router-dom";
 
 interface Props {
-  goalies: boolean;
+  nation: string;
   nationId: number;
   seasonId: number;
   enabled: boolean;
 }
 
 const items: { id: number; title: string }[] = [
-  { id: 0, title: "Europe" },
-  { id: 1, title: "North America" },
-  { id: 2, title: "International" },
+  { id: 0, title: "Forwards" },
+  { id: 1, title: "Defensemen" },
+  { id: 2, title: "Goaltenders" },
 ];
 
-const northAmericaLeagues = [14, 15];
-
-const Stats = ({ goalies, nationId, seasonId, enabled }: Props) => {
+const Stats = ({ nation, nationId, seasonId, enabled }: Props) => {
   const [value, setValue] = useState(0);
+  const [searchParams] = useSearchParams();
+  const tournamentId = Number(searchParams.get("tournament")) || 0;
+  const typeId = tournaments.find((t) => t.id === tournamentId)?.typeId;
+  const northAmericaLeagues = tournaments.find(
+    (t) => t.id === tournamentId,
+  )?.northAmericaLeagues;
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  const configs = useMemo<MultipleStatsConfig<PlayersStatsDetailParams>[]>(
-    () => [
+  const configs = useMemo<
+    MultipleStatsConfig<PlayersStatsDetailParams>[]
+  >(() => {
+    let leagueFilter: Partial<
+      Pick<PlayersStatsDetailParams, "leagueId" | "excludeLeagueId">
+    > = {};
+    if (tournamentId === 0) {
+      leagueFilter = { excludeLeagueId: northAmericaLeagues ?? [] };
+    } else if (tournamentId === 1) {
+      leagueFilter = { leagueId: northAmericaLeagues ?? [] };
+    }
+
+    return [
       {
         id: 1,
-        name: "europe",
+        name: "forwards",
         params: {
           nationId,
           seasonId,
-          excludeLeagueId: northAmericaLeagues,
-          typeId: 1,
+          ...leagueFilter,
+          playerOrd: [3],
+          typeId,
         },
       },
       {
         id: 2,
-        name: "america",
+        name: "defensemen",
         params: {
           nationId,
           seasonId,
-          leagueId: northAmericaLeagues,
+          ...leagueFilter,
+          playerOrd: [2],
+          typeId,
         },
       },
       {
         id: 3,
-        name: "international",
+        name: "goaltenders",
         params: {
           nationId,
           seasonId,
-          typeId: 2,
+          ...leagueFilter,
+          playerOrd: [1],
+          typeId,
         },
       },
-    ],
-    [nationId, seasonId],
-  );
+    ];
+  }, [nationId, seasonId, typeId, tournamentId, northAmericaLeagues]);
 
   const { data: player } = useMultiplePlayersStatsDetail(configs, enabled);
 
@@ -81,8 +102,8 @@ const Stats = ({ goalies, nationId, seasonId, enabled }: Props) => {
       {items.map((item) => (
         <div key={item.id} hidden={value !== item.id}>
           <StatsTab
-            goalies={goalies}
-            tabHeader={item.title}
+            nation={nation}
+            title={item.title}
             players={player[item.id].list}
           />
         </div>

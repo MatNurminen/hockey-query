@@ -6,7 +6,7 @@ const StyledTabs = styled(Tabs)`
     color: #ffffff;
     background-color: #9db1bb;
     text-transform: uppercase;
-    margin-right: 6px;
+    margin-right: 1px;
     &:hover {
       background-color: #093f56;
       opacity: 1;
@@ -21,6 +21,11 @@ const StyledTabs = styled(Tabs)`
   }
   && .MuiTab-root:last-of-type {
     margin-right: 0;
+  }
+  ${({ theme }) => theme.breakpoints.up("sm")} {
+    && .MuiTab-root {
+      margin-right: 6px;
+    }
   }
 `;
 
