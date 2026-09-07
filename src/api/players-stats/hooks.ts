@@ -18,6 +18,7 @@ export type MultipleStatsConfig<T> = {
 
 export function useMultiplePlayersStatsDetail(
   configs: MultipleStatsConfig<PlayersStatsDetailParams>[],
+  enabled = true,
 ) {
   const showError = useShowSnackbar();
 
@@ -31,7 +32,7 @@ export function useMultiplePlayersStatsDetail(
         ["playersStatsDetail", config.params],
         url,
         undefined,
-        { placeholderData: keepPreviousData },
+        { placeholderData: keepPreviousData, enabled },
         showError,
       );
     }),
@@ -57,6 +58,7 @@ export function useMultiplePlayersStatsDetail(
 
 export function useMultiplePlayersStatsTotal(
   configs: MultipleStatsConfig<PlayersStatsTotalParams>[],
+  enabled = true,
 ) {
   const showError = useShowSnackbar();
 
@@ -70,7 +72,7 @@ export function useMultiplePlayersStatsTotal(
         ["playersStatsTotal", config.params],
         url,
         undefined,
-        { placeholderData: keepPreviousData },
+        { placeholderData: keepPreviousData, enabled },
         showError,
       );
     }),
