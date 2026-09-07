@@ -3,26 +3,42 @@ import Grid from "@mui/material/Grid2";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import CardMedia from "@mui/material/CardMedia";
-import { memo } from "react";
 
 const NotFound = () => {
   return (
-    <Box sx={{ padding: 4, backgroundColor: "#063950" }}>
+    <Box
+      sx={(theme) => ({
+        padding: 4,
+        backgroundColor: theme.palette.extra.menuBG,
+      })}
+    >
       <Container>
-        <Grid container justifyContent="center" alignItems="center">
-          <Grid size={4}>
-            <Typography sx={{ color: "#fff" }} variant="h1" fontWeight="bold">
+        <Grid container spacing={4} justifyContent="center" alignItems="center">
+          <Grid size={{ xs: 12, md: 6 }}>
+            <CardMedia
+              sx={{ height: { xs: 200, md: 300 } }}
+              image="/img/puck_spinning.gif"
+            />
+          </Grid>
+          <Grid
+            size={{ xs: 12, md: 6 }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+          >
+            <Typography color="common.white" variant="h1" fontWeight="bold">
               404
             </Typography>
-            <Typography sx={{ color: "#fff" }} variant="h4">
+            <Typography color="common.white" variant="h4">
               Not found
             </Typography>
-            <Typography sx={{ color: "#fff" }}>
+            <Typography color="common.white">
               The link is broken or the page has been moved.
             </Typography>
-          </Grid>
-          <Grid size={7}>
-            <CardMedia sx={{ height: 300 }} image="/img/puck_spinning.gif" />
           </Grid>
         </Grid>
       </Container>
@@ -30,4 +46,4 @@ const NotFound = () => {
   );
 };
 
-export default memo(NotFound);
+export default NotFound;
