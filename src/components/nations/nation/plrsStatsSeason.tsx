@@ -108,7 +108,7 @@ const PlrsStatsSeason = ({ nationId, natName }: Props) => {
                           <TableFlag alt="" src={player.team_flag} />
                           <LinkRoute
                             underline="hover"
-                            to={`/teams/${player.team_id}`}
+                            to={`/teams/${player.team_id}?season=${seasonId}`}
                             ml={1}
                           >
                             {player.full_name}
@@ -118,7 +118,7 @@ const PlrsStatsSeason = ({ nationId, natName }: Props) => {
                       <TableCell>
                         <LinkRoute
                           underline="hover"
-                          to={`/leagues/${player.league_id}`}
+                          to={`/leagues/${player.league_id}?season=${seasonId}`}
                           ml={1}
                         >
                           {player.short_name}
