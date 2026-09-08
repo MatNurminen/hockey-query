@@ -6,12 +6,12 @@ import { memo } from "react";
 
 const Selects = () => {
   return (
-    <Box sx={{ flexGrow: 1, py: 3, pl: 2 }}>
+    <Box sx={{ py: 3, px: 2 }}>
       <Grid container spacing={4}>
-        <Grid size={{ xs: 5 }}>
+        <Grid size={{ xs: 5, md: 2 }}>
           <SelectSeason />
         </Grid>
-        <Grid size={{ xs: 3 }}>
+        <Grid size={{ xs: 7, md: 4 }}>
           <SelectNation />
         </Grid>
       </Grid>

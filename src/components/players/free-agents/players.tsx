@@ -4,13 +4,13 @@ import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import HeaderSection from "../../common/Table/headerSection";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
 import TableFlag from "../../common/Images/tableFlag";
 import { getFreeAgents } from "../../../api/players/queries";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import { TFreeAgentDto } from "../../../api/players/types";
 import Paper from "@mui/material/Paper";
+import LinkRoute from "../../common/LinkRoute";
+import { memo } from "react";
 
 interface Props {
   seasonId: number;
@@ -35,7 +35,7 @@ const Players = ({ seasonId, nationId }: Props) => {
         <Table size="small">
           <HeaderSection
             cells={[
-              { align: "center", text: "Position" },
+              { align: "center", text: "Pos" },
               { align: "center", text: "#" },
               { text: "Name" },
               { align: "center", text: "Nat" },
@@ -50,14 +50,13 @@ const Players = ({ seasonId, nationId }: Props) => {
               <TableRow key={player.id}>
                 <TableCell align="center">{player.player_position}</TableCell>
                 <TableCell align="center">{player.jersey_number}</TableCell>
-                <TableCell>
-                  <Link
+                <TableCell sx={{ minWidth: 160 }}>
+                  <LinkRoute
                     underline="hover"
-                    component={RouterLink}
                     to={`/players/${player.id}`}
                   >
                     {player.first_name} {player.last_name}
-                  </Link>
+                  </LinkRoute>
                 </TableCell>
                 <TableCell align="center">
                   <TableFlag alt="flag" src={player.flag} />
@@ -77,4 +76,4 @@ const Players = ({ seasonId, nationId }: Props) => {
   );
 };
 
-export default Players;
+export default memo(Players);
