@@ -1,7 +1,6 @@
 import Container from "@mui/material/Container";
 import { useSearchParams, useParams } from "react-router-dom";
 import Header from "./header";
-import SectionExternalLinks from "../../common/Sections/sectionExternalLinks";
 import SelectSeason from "../../common/Selects/selectSeason";
 import Roster from "./roster";
 import History from "./history";
@@ -32,9 +31,6 @@ const Team = () => {
     <Container sx={{ py: 1, mt: 2, mb: 10 }}>
       <Paper sx={{ px: 2, pb: 1 }}>
         <Header team={team} />
-      </Paper>
-      <Paper sx={{ mt: 2, py: 1 }}>
-        <SectionExternalLinks title={title} />
       </Paper>
       <Paper sx={{ mt: 2, p: 2 }}>
         <SelectSeason />

@@ -31,70 +31,75 @@ const Header = ({ team }: Props) => {
     setOpen(false);
   };
 
+  const facts = [
+    { label: "Country", value: team.nation.name },
+    { label: "Founded", value: team.start_year },
+  ];
+
   return (
     <>
       <Grid container spacing={1}>
-        <Grid size={{ sm: 12, md: 6 }} mt={3}>
+        <Grid size={{ sm: 12, md: 6 }}>
           <Grid
             container
+            spacing={{ md: 8 }}
             direction="row"
             justifyContent="flex-start"
             alignItems="center"
-            mt={-2}
+            mt={{ xs: 2, md: 0 }}
+            my={{ md: 2 }}
           >
-            <Grid size={2}>
-              <img alt="" width={60} src={team.nation.flag} />
+            <Grid size={{ xs: 12, sm: 2 }}>
+              <MainLogo alt="" src={team.nation.flag} />
             </Grid>
-            <Grid size={10}>
+            <Grid size={{ xs: 12, sm: 9 }}>
               <SectionHeader txtAlign="left" content={team.full_name} />
             </Grid>
           </Grid>
+          <Grid size={{ xs: 12 }}>
+            <Stack
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="center"
+              spacing={5}
+            >
+              {team.logos
+                .toSorted((a, b) => a.start_year - b.start_year)
+                .map((logo) => (
+                  <Box key={logo.id} textAlign="center">
+                    <MainLogo src={logo.logo} alt="" />
+                    <Typography variant="body1" gutterBottom>
+                      {logo.start_year} - {logo.end_year}
+                    </Typography>
+                  </Box>
+                ))}
+            </Stack>
+          </Grid>
         </Grid>
-        <Grid my={3} size={{ sm: 12, md: 6 }}>
-          <SectionChapter txtAlign={"right"} content={"Team Facts"} />
+        <Grid my={3} size={{ xs: 12, md: 6 }}>
+          <SectionChapter content="Team Facts" />
           <TableContainer component={Paper}>
             <Table size="small">
               <TableBody>
-                <TableRow>
-                  <TableCell>
-                    <Box>Country</Box>
-                  </TableCell>
-                  <TableCell>
-                    <Box>{team.nation.name}</Box>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <Box>Founded</Box>
-                  </TableCell>
-                  <TableCell>
-                    <Box>{team.start_year}</Box>
-                  </TableCell>
-                </TableRow>
+                {facts.map((fact) => (
+                  <TableRow key={fact.label}>
+                    <TableCell>{fact.label}</TableCell>
+                    <TableCell>{fact.value}</TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
         </Grid>
-        <Grid size={{ xs: 12 }}>
-          <Stack
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="center"
-            spacing={5}
-          >
-            {team?.logos
-              .toSorted((a, b) => a.start_year - b.start_year)
-              .map((logo) => (
-                <Box key={logo.id} textAlign="center">
-                  <MainLogo src={logo.logo} alt="" />
-                  <Typography variant="body1" gutterBottom>
-                    {logo.start_year} - {logo.end_year}
-                  </Typography>
-                </Box>
-              ))}
-          </Stack>
-        </Grid>
-        <Grid textAlign="right" size={{ xs: 12 }} sx={{ mb: 1 }}>
+        <Grid
+          textAlign="right"
+          size={{ xs: 12 }}
+          sx={{
+            mb: 1,
+            display: { xs: "none", md: "flex" },
+            justifyContent: "flex-end",
+          }}
+        >
           <AppButton
             text="Edit Team"
             onClick={handleOpen}
@@ -103,8 +108,8 @@ const Header = ({ team }: Props) => {
             color="success"
           />
         </Grid>
+        <UpdateTeam teamId={team.id} open={open} onClose={handleClose} />
       </Grid>
-      <UpdateTeam teamId={team.id} open={open} onClose={handleClose} />
     </>
   );
 };
