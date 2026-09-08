@@ -11,7 +11,6 @@ import PlayersStatsPerSeason from "./playersStatsPerSeason";
 import NatsTotal from "./natsTotal";
 import NationsTeamChart from "./nationsTeamChart";
 import { useLatestSeason } from "../../../hooks/useLatestSeason";
-import { getPlayersStatsDetail } from "../../../api/players-stats/queries";
 
 const Team = () => {
   const params = useParams();
@@ -21,18 +20,11 @@ const Team = () => {
   const seasonId = Number(searchParams.get("season") || startYear);
 
   const { data: team, isError, isLoading } = getTeam(teamId);
-  const { data } = getPlayersStatsDetail({
-    teamId,
-    seasonId,
-    typeId: 1,
-  });
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
   if (!team) return <h3>No data available</h3>;
-  if (!data) return <h3>No data available</h3>;
 
-  const players = data.data;
   const title: string = team.full_name;
 
   return (
@@ -44,7 +36,7 @@ const Team = () => {
         <SelectSeason />
       </Paper>
       <Paper sx={{ mt: 2 }}>
-        <Roster seasonId={seasonId} title={title} players={players} />
+        <Roster teamId={teamId} seasonId={seasonId} title={title} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
         <NationsTeamChart

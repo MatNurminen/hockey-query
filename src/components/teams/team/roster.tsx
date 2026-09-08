@@ -16,12 +16,23 @@ import { TPlayerStatDetail } from "../../../api/players-stats/types";
 import { Fragment, memo } from "react";
 
 interface Props {
+  teamId: number;
   seasonId: number;
   title: string;
-  players: TPlayerStatDetail[];
 }
 
-const Roster = ({ seasonId, title, players }: Props) => {
+const Roster = ({ teamId, seasonId, title }: Props) => {
+  const { data, isLoading, isError } = getPlayersStatsDetail({
+    teamId,
+    seasonId,
+    typeId: 1,
+  });
+
+  const players = data?.data;
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error</p>;
+  if (!players) return <div>No data available</div>;
+
   const pos = ["GOALTENDERS", "DEFENSEMEN", "FORWARDS"];
 
   const players_by_pos = (_player: TPlayerStatDetail[], pos: number) => {
@@ -33,7 +44,7 @@ const Roster = ({ seasonId, title, players }: Props) => {
   const forwards = players_by_pos(players, 3);
 
   const calcAverage = (players: TPlayerStatDetail[]) => {
-    const totalPlayers = players.length || 1;
+    const totalPlayers = players.length;
     const totalAge = players.reduce(
       (sum, player) => sum + (player.season_id - player.birth_year),
       0,
@@ -95,9 +106,7 @@ const Roster = ({ seasonId, title, players }: Props) => {
                     </TableCell>
                     <TableCell align="center">{player.games}</TableCell>
                     <TableCell align="center">{player.goals}</TableCell>
-                    <TableCell sx={{ minWidth: 160 }}>
-                      {player.postseason}
-                    </TableCell>
+                    <TableCell sx={{ minWidth: 160 }}>{player.postseason}</TableCell>
                     <TableCell align="center">
                       {player.season_id - player.birth_year}
                     </TableCell>
