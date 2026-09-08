@@ -4,13 +4,13 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
-//import HeaderMain from "../../common/Table/headerMain";
 import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
 import { TPlayerDto } from "../../../api/players/types";
 import SectionChapter from "../../common/Sections/sectionChapter";
+import Paper from "@mui/material/Paper";
 
 const Facts = ({ player }: { player: TPlayerDto }) => {
   const items = useMemo(() => {
@@ -46,7 +46,7 @@ const Facts = ({ player }: { player: TPlayerDto }) => {
         txtAlign={"left"}
         content={`${player.first_name} ${player.last_name} Facts`}
       />
-      <TableContainer>
+      <TableContainer component={Paper}>
         <Table size="small">
           <TableBody>
             {items.map((item) => (

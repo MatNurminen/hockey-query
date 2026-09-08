@@ -11,11 +11,10 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid2";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import { memo } from "react";
+import LinkRoute from "../../common/LinkRoute";
 
 interface Props {
   playerName: string;
@@ -82,17 +81,16 @@ const StatsTotal = ({ playerName, playerId }: Props) => {
                 ]}
               />
               <TableBody>
-                {item.data.map((stat: StatDisplay) => (
-                  <TableRow key={stat.league_id || stat.team_id}>
-                    <TableCell>
+                {item.data.map((stat: StatDisplay, key) => (
+                  <TableRow key={stat.league_id || stat.team_id || key}>
+                    <TableCell sx={{ minWidth: 180 }}>
                       <Box display="flex" alignItems="center">
                         <TableFlag
                           alt="flag"
                           src={stat.logo || stat.flag || ""}
                         />
-                        <Link
+                        <LinkRoute
                           underline="hover"
-                          component={RouterLink}
                           to={
                             stat.league_id
                               ? `/leagues/${stat.league_id}`
@@ -101,7 +99,7 @@ const StatsTotal = ({ playerName, playerId }: Props) => {
                           ml={1}
                         >
                           {stat.short_name || stat.full_name}
-                        </Link>
+                        </LinkRoute>
                       </Box>
                     </TableCell>
                     <TableCell align="center">{stat.years}</TableCell>

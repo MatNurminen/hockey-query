@@ -2,12 +2,10 @@ import Tab from "@mui/material/Tab";
 import StyledTabs from "../../common/Tabs/styledTabs";
 import { memo, useState } from "react";
 import StatsTab from "./statsTab";
-import { TPlayerStatDetail } from "../../../api/players-stats/types";
 
 interface Props {
   playerName: string;
   playerId: number;
-  setLastTeam: React.Dispatch<React.SetStateAction<TPlayerStatDetail | null>>;
 }
 
 interface Items {
@@ -22,7 +20,7 @@ const items: Items[] = [
   { id: 2, title: "Tournaments", typeId: 3 },
 ];
 
-const Stats = ({ playerName, playerId, setLastTeam }: Props) => {
+const Stats = ({ playerName, playerId }: Props) => {
   const [value, setValue] = useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -48,7 +46,6 @@ const Stats = ({ playerName, playerId, setLastTeam }: Props) => {
               playerName={playerName}
               playerId={playerId}
               typeId={item.typeId}
-              setLastTeam={setLastTeam}
             />
           )}
         </div>
