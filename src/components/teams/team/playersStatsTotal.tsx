@@ -6,8 +6,6 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid2";
 import AppButton from "../../common/Buttons/appButton";
 import TableFlag from "../../common/Images/tableFlag";
@@ -15,6 +13,7 @@ import { getPlayersStatsTotal } from "../../../api/players-stats/queries";
 import { TPlayerStatTotal } from "../../../api/players-stats/types";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import { memo } from "react";
+import LinkRoute from "../../common/LinkRoute";
 
 interface Props {
   teamId: number;
@@ -29,24 +28,24 @@ const PlayersStatsTotal = ({ teamId }: Props) => {
   if (isError) return <p>Error</p>;
   if (!players) return <div>No data available</div>;
 
-  const goalkeepers = (players: TPlayerStatTotal[]) => {
+  const goaltendings = () => {
     return players
       .filter((f) => f.player_order === 1)
-      .toSorted((b, a) => a.goals_t - b.goals_t)
+      .toSorted((a, b) => b.goals_t - a.goals_t)
       .slice(0, 5);
   };
 
-  const defenders = (players: TPlayerStatTotal[]) => {
+  const defensemen = () => {
     return players
       .filter((f) => f.player_order === 2)
-      .toSorted((b, a) => a.goals_t - b.goals_t)
+      .toSorted((a, b) => b.goals_t - a.goals_t)
       .slice(0, 5);
   };
 
-  const forwards = (players: TPlayerStatTotal[]) => {
+  const forwards = () => {
     return players
       .filter((f) => f.player_order === 3)
-      .toSorted((b, a) => a.goals_t - b.goals_t)
+      .toSorted((a, b) => b.goals_t - a.goals_t)
       .slice(0, 5);
   };
 
@@ -56,18 +55,15 @@ const PlayersStatsTotal = ({ teamId }: Props) => {
     name: string;
   }[] = [
     { sort: 3, list: forwards, name: "forwards" },
-    { sort: 2, list: defenders, name: "defensemen" },
-    { sort: 1, list: goalkeepers, name: "goaltending" },
+    { sort: 2, list: defensemen, name: "defensemen" },
+    { sort: 1, list: goaltendings, name: "goaltendings" },
   ];
 
   return (
     <Grid container direction="row" justifyContent="center" spacing={2}>
       {items.map((item) => (
-        <Grid size={{ sm: 12, md: 4 }} key={item.name}>
-          <SectionChapter
-            txtAlign={"left"}
-            content={`Franchise all-time ${item.name} Stats`}
-          />
+        <Grid size={{ xs: 12, md: 4 }} key={item.name}>
+          <SectionChapter content={`Franchise all-time ${item.name} Stats`} />
           <TableContainer component={Paper}>
             <Table size="small">
               <HeaderSection
@@ -79,21 +75,20 @@ const PlayersStatsTotal = ({ teamId }: Props) => {
                 ]}
               />
               <TableBody>
-                {item.list(players).map((player: TPlayerStatTotal, key: number) => (
-                  <TableRow key={key}>
-                    <TableCell align="center">{key + 1}</TableCell>
+                {item.list(players).map((player, index) => (
+                  <TableRow key={player.player_id}>
+                    <TableCell align="center">{index + 1}</TableCell>
                     <TableCell>
                       <Box display="flex" alignItems="center">
                         <TableFlag src={player.player_flag} alt="" />
-                        <Link
+                        <LinkRoute
                           underline="hover"
-                          component={RouterLink}
                           to={`/players/${player.player_id}`}
                           ml={1}
                         >
                           {player.first_name} {player.last_name} (
                           {player.player_position})
-                        </Link>
+                        </LinkRoute>
                       </Box>
                     </TableCell>
                     <TableCell align="center">{player.games_t}</TableCell>
@@ -103,7 +98,12 @@ const PlayersStatsTotal = ({ teamId }: Props) => {
               </TableBody>
             </Table>
           </TableContainer>
-          <AppButton fullWidth={true} text="Show More" color="success" />
+          <AppButton
+            fullWidth={true}
+            text="Show More"
+            color="success"
+            //to={`/league-stats?league=${leagueId}&season=${seasonId}&playerOrd=${item.id}&tab=three`}
+          />
         </Grid>
       ))}
     </Grid>

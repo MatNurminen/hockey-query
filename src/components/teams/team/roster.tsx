@@ -16,23 +16,12 @@ import { TPlayerStatDetail } from "../../../api/players-stats/types";
 import { Fragment, memo } from "react";
 
 interface Props {
-  teamId: number;
   seasonId: number;
   title: string;
+  players: TPlayerStatDetail[];
 }
 
-const Roster = ({ teamId, seasonId, title }: Props) => {
-  const { data, isLoading, isError } = getPlayersStatsDetail({
-    teamId,
-    seasonId,
-    typeId: 1,
-  });
-
-  const players = data?.data;
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Error</p>;
-  if (!players) return <div>No data available</div>;
-
+const Roster = ({ seasonId, title, players }: Props) => {
   const pos = ["GOALTENDERS", "DEFENSEMEN", "FORWARDS"];
 
   const players_by_pos = (_player: TPlayerStatDetail[], pos: number) => {
