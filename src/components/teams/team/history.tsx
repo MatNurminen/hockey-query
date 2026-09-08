@@ -5,11 +5,7 @@ import HeaderSection from "../../common/Table/headerSection";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import {
-  useMultipleStandings,
-  StandingsResult,
-} from "../../../api/teams-stats/hooks";
-import { TStandings } from "../../../api/teams-stats/types";
+import { useMultipleStandings } from "../../../api/teams-stats/hooks";
 import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
 import SectionChapter from "../../common/Sections/sectionChapter";
@@ -46,38 +42,33 @@ const History = ({ title, teamId }: Props) => {
 
   return (
     <Grid container spacing={2}>
-      {leagues.map((league: StandingsResult) => (
-        <Grid size={{ sm: 12 }} key={league.id}>
-          <SectionChapter
-            txtAlign={"left"}
-            content={`${title} ${league.name}`}
-          />
+      {leagues.map((league) => (
+        <Grid size={12} key={league.id}>
+          <SectionChapter content={`${title} ${league.name}`} />
           <TableContainer component={Paper}>
             <Table size="small">
               <HeaderSection
                 cells={[
-                  { text: "Season", width: "6%" },
-                  { text: "League", width: "24%" },
-                  { align: "center", text: "gp", width: "5%" },
-                  { align: "center", text: "w", width: "5%" },
-                  { align: "center", text: "t", width: "5%" },
-                  { align: "center", text: "l", width: "5%" },
-                  { align: "center", text: "gf", width: "5%" },
-                  { align: "center", text: "ga", width: "5%" },
-                  { align: "center", text: "+/-", width: "5%" },
-                  { align: "center", text: "pts", width: "5%" },
-                  { text: "Postseason", width: "30%" },
+                  { text: "Season" },
+                  { text: "League" },
+                  { align: "center", text: "gp" },
+                  { align: "center", text: "w" },
+                  { align: "center", text: "t" },
+                  { align: "center", text: "l" },
+                  { align: "center", text: "gf" },
+                  { align: "center", text: "ga" },
+                  { align: "center", text: "+/-" },
+                  { align: "center", text: "pts" },
+                  { text: "Postseason" },
                 ]}
               />
               <TableBody>
                 {league.list
-                  .toSorted(
-                    (a: TStandings, b: TStandings) => b.season_id - a.season_id,
-                  )
-                  .map((team: TStandings) => (
+                  .toSorted((a, b) => b.season_id - a.season_id)
+                  .map((team) => (
                     <TableRow key={team.id}>
                       <TableCell>{team.season}</TableCell>
-                      <TableCell>{team.name}</TableCell>
+                      <TableCell sx={{ minWidth: 160 }}>{team.name}</TableCell>
                       <TableCell align="center">{team.games}</TableCell>
                       <TableCell align="center">{team.wins}</TableCell>
                       <TableCell align="center">{team.ties}</TableCell>
@@ -86,7 +77,9 @@ const History = ({ title, teamId }: Props) => {
                       <TableCell align="center">{team.goals_against}</TableCell>
                       <TableCell align="center">{team.gd}</TableCell>
                       <TableCell align="center">{team.pts}</TableCell>
-                      {/* <TableCell>{team.postseason?.title}</TableCell> */}
+                      <TableCell sx={{ minWidth: 160 }}>
+                        {team.postseason?.title}
+                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>
