@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
-import { Fragment, memo } from "react";
+import { memo } from "react";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import LinkRoute from "../../common/LinkRoute";
@@ -71,12 +71,13 @@ const StatsTab = ({ nation, title, players }: Props) => {
               }
 
               return (
-                <Fragment key={league.league_id}>
+                <TableBody key={league.league_id}>
                   <HeaderPosition
-                    cells={[league.short_name, "", "", "", "", "", "", ""]}
+                    row
+                    cells={[league.short_name]}
+                    colSpan={8}
                   />
-                  <TableBody>
-                    {leaguePlayers.map((player) => (
+                  {leaguePlayers.map((player) => (
                       <TableRow key={player.id}>
                         <TableCell sx={{ minWidth: 160 }}>
                           <LinkRoute
@@ -111,8 +112,7 @@ const StatsTab = ({ nation, title, players }: Props) => {
                         </TableCell>
                       </TableRow>
                     ))}
-                  </TableBody>
-                </Fragment>
+                </TableBody>
               );
             })}
         </Table>

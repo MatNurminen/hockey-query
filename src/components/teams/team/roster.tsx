@@ -13,7 +13,7 @@ import FooterSection from "../../common/Table/footerSection";
 import { formatSeason } from "../../utils/formatSeason";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
-import { memo } from "react";
+import { Fragment, memo } from "react";
 
 interface Props {
   teamId: number;
@@ -44,7 +44,7 @@ const Roster = ({ teamId, seasonId, title }: Props) => {
   const forwards = players_by_pos(players, 3);
 
   const calcAverage = (players: TPlayerStatDetail[]) => {
-    const totalPlayers = players.length;
+    const totalPlayers = players.length || 1;
     const totalAge = players.reduce(
       (sum, player) => sum + (player.season_id - player.birth_year),
       0,
@@ -67,43 +67,34 @@ const Roster = ({ teamId, seasonId, title }: Props) => {
 
   return (
     <>
-      <SectionChapter
-        txtAlign={"center"}
-        content={`${formatSeason(seasonId)} ${title} Roster`}
-      />
+      <SectionChapter content={`${formatSeason(seasonId)} ${title} Roster`} />
       <TableContainer>
         <Table size="small">
           <HeaderSection
             cells={[
-              { align: "center", text: "#", width: "8%" },
-              { align: "center", text: "N", width: "8%" },
-              { text: "player", width: "20%" },
-              { align: "center", text: "gp", width: "8%" },
-              { align: "center", text: "g", width: "8%" },
-              { text: "Postseason", width: "16%" },
-              { align: "center", text: "a", width: "8%" },
-              { align: "center", text: "born", width: "8%" },
-              { align: "center", text: "ht", width: "8%" },
-              { align: "center", text: "wt", width: "8%" },
+              { align: "center", text: "#" },
+              { align: "center", text: "N" },
+              { text: "player" },
+              { align: "center", text: "gp" },
+              { align: "center", text: "g" },
+              { text: "Postseason" },
+              { align: "center", text: "a" },
+              { align: "center", text: "born" },
+              { align: "center", text: "ht" },
+              { align: "center", text: "wt" },
             ]}
           />
-        </Table>
-        {pos.map((p, p_key) => (
-          <TableContainer key={p_key}>
-            <Table size="small">
-              <HeaderPosition cells={[`${p}`]} />
-            </Table>
-            <Table size="small">
-              <TableBody>
+          <TableBody>
+            {pos.map((p, p_key) => (
+              <Fragment key={p}>
+                <HeaderPosition row cells={[p]} colSpan={10} />
                 {players_by_pos(players, p_key + 1).map((player) => (
                   <TableRow key={player.id}>
-                    <TableCell align="center" width={"8%"}>
-                      {player.jersey_number}
-                    </TableCell>
-                    <TableCell align="center" width={"8%"}>
+                    <TableCell align="center">{player.jersey_number}</TableCell>
+                    <TableCell align="center">
                       <TableFlag src={player.player_flag} alt="" />
                     </TableCell>
-                    <TableCell width={"20%"}>
+                    <TableCell sx={{ minWidth: 160 }}>
                       <Link
                         underline="hover"
                         component={RouterLink}
@@ -113,36 +104,27 @@ const Roster = ({ teamId, seasonId, title }: Props) => {
                         {player.player_position})
                       </Link>
                     </TableCell>
-                    <TableCell align="center" width={"8%"}>
-                      {player.games}
+                    <TableCell align="center">{player.games}</TableCell>
+                    <TableCell align="center">{player.goals}</TableCell>
+                    <TableCell sx={{ minWidth: 160 }}>
+                      {player.postseason}
                     </TableCell>
-                    <TableCell align="center" width={"8%"}>
-                      {player.goals}
-                    </TableCell>
-                    <TableCell width={"16%"}>{player.postseason}</TableCell>
-                    <TableCell align="center" width={"8%"}>
+                    <TableCell align="center">
                       {player.season_id - player.birth_year}
                     </TableCell>
-                    <TableCell align="center" width={"8%"}>
-                      {player.birth_year}
-                    </TableCell>
-                    <TableCell align="center" width={"8%"}>
-                      {player.height}
-                    </TableCell>
-                    <TableCell align="center" width={"8%"}>
-                      {player.weight}
-                    </TableCell>
+                    <TableCell align="center">{player.birth_year}</TableCell>
+                    <TableCell align="center">{player.height}</TableCell>
+                    <TableCell align="center">{player.weight}</TableCell>
                   </TableRow>
                 ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        ))}
-        <Table size="small">
+              </Fragment>
+            ))}
+          </TableBody>
           <FooterSection
             cells={[
               {
                 align: "center",
+                colSpan: 10,
                 text: `Position: G: ${goaltenders.length}, D: ${
                   defensemen.length
                 }, F: ${forwards.length} | 
