@@ -9,7 +9,7 @@ import TableFlag from "../common/Images/tableFlag";
 import ClubHeader from "./clubHeader";
 import { TStandings } from "../../api/teams-stats/types";
 import { TPlayerStatDetail } from "../../api/players-stats/types";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { Cell } from "../common/Table/types";
 import LinkRoute from "../common/LinkRoute";
 
@@ -96,4 +96,4 @@ const Players = ({ players, teams }: Props) => {
   );
 };
 
-export default Players;
+export default memo(Players);
