@@ -8,7 +8,7 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
-import { Fragment } from "react";
+import { Fragment, memo } from "react";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import LinkRoute from "../../common/LinkRoute";
@@ -121,4 +121,4 @@ const StatsTab = ({ nation, title, players }: Props) => {
   );
 };
 
-export default StatsTab;
+export default memo(StatsTab);

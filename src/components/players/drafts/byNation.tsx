@@ -4,10 +4,9 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import TableFlag from "../../common/Images/tableFlag";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
 import { getDraftNations } from "../../../api/players/queries";
 import { memo } from "react";
+import LinkRoute from "../../common/LinkRoute";
 
 const ByNation = () => {
   const { data: drafts, isError, isLoading } = getDraftNations();
@@ -19,7 +18,7 @@ const ByNation = () => {
   return (
     <>
       <SectionChapter txtAlign="left" content="Draft selections by nation" />
-      <List sx={{ columns: { xs: 2, sm: 3, md: 4 } }} dense={true}>
+      <List sx={{ columns: { xs: 1, sm: 2, md: 4 } }} dense>
         {drafts.map((draft) => (
           <ListItem key={draft.id} sx={{ gap: 2 }}>
             <ListItemAvatar sx={{ minWidth: 0 }}>
@@ -27,13 +26,12 @@ const ByNation = () => {
             </ListItemAvatar>
             <ListItemText
               primary={
-                <Link
+                <LinkRoute
                   underline="hover"
-                  component={RouterLink}
                   to={`/drafts/dets?nation=${draft.id}`}
                 >
                   {draft.name} {draft.plrs} plrs
-                </Link>
+                </LinkRoute>
               }
             />
           </ListItem>

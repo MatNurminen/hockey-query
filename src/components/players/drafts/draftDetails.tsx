@@ -7,8 +7,6 @@ import { useSearchParams } from "react-router-dom";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import SectionHeader from "../../common/Sections/sectionHeader";
 import HeaderSection from "../../common/Table/headerSection";
@@ -17,6 +15,7 @@ import TableFlag from "../../common/Images/tableFlag";
 import { TDraftDetail } from "../../../api/players/types";
 import SectionFirst from "../../common/Sections/sectionFirst";
 import SectionChapter from "../../common/Sections/sectionChapter";
+import LinkRoute from "../../common/LinkRoute";
 
 const DraftDetails = () => {
   const [searchParams] = useSearchParams();
@@ -62,17 +61,16 @@ const DraftDetails = () => {
             {players.map((player: TDraftDetail, index: number) => (
               <TableRow key={player.id}>
                 <TableCell align="center">{index + 1}</TableCell>
-                <TableCell>
+                <TableCell sx={{ minWidth: 180 }}>
                   <Box display="flex" alignItems="center">
                     <TableFlag src={player.flag} alt={player.name} />
-                    <Link
+                    <LinkRoute
                       underline="hover"
-                      component={RouterLink}
                       to={`/players/${player.id}`}
                       ml={1}
                     >
                       {`${player.first_name} ${player.last_name} (${player.player_position})`}
-                    </Link>
+                    </LinkRoute>
                   </Box>
                 </TableCell>
                 <TableCell align="center">

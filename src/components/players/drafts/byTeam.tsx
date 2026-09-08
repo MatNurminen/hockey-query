@@ -4,10 +4,9 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import TableFlag from "../../common/Images/tableFlag";
 import SectionChapter from "../../common/Sections/sectionChapter";
-import { Link as RouterLink } from "react-router-dom";
-import Link from "@mui/material/Link";
 import { getDraftTeams } from "../../../api/players/queries";
 import { memo } from "react";
+import LinkRoute from "../../common/LinkRoute";
 
 const ByTeam = () => {
   const { data: drafts, isError, isLoading } = getDraftTeams();
@@ -19,7 +18,7 @@ const ByTeam = () => {
   return (
     <>
       <SectionChapter txtAlign="left" content="Draft selections by team" />
-      <List sx={{ columns: { xs: 2, sm: 3 } }} dense={true}>
+      <List sx={{ columns: { xs: 1, sm: 2, md: 3 } }} dense>
         {drafts.map((draft) => (
           <ListItem key={draft.id}>
             <ListItemAvatar
@@ -33,13 +32,12 @@ const ByTeam = () => {
             </ListItemAvatar>
             <ListItemText
               primary={
-                <Link
+                <LinkRoute
                   underline="hover"
-                  component={RouterLink}
                   to={`/drafts/dets?team=${draft.id}`}
                 >
                   {draft.full_name} {draft.plrs} plrs
-                </Link>
+                </LinkRoute>
               }
             />
           </ListItem>
