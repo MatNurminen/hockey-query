@@ -5,41 +5,19 @@ import HeaderSection from "../../common/Table/headerSection";
 import TableBody from "@mui/material/TableBody";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
-import { useMultipleStandings } from "../../../api/teams-stats/hooks";
+import { StandingsResult } from "../../../api/teams-stats/hooks";
 import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
 import SectionChapter from "../../common/Sections/sectionChapter";
+import LinkRoute from "../../common/LinkRoute";
 
 interface Props {
   title: string;
   teamId: number;
+  leagues: StandingsResult[];
 }
 
-const History = ({ title, teamId }: Props) => {
-  const configs = [
-    {
-      id: 1,
-      name: "History and Standings",
-      params: {
-        teamId,
-        typeId: 1,
-      },
-    },
-    {
-      id: 2,
-      name: "Tournament Statistics",
-      params: {
-        teamId,
-        typeId: 3,
-      },
-    },
-  ];
-
-  const { data: leagues, isError, isLoading } = useMultipleStandings(configs);
-
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-
+const History = ({ title, teamId, leagues }: Props) => {
   return (
     <Grid container spacing={2}>
       {leagues.map((league) => (
@@ -67,8 +45,20 @@ const History = ({ title, teamId }: Props) => {
                   .toSorted((a, b) => b.season_id - a.season_id)
                   .map((team) => (
                     <TableRow key={team.id}>
-                      <TableCell>{team.season}</TableCell>
-                      <TableCell sx={{ minWidth: 160 }}>{team.name}</TableCell>
+                      <TableCell>
+                        <LinkRoute
+                          to={`/teams/${teamId}?season=${team.season_id}`}
+                        >
+                          {team.season}
+                        </LinkRoute>
+                      </TableCell>
+                      <TableCell sx={{ minWidth: 160 }}>
+                        <LinkRoute
+                          to={`/leagues/${team.league_id}?season=${team.season_id}`}
+                        >
+                          {team.name}
+                        </LinkRoute>
+                      </TableCell>
                       <TableCell align="center">{team.games}</TableCell>
                       <TableCell align="center">{team.wins}</TableCell>
                       <TableCell align="center">{team.ties}</TableCell>

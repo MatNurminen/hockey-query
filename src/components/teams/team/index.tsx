@@ -11,6 +11,9 @@ import PlayersStatsPerSeason from "./playersStatsPerSeason";
 import NatsTotal from "./natsTotal";
 import NationsTeamChart from "./nationsTeamChart";
 import { useLatestSeason } from "../../../hooks/useLatestSeason";
+import { useMemo } from "react";
+import { historySections } from "./configs";
+import { useMultipleStandings } from "../../../api/teams-stats/hooks";
 
 const Team = () => {
   const params = useParams();
@@ -18,12 +21,23 @@ const Team = () => {
   const { startYear } = useLatestSeason();
   const [searchParams] = useSearchParams();
   const seasonId = Number(searchParams.get("season") || startYear);
+  const configs = useMemo(
+    () =>
+      historySections.map(({ id, name, typeId }) => ({
+        id,
+        name,
+        params: { teamId, typeId },
+      })),
+    [teamId],
+  );
 
   const { data: team, isError, isLoading } = getTeam(teamId);
+  const { data: leagues } = useMultipleStandings(configs);
 
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
   if (!team) return <h3>No data available</h3>;
+  if (!leagues) return <h3>No data available</h3>;
 
   const title: string = team.full_name;
 
@@ -46,7 +60,7 @@ const Team = () => {
         />
       </Paper>
       <Paper sx={{ mt: 2, backgroundColor: "transparent", boxShadow: "none" }}>
-        <History title={title} teamId={teamId} />
+        <History title={title} teamId={teamId} leagues={leagues} />
       </Paper>
       <Paper sx={{ mt: 4, backgroundColor: "transparent", boxShadow: "none" }}>
         <PlayersStatsTotal teamId={teamId} />
