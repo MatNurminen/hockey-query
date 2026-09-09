@@ -65,9 +65,8 @@ const PlayersStatsPerSeason = ({ teamId, leagueId, seasonId }: Props) => {
       spacing={2}
     >
       {items.map((item) => (
-        <Grid size={{ sm: 12, md: 6 }} key={item.name}>
+        <Grid size={{ xs: 12, md: 6 }} key={item.name}>
           <SectionChapter
-            txtAlign={"left"}
             content={`Franchise all-time ${item.name} goals per season`}
           />
           <TableContainer component={Paper}>
@@ -85,9 +84,9 @@ const PlayersStatsPerSeason = ({ teamId, leagueId, seasonId }: Props) => {
               <TableBody>
                 {item
                   .list(players)
-                  .map((player: TPlayerStatDetail, key: number) => (
-                    <TableRow key={key}>
-                      <TableCell align="center">{key + 1}</TableCell>
+                  .map((player: TPlayerStatDetail, index) => (
+                    <TableRow key={player.player_id + player.season_id}>
+                      <TableCell align="center">{index + 1}</TableCell>
                       <TableCell>
                         <Box display="flex" alignItems="center">
                           <TableFlag src={player.player_flag} alt="" />
@@ -112,7 +111,7 @@ const PlayersStatsPerSeason = ({ teamId, leagueId, seasonId }: Props) => {
             </Table>
           </TableContainer>
           <AppButton
-            fullWidth={true}
+            fullWidth
             text="Show More"
             color="success"
             to={`/league-stats?league=${leagueId}&season=${seasonId}&playerOrd=${item.sort}&tab=three&offset=0&teamId=${teamId}`}

@@ -30,7 +30,7 @@ const PlayersStatsTotal = ({ teamId, seasonId, leagueId }: Props) => {
   if (isError) return <p>Error</p>;
   if (!players) return <div>No data available</div>;
 
-  const goaltendings = () => {
+  const goaltenders = () => {
     return players
       .filter((f) => f.player_order === 1)
       .toSorted((a, b) => b.goals_t - a.goals_t)
@@ -58,7 +58,7 @@ const PlayersStatsTotal = ({ teamId, seasonId, leagueId }: Props) => {
   }[] = [
     { sort: 3, list: forwards, name: "forwards" },
     { sort: 2, list: defensemen, name: "defensemen" },
-    { sort: 1, list: goaltendings, name: "goaltendings" },
+    { sort: 1, list: goaltenders, name: "goaltenders" },
   ];
 
   return (

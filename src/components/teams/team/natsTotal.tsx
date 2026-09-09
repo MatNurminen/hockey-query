@@ -34,8 +34,8 @@ const NatsTotal = ({ teamId, seasonId, leagueId }: Props) => {
       />
       <List
         sx={{ columns: { sm: 2, md: 3, lg: 4 }, pb: 1 }}
-        dense={true}
-        disablePadding={true}
+        dense
+        disablePadding
       >
         {data.map((nat: TCountPlayerByNation) => (
           <ListItem key={nat.id}>
@@ -48,9 +48,7 @@ const NatsTotal = ({ teamId, seasonId, leagueId }: Props) => {
               to={`/league-stats?league=${leagueId}&season=${seasonId}&tab=four&offset=0&teamId=${teamId}&nationId=${nat.id}`}
             >
               <ListItemText
-                primary={`${nat.count} ${
-                  nat.count == 1 ? "player" : "players"
-                }`}
+                primary={`${nat.count} ${nat.count === 1 ? "player" : "players"}`}
               />
             </Link>
           </ListItem>

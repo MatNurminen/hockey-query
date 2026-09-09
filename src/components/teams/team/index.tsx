@@ -37,10 +37,9 @@ const Team = () => {
   if (isLoading) return <h3>Loading...</h3>;
   if (isError) return <h3>Error!</h3>;
   if (!team) return <h3>No data available</h3>;
-  if (!leagues) return <h3>No data available</h3>;
 
-  const title: string = team.full_name;
-  const leagueId = leagues[0].list[0].league_id;
+  const title = team.full_name;
+  const leagueId = leagues[0]?.list[0]?.league_id ?? 0;
 
   return (
     <Container sx={{ py: 1, mt: 2, mb: 10 }}>
