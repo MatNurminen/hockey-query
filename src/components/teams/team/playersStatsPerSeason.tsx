@@ -18,9 +18,11 @@ import { memo } from "react";
 
 interface Props {
   teamId: number;
+  leagueId: number;
+  seasonId: number;
 }
 
-const PlayersStatsPerSeason = ({ teamId }: Props) => {
+const PlayersStatsPerSeason = ({ teamId, leagueId, seasonId }: Props) => {
   const { data, isLoading, isError } = getPlayersStatsDetail({
     teamId,
   });
@@ -109,7 +111,12 @@ const PlayersStatsPerSeason = ({ teamId }: Props) => {
               </TableBody>
             </Table>
           </TableContainer>
-          <AppButton fullWidth={true} text="Show More" color="success" />
+          <AppButton
+            fullWidth={true}
+            text="Show More"
+            color="success"
+            to={`/league-stats?league=${leagueId}&season=${seasonId}&playerOrd=${item.sort}&tab=three&offset=0&teamId=${teamId}`}
+          />
         </Grid>
       ))}
     </Grid>

@@ -12,12 +12,14 @@ import { getCountPlayersByNation } from "../../../api/players-stats/queries";
 import { TCountPlayerByNation } from "../../../api/players-stats/types";
 
 interface Props {
-  teamId: number
+  teamId: number;
+  seasonId: number;
+  leagueId: number;
 }
 
-const NatsTotal = ({ teamId }: Props) => {
+const NatsTotal = ({ teamId, seasonId, leagueId }: Props) => {
   const { data, isLoading, isError } = getCountPlayersByNation({
-    teamId
+    teamId,
   });
 
   if (isLoading) return <h3>Loading...</h3>;
@@ -43,7 +45,7 @@ const NatsTotal = ({ teamId }: Props) => {
             <Link
               underline="hover"
               component={RouterLink}
-              to={"/nations/" + nat.id}
+              to={`/league-stats?league=${leagueId}&season=${seasonId}&tab=four&offset=0&teamId=${teamId}&nationId=${nat.id}`}
             >
               <ListItemText
                 primary={`${nat.count} ${

@@ -40,6 +40,7 @@ const Team = () => {
   if (!leagues) return <h3>No data available</h3>;
 
   const title: string = team.full_name;
+  const leagueId = leagues[0].list[0].league_id;
 
   return (
     <Container sx={{ py: 1, mt: 2, mb: 10 }}>
@@ -63,13 +64,21 @@ const Team = () => {
         <History title={title} teamId={teamId} leagues={leagues} />
       </Paper>
       <Paper sx={{ mt: 4, backgroundColor: "transparent", boxShadow: "none" }}>
-        <PlayersStatsTotal teamId={teamId} />
+        <PlayersStatsTotal
+          teamId={teamId}
+          seasonId={seasonId}
+          leagueId={leagueId}
+        />
       </Paper>
       <Paper sx={{ mt: 2, backgroundColor: "transparent", boxShadow: "none" }}>
-        <PlayersStatsPerSeason teamId={teamId} />
+        <PlayersStatsPerSeason
+          teamId={teamId}
+          seasonId={seasonId}
+          leagueId={leagueId}
+        />
       </Paper>
       <Paper>
-        <NatsTotal teamId={teamId} />
+        <NatsTotal teamId={teamId} seasonId={seasonId} leagueId={leagueId} />
       </Paper>
     </Container>
   );

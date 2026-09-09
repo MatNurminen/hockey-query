@@ -17,9 +17,11 @@ import LinkRoute from "../../common/LinkRoute";
 
 interface Props {
   teamId: number;
+  seasonId: number;
+  leagueId: number;
 }
 
-const PlayersStatsTotal = ({ teamId }: Props) => {
+const PlayersStatsTotal = ({ teamId, seasonId, leagueId }: Props) => {
   const { data, isLoading, isError } = getPlayersStatsTotal({ teamId });
 
   const players = data?.data;
@@ -102,7 +104,7 @@ const PlayersStatsTotal = ({ teamId }: Props) => {
             fullWidth={true}
             text="Show More"
             color="success"
-            //to={`/league-stats?league=${leagueId}&season=${seasonId}&playerOrd=${item.id}&tab=three`}
+            to={`/league-stats?league=${leagueId}&season=${seasonId}&playerOrd=${item.sort}&tab=four&offset=0&teamId=${teamId}`}
           />
         </Grid>
       ))}
