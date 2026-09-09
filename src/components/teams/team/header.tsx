@@ -59,9 +59,11 @@ const Header = ({ team }: Props) => {
           <Grid size={{ xs: 12 }}>
             <Stack
               direction="row"
+              flexWrap="wrap"
+              useFlexGap
               justifyContent="flex-start"
               alignItems="center"
-              spacing={5}
+              spacing={2}
             >
               {team.logos
                 .toSorted((a, b) => a.start_year - b.start_year)

@@ -87,7 +87,7 @@ const PlayersStatsPerSeason = ({ teamId, leagueId, seasonId }: Props) => {
                   .map((player: TPlayerStatDetail, index) => (
                     <TableRow key={player.player_id + player.season_id}>
                       <TableCell align="center">{index + 1}</TableCell>
-                      <TableCell>
+                      <TableCell sx={{ minWidth: 180 }}>
                         <Box display="flex" alignItems="center">
                           <TableFlag src={player.player_flag} alt="" />
                           <Link
