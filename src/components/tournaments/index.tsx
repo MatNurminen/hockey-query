@@ -9,6 +9,8 @@ const Tournaments = () => {
   const { firstLeagueId } = useFirstLeague();
   const leagueId = Number(searchParams.get("league")) || firstLeagueId;
 
+  if (!leagueId) return null;
+
   return (
     <Container sx={{ py: 1, mb: 10 }}>
       <Header leagueId={leagueId} />

@@ -10,15 +10,17 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import LinkRoute from "../../common/LinkRoute";
 import { useLatestSeason } from "../../../hooks/useLatestSeason";
+import { useFirstLeague } from "../../../hooks/useFirstLeague";
 
 const NavBar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
 
   const { startYear: lastSeason } = useLatestSeason();
+  const { firstLeagueId } = useFirstLeague();
 
   const pages = [
-    { label: "Tournaments", to: "/tournaments" },
+    { label: "Tournaments", to: `/tournaments?league=${firstLeagueId}` },
     { label: "Teams", to: "/teams" },
     { label: "Leagues", to: "/leagues" },
     { label: "Nations", to: "/nations" },

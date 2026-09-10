@@ -29,8 +29,8 @@ const Header = ({ leagueId }: Props) => {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Grid size={{ xs: 3 }}>
-          <SelectLeague />
+        <Grid size={{ xs: 8, sm: 6, md: 3 }}>
+          <SelectLeague value={String(leagueId)} />
         </Grid>
         <Grid>
           <AppButton
@@ -39,6 +39,7 @@ const Header = ({ leagueId }: Props) => {
             iconName="add"
             text="Add Tournament"
             color="success"
+            sx={{ display: { xs: "none", md: "inline-flex" } }}
           />
           <AddTournament
             leagueId={leagueId}

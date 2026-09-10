@@ -13,6 +13,7 @@ import AppButton from "../common/Buttons/appButton";
 import DeleteDialog from "../common/Dialogs/deleteDialog";
 import TableFlag from "../common/Images/tableFlag";
 import Box from "@mui/material/Box";
+import LinkRoute from "../common/LinkRoute";
 import { TTournamentByLeagueDto } from "../../api/tournaments/types";
 
 interface Props {
@@ -20,9 +21,8 @@ interface Props {
 }
 
 const TournamentsByLeague = ({ leagueId }: Props) => {
-  const [selectedTournament, setSelectedTournament] = useState<number | null>(
-    null,
-  );
+  const [selectedTournament, setSelectedTournament] =
+    useState<TTournamentByLeagueDto | null>(null);
   const {
     data: tournaments,
     isLoading,
@@ -32,10 +32,11 @@ const TournamentsByLeague = ({ leagueId }: Props) => {
 
   if (isError) return <p>Error</p>;
   if (isLoading) return <p>Loading...</p>;
-  if (!tournaments) return <h3>No data available</h3>;
+  if (!tournaments || tournaments.length === 0)
+    return <h3>No data available</h3>;
 
-  const handleOpen = (id: number) => {
-    setSelectedTournament(id);
+  const handleOpen = (tournament: TTournamentByLeagueDto) => {
+    setSelectedTournament(tournament);
   };
 
   const handleClose = () => {
@@ -45,7 +46,7 @@ const TournamentsByLeague = ({ leagueId }: Props) => {
   const handleDelete = () => {
     if (selectedTournament) {
       deleteTournament(
-        { id: selectedTournament },
+        { id: selectedTournament.id },
         {
           onSuccess: () => setSelectedTournament(null),
         },
@@ -58,59 +59,60 @@ const TournamentsByLeague = ({ leagueId }: Props) => {
       <DeleteDialog
         open={Boolean(selectedTournament)}
         onClose={handleClose}
-        name={`Tournament ID: ${selectedTournament}`}
+        name={
+          selectedTournament
+            ? `${selectedTournament.season} ${selectedTournament.league} tournament`
+            : ""
+        }
         onConfirm={handleDelete}
       />
       <TableContainer component={Paper} sx={{ my: 4 }}>
         <Table size="small">
-          <HeaderMain
-            cells={[
-              { text: "tournaments", colSpan: 5 },
-            ]}
-          />
+          <HeaderMain cells={[{ text: "tournaments", colSpan: 5 }]} />
           <HeaderSection
             cells={[
               { align: "center", text: "ID" },
               { align: "center", text: "Season" },
-              { text: "League", width: "20%" },
+              { text: "League" },
               { text: "" },
               { text: "" },
             ]}
           />
           <TableBody>
-            {tournaments.map((tournament: TTournamentByLeagueDto) => (
+            {tournaments.map((tournament) => (
               <TableRow key={tournament.id}>
-                <TableCell width={"10%"} align="center">
-                  {tournament.id}
-                </TableCell>
-                <TableCell width={"20%"} align="center">
-                  {tournament.season}
-                </TableCell>
-                <TableCell width={"50%"}>
-                  <Box display="flex" alignItems="center">
-                    <Box display="flex" sx={{ mr: 1 }}>
-                      <TableFlag alt="" src={tournament.logo} />
+                <TableCell align="center">{tournament.id}</TableCell>
+                <TableCell align="center">{tournament.season}</TableCell>
+                <TableCell sx={{ minWidth: 200 }}>
+                  <LinkRoute
+                    to={`/leagues/${tournament.league_id}?season=${tournament.season_id}`}
+                  >
+                    <Box display="flex" alignItems="center">
+                      <Box display="flex" sx={{ mr: 1 }}>
+                        <TableFlag alt="" src={tournament.logo} />
+                      </Box>
+                      {tournament.league}
                     </Box>
-                    {tournament.league}
-                  </Box>
+                  </LinkRoute>
                 </TableCell>
-                <TableCell width={"10%"}>
+                <TableCell align="right">
                   <AppButton
                     text="Edit"
                     size="small"
                     iconName="edit"
                     color="success"
+                    sx={{ display: { xs: "none", md: "inline-flex" } }}
                     to={`/tournaments/${tournament.id}?league=${leagueId}`}
                   />
                 </TableCell>
-                <TableCell width={"10%"}>
+                <TableCell align="center">
                   <AppButton
                     text="Delete"
                     size="small"
                     color="error"
                     iconName="delete"
                     onClick={() => {
-                      handleOpen(tournament.id);
+                      handleOpen(tournament);
                     }}
                   />
                 </TableCell>
