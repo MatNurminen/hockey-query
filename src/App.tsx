@@ -16,21 +16,23 @@ import SearchBar from "./components/layout/SearchBar";
 import Loading from "./components/layout/React-query/loading";
 import Footer from "./components/layout/Footer";
 
-const Main = lazy(() => import("./components/main"));
+import Main from "./components/main";
+
+import Leagues from "./components/leagues/leagues";
+import League from "./components/leagues/league";
+
 const NotFound = lazy(() => import("./components/notFound"));
 
-const Leagues = lazy(() => import("./components/leagues/leagues"));
-const League = lazy(() => import("./components/leagues/league"));
 const PlayersStats = lazy(() => import("./components/leagues/stats"));
 
-const Nations = lazy(() => import("./components/nations/nations"));
-const Nation = lazy(() => import("./components/nations/nation"));
+import Nations from "./components/nations/nations";
+import Nation from "./components/nations/nation";
 const NationStats = lazy(() => import("./components/nations/stats"));
 
-const Teams = lazy(() => import("./components/teams/teams"));
-const Team = lazy(() => import("./components/teams/team"));
+import Teams from "./components/teams/teams";
+import Team from "./components/teams/team";
 
-const Player = lazy(() => import("./components/players/player"));
+import Player from "./components/players/player";
 const FreeAgents = lazy(() => import("./components/players/free-agents"));
 const Drafts = lazy(() => import("./components/players/drafts"));
 const DraftDetails = lazy(
