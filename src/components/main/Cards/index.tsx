@@ -6,6 +6,7 @@ import LinkRoute from "../../common/LinkRoute";
 import { getSeasons } from "../../../api/seasons/queries";
 import { TSeasonDto } from "../../../api/seasons/types";
 import { memo } from "react";
+import Loading from "../../layout/React-query/loading";
 
 function srcset(
   image: string,
@@ -25,7 +26,7 @@ function srcset(
 const Cards = () => {
   const { data, isLoading, isError } = getSeasons();
 
-  if (isLoading) return <h3>Loading...</h3>;
+  if (isLoading) return <Loading />;
   if (isError) return <h3>Error!</h3>;
   if (!data?.length) return <h3>No data available</h3>;
 

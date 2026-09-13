@@ -10,6 +10,7 @@ import { getLeaguesCurLogo } from "../../../api/leagues/queries";
 import { formatSeason } from "../../utils/formatSeason";
 import { TLeagueDto } from "../../../api/leagues/types";
 import { memo } from "react";
+import Loading from "../../layout/React-query/loading";
 
 interface Props {
   curSeason: number;
@@ -18,7 +19,7 @@ interface Props {
 const Leagues = ({ curSeason }: Props) => {
   const { data, isLoading, isError } = getLeaguesCurLogo();
 
-  if (isLoading) return <h3>Loading...</h3>;
+  if (isLoading) return <Loading />;
   if (isError) return <h3>Error!</h3>;
   if (!data?.length) return <h3>No data available</h3>;
 
