@@ -1,5 +1,5 @@
+import { useEffect, useRef } from "react";
 import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
 import Header from "./header";
 import { useSearchParams } from "react-router-dom";
 import StatsTabs from "./stats-tabs";
@@ -10,13 +10,25 @@ import {
 } from "../../../api/players-stats/queries";
 import SelectSeason from "../../common/Selects/selectSeason";
 import Box from "@mui/material/Box";
+import { updateSearchParams } from "../../utils/urlHelpers";
+import { useLatestSeason } from "../../../hooks/useLatestSeason";
 
 const LIMIT = 50;
 
 const PlayersStats = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const leagueId = Number(searchParams.get("league"));
-  const seasonId = Number(searchParams.get("season"));
+  const tab = searchParams.get("tab") || "one";
+  const isSeasonTab = tab === "one";
+  const { startYear: latestSeason } = useLatestSeason();
+
+  // Последний выбранный сезон: на All-Time табах параметр уходит из URL,
+  // и без этого возврат на таб Season сбрасывал бы выбор на последний сезон
+  const lastSeasonRef = useRef<number | null>(null);
+  const seasonParam =
+    Number(searchParams.get("season")) || lastSeasonRef.current || latestSeason;
+  // Сезон показываем только на табе Season: на остальных он не имеет смысла
+  const seasonId = isSeasonTab ? seasonParam : 0;
   const playerOrd = searchParams.get("playerOrd")
     ? [Number(searchParams.get("playerOrd"))]
     : undefined;
@@ -24,9 +36,33 @@ const PlayersStats = () => {
   const nationId = Number(searchParams.get("nationId")) || undefined;
   const offset = Number(searchParams.get("offset")) || 0;
 
+  useEffect(() => {
+    const seasonFromUrl = Number(searchParams.get("season"));
+
+    if (seasonFromUrl) {
+      lastSeasonRef.current = seasonFromUrl;
+    }
+
+    if (isSeasonTab) {
+      // Сезон в URL, иначе страница зафиксирует его отсутствие
+      if (!seasonFromUrl && latestSeason) {
+        setSearchParams(
+          updateSearchParams(searchParams, {
+            season: lastSeasonRef.current ?? latestSeason,
+          }),
+          { replace: true },
+        );
+      }
+    } else if (searchParams.get("season")) {
+      setSearchParams(updateSearchParams(searchParams, { season: null }), {
+        replace: true,
+      });
+    }
+  }, [isSeasonTab, latestSeason, searchParams, setSearchParams]);
+
   const detailParams = {
     leagueId: [leagueId],
-    seasonId,
+    seasonId: seasonParam,
     playerOrd,
     teamId,
     nationId,
@@ -58,33 +94,14 @@ const PlayersStats = () => {
     offset,
   };
 
-  const {
-    data: playersResponse,
-    isLoading: isLoadingDetail,
-    isFetching: isFetchingDetail,
-    isError: isErrorDetail,
-  } = getPlayersStatsDetail(detailParams);
+  const { data: playersResponse } = getPlayersStatsDetail(detailParams);
 
-  const {
-    data: totalsResponse,
-    isLoading: isLoadingTotal,
-    isFetching: isFetchingTotal,
-    isError: isErrorTotal,
-  } = getPlayersStatsTotal(totalParams);
+  const { data: totalsResponse } = getPlayersStatsTotal(totalParams);
 
-  const {
-    data: seasonsResponse,
-    isLoading: isLoadingSeasons,
-    isFetching: isFetchingSeasons,
-    isError: isErrorSeasons,
-  } = getPlayersStatsDetail(seasonParams);
+  const { data: seasonsResponse } = getPlayersStatsDetail(seasonParams);
 
-  const {
-    data: totalteamsResponse,
-    isLoading: isLoadingTotalTeam,
-    isFetching: isFetchingTotalTeam,
-    isError: isErrorTotalTeam,
-  } = getPlayersStatsTotalByTeam(totalByTeamParams);
+  const { data: totalteamsResponse } =
+    getPlayersStatsTotalByTeam(totalByTeamParams);
 
   const players = playersResponse?.data ?? [];
   const totals = totalsResponse?.data ?? [];
@@ -96,57 +113,31 @@ const PlayersStats = () => {
   const totalSeasons = seasonsResponse?.total ?? 0;
   const totalTeams = totalteamsResponse?.total ?? 0;
 
-  const hasData =
-    players.length ||
-    totals.length ||
-    seasons.length ||
-    totalteams.length ||
-    isFetchingDetail ||
-    isFetchingTotal ||
-    isFetchingSeasons ||
-    isFetchingTotalTeam;
-
   const league = players[0]?.short_name || "";
-
-  if (isErrorDetail || isErrorTotal || isErrorSeasons || isErrorTotalTeam)
-    return <h3>Error!</h3>;
 
   return (
     <Container sx={{ py: 1, mt: 2, mb: 10 }}>
       <Box sx={{ px: 2, pb: 1 }}>
         <Header league={league} leagueId={leagueId} seasonId={seasonId} />
       </Box>
-      {seasonId && seasonId > 0 ? (
+      {isSeasonTab && (
         <Box sx={{ mt: 1, p: 2 }}>
-          <SelectSeason />
+          <SelectSeason value={seasonParam ? String(seasonParam) : ""} />
         </Box>
-      ) : null}
-      {isLoadingDetail ||
-      isLoadingTotal ||
-      isLoadingSeasons ||
-      isLoadingTotalTeam ? (
-        <Paper sx={{ mt: 2, p: 2 }}>
-          <p>Loading...</p>
-        </Paper>
-      ) : hasData ? (
-        <StatsTabs
-          seasonId={seasonId}
-          players={players}
-          totals={totals}
-          seasons={seasons}
-          totalteams={totalteams}
-          offset={offset}
-          limit={LIMIT}
-          totalDetail={totalDetail}
-          totalStats={totalStats}
-          totalSeasons={totalSeasons}
-          totalTeams={totalTeams}
-        />
-      ) : (
-        <Paper sx={{ mt: 2, p: 2 }}>
-          <h3>No players stats for this tournament</h3>
-        </Paper>
       )}
+      <StatsTabs
+        seasonId={seasonId}
+        players={players}
+        totals={totals}
+        seasons={seasons}
+        totalteams={totalteams}
+        offset={offset}
+        limit={LIMIT}
+        totalDetail={totalDetail}
+        totalStats={totalStats}
+        totalSeasons={totalSeasons}
+        totalTeams={totalTeams}
+      />
     </Container>
   );
 };

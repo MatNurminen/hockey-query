@@ -2,6 +2,7 @@ import { memo } from "react";
 import LinkRoute from "../../common/LinkRoute";
 import StatsTable, { StatsColumn } from "./statsTable";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
+import { formatSeason } from "../../utils/formatSeason";
 
 interface Props {
   seasonId: number;
@@ -36,7 +37,7 @@ const columns: StatsColumn<TPlayerStatDetail>[] = [
 const StatsDetails = memo(({ seasonId, players, offset }: Props) => {
   return (
     <StatsTable
-      title={`${seasonId}-${seasonId + 1} Player Stats`}
+      title={`${formatSeason(seasonId)} Player Stats`}
       rows={players}
       columns={columns}
       rowKey={(player) =>
