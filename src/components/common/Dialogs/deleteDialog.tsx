@@ -32,9 +32,14 @@ export default function DeleteDialog({
   onConfirm,
   loading = false,
 }: DeleteDialogProps) {
+  const handleClose = () => {
+    (document.activeElement as HTMLElement | null)?.blur();
+    onClose();
+  };
+
   const handleDelete = () => {
     onConfirm();
-    onClose();
+    handleClose();
   };
 
   return (
@@ -42,7 +47,7 @@ export default function DeleteDialog({
       open={open}
       slots={{ transition: Transition }}
       keepMounted
-      onClose={onClose}
+      onClose={handleClose}
       disableRestoreFocus
       role="alertdialog"
       aria-labelledby="delete-dialog-title"
@@ -67,7 +72,7 @@ export default function DeleteDialog({
           <AppButton
             text="Cancel"
             size="small"
-            onClick={onClose}
+            onClick={handleClose}
             disabled={loading}
             autoFocus
             iconName="cancel"
