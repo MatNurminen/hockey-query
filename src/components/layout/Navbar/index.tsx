@@ -24,7 +24,12 @@ const NavBar = () => {
     { label: "Teams", to: "/teams" },
     { label: "Leagues", to: "/leagues" },
     { label: "Nations", to: "/nations" },
-    { label: "Free Agents", to: `/free-agents?season=${lastSeason}&nation=1` },
+    {
+      label: "Free Agents",
+      to: lastSeason
+        ? `/free-agents?season=${lastSeason}&nation=1`
+        : "/free-agents?nation=1",
+    },
     { label: "Drafts", to: "/drafts" },
   ];
 
@@ -36,10 +41,7 @@ const NavBar = () => {
     >
       <Container sx={{ my: 2 }}>
         <Toolbar>
-          <LinkRoute
-            to="/"
-            sx={{ width: 80 }}
-          >
+          <LinkRoute to="/" sx={{ width: 80 }}>
             <img
               src="/img/logo.png"
               alt="Logo"
