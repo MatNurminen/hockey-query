@@ -11,9 +11,11 @@ import Stack from "@mui/material/Stack";
 import { useDeleteLeague } from "../../../api/leagues/mutations";
 import { memo, useState } from "react";
 import DeleteDialog from "../../common/Dialogs/deleteDialog";
-import { TLeagueDto } from "../../../api/leagues/types";
+import type { TLeagueDto } from "../../../api/leagues/types";
 import TableHeader from "../../common/Table/tableHeader";
 import type { Cell } from "../../common/Table/types";
+import SectionChapter from "../../common/Sections/sectionChapter";
+import Box from "@mui/material/Box";
 
 interface Props {
   leagues: TLeagueDto[];
@@ -51,13 +53,12 @@ const headerCells: Cell[] = [
 ];
 
 const LeaguesTable = ({ leagues, seasonId }: Props) => {
-  const [selectedLeague, setSelectedLeague] = useState<number | null>(null);
-  const [name, setName] = useState("");
-
+  const [selectedLeague, setSelectedLeague] = useState<TLeagueDto | null>(null);
   const { mutate: deleteLeague } = useDeleteLeague();
+  const seasonQuery = seasonId ? `?season=${seasonId}` : "";
 
-  const handleOpen = (id: number) => {
-    setSelectedLeague(id);
+  const handleOpen = (league: TLeagueDto) => {
+    setSelectedLeague(league);
   };
 
   const handleClose = () => {
@@ -65,13 +66,8 @@ const LeaguesTable = ({ leagues, seasonId }: Props) => {
   };
 
   const handleDelete = () => {
-    if (selectedLeague !== null) {
-      deleteLeague(
-        { id: selectedLeague },
-        {
-          onSuccess: () => setSelectedLeague(null),
-        },
-      );
+    if (selectedLeague) {
+      deleteLeague({ id: selectedLeague.id });
     }
   };
 
@@ -80,69 +76,62 @@ const LeaguesTable = ({ leagues, seasonId }: Props) => {
       <DeleteDialog
         open={Boolean(selectedLeague)}
         onClose={handleClose}
-        name={name}
+        name={selectedLeague?.name ?? ""}
         onConfirm={handleDelete}
       />
       {leagueModes.map((mode) => {
         const items = leagues.filter(mode.condition);
         if (!items.length) return null;
-
         return (
-          <TableContainer component={Paper} key={mode.title}>
-            <Table size="small">
-              <TableHead>
-                <TableHeader
-                  cells={[{ text: mode.title, colSpan: headerCells.length }]}
-                  background="ocean.main"
-                  row
-                />
-                <TableHeader
-                  cells={headerCells}
-                  background="secondary.main"
-                  row
-                />
-              </TableHead>
-              <TableBody>
-                {items.map((league) => (
-                  <TableRow key={league.id}>
-                    <TableCell align="center">
-                      <img
-                        height={30}
-                        alt=""
-                        src={league.logos.at(-1)?.logo}
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = "none";
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <LinkRoute
-                        to={`/leagues/${league.id}?season=${seasonId}`}
+          <Box key={mode.title}>
+            <SectionChapter content={mode.title} />
+            <TableContainer component={Paper}>
+              <Table size="small">
+                <TableHead>
+                  <TableHeader
+                    cells={headerCells}
+                    background="secondary.main"
+                    row
+                  />
+                </TableHead>
+                <TableBody>
+                  {items.map((league) => (
+                    <TableRow key={league.id}>
+                      <TableCell align="center">
+                        <img
+                          height={30}
+                          alt=""
+                          src={league.logos.at(-1)?.logo}
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display =
+                              "none";
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <LinkRoute to={`/leagues/${league.id}${seasonQuery}`}>
+                          {league.name}
+                        </LinkRoute>
+                      </TableCell>
+                      <TableCell>{league.short_name}</TableCell>
+                      <TableCell
+                        align="right"
+                        sx={{ display: { xs: "none", sm: "table-cell" } }}
                       >
-                        {league.name}
-                      </LinkRoute>
-                    </TableCell>
-                    <TableCell>{league.short_name}</TableCell>
-                    <TableCell
-                      align="right"
-                      sx={{ display: { xs: "none", sm: "table-cell" } }}
-                    >
-                      <AppButton
-                        text="Delete"
-                        size="small"
-                        color="error"
-                        iconName="delete"
-                        onClick={() => {
-                          handleOpen(league.id);
-                          setName(league.name);
-                        }}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                        <AppButton
+                          text="Delete"
+                          size="small"
+                          color="error"
+                          iconName="delete"
+                          onClick={() => handleOpen(league)}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
         );
       })}
     </Stack>
