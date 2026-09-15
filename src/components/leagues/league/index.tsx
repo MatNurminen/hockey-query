@@ -24,13 +24,11 @@ const League = () => {
 
   const [searchParams] = useSearchParams();
   const { startYear: latestSeason } = useLatestSeason();
-  const seasonId = Number(searchParams.get("season") || latestSeason);
+  const seasonId = Number(searchParams.get("season")) || latestSeason;
 
-  const { data: league, isError, isLoading } = getLeague(leagueId);
+  const { data: league } = getLeague(leagueId);
 
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-  if (!league) return <h3>No data available</h3>;
+  if (!league) return null;
 
   const title: string = league.short_name;
 
@@ -46,7 +44,7 @@ const League = () => {
         <Teams leagueId={leagueId} title={title} />
       </Paper>
       <Paper sx={{ mt: 2, p: 2 }}>
-        <SelectSeason />
+        <SelectSeason value={String(seasonId)} />
       </Paper>
       <Paper sx={{ mt: 2, backgroundColor: "transparent", boxShadow: "none" }}>
         <Standings leagueId={leagueId} seasonId={seasonId} title={title} />

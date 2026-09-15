@@ -54,7 +54,7 @@ function App() {
         <Navbar />
         <AdminNavbar />
         <SearchBar />
-        {/* <Loading /> */}
+        <Loading />
 
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>

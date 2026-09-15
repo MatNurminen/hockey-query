@@ -11,8 +11,8 @@ const FreeAgents = () => {
   const { startYear } = useLatestSeason();
   const { firstNationId } = useFirstNation();
   const [searchParams] = useSearchParams();
-  const seasonId = searchParams.get("season") || startYear;
-  const nationId = searchParams.get("nation") || firstNationId;
+  const seasonId = Number(searchParams.get("season")) || startYear;
+  const nationId = Number(searchParams.get("nation")) || firstNationId;
 
   return (
     <Container sx={{ py: 1 }}>
@@ -21,7 +21,7 @@ const FreeAgents = () => {
         <Selects />
       </Paper>
       <Paper sx={{ mt: 2 }}>
-        <Players seasonId={Number(seasonId)} nationId={Number(nationId)} />
+        <Players seasonId={seasonId} nationId={nationId} />
       </Paper>
     </Container>
   );

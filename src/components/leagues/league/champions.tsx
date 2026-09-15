@@ -13,11 +13,8 @@ interface Props {
 }
 
 const Champions = ({ title, leagueId }: Props) => {
-  const { data, isLoading, isError } = getTeamChampions(leagueId);
-
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-  if (!data) return <h3>No data</h3>;
+  const { data } = getTeamChampions(leagueId);
+  const teams = data || [];
 
   return (
     <Box my={2}>
@@ -27,7 +24,7 @@ const Champions = ({ title, leagueId }: Props) => {
         dense
         disablePadding
       >
-        {data.map((team) => (
+        {teams.map((team) => (
           <ListItem key={team.season_id}>
             <LinkRoute
               to={`/rosters?league=${leagueId}&season=${team.season_id}`}

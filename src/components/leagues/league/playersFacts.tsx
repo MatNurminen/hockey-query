@@ -83,19 +83,11 @@ const items: FactItem[] = [
 ];
 
 const PlayersFacts = ({ leagueId, seasonId }: Props) => {
-  const {
-    data: playersResponse,
-    isLoading,
-    isError,
-  } = getPlayersStatsDetail({
+  const { data: playersResponse } = getPlayersStatsDetail({
     leagueId: [leagueId],
     seasonId,
   });
-  const players = playersResponse?.data ?? [];
-
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-  if (players.length === 0) return <h3>No data available</h3>;
+  const players = playersResponse?.data || [];
 
   return (
     <>
@@ -113,11 +105,7 @@ const PlayersFacts = ({ leagueId, seasonId }: Props) => {
               <TableContainer component={Paper}>
                 <Table size="small">
                   <HeaderSection
-                    cells={[
-                      { text: "#" },
-                      { text: item.name },
-                      { text: "" },
-                    ]}
+                    cells={[{ text: "#" }, { text: item.name }, { text: "" }]}
                   />
                   <TableBody>
                     {factPlayers.map((player, index) => (

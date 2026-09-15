@@ -15,11 +15,8 @@ interface Props {
 }
 
 const TotalNations = ({ leagueId, seasonId }: Props) => {
-  const { data, isLoading, isError } = getCountPlayersByNation({ leagueId });
-
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-  if (!data || data.length === 0) return <h3>No data available</h3>;
+  const { data } = getCountPlayersByNation({ leagueId });
+  const nations = data || [];
 
   return (
     <Box my={2}>
@@ -32,7 +29,7 @@ const TotalNations = ({ leagueId, seasonId }: Props) => {
         dense
         disablePadding
       >
-        {data.map((nat) => (
+        {nations.map((nat) => (
           <ListItem key={nat.id} sx={{ breakInside: "avoid" }}>
             <ListItemIcon sx={{ minWidth: "auto", mr: 1 }}>
               <TableFlag src={nat.flag} alt="" />

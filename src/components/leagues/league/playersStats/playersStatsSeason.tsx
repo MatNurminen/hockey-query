@@ -28,14 +28,7 @@ const PlayersStatsSeason = ({ leagueId, seasonId, title }: Props) => {
     [leagueId, seasonId],
   );
 
-  const {
-    data: items,
-    isLoading,
-    isError,
-  } = useMultiplePlayersStatsDetail(configs);
-
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
+  const { data: items } = useMultiplePlayersStatsDetail(configs);
 
   return (
     <PlayersStatsTable<TPlayerStatDetail>

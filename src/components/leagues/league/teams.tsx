@@ -15,11 +15,8 @@ interface Props {
 }
 
 const Teams = ({ leagueId, title }: Props) => {
-  const { data, isLoading, isError } = getTeamsByLeague(leagueId);
-
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-  if (!data) return <h3>No data available</h3>;
+  const { data } = getTeamsByLeague(leagueId);
+  const teams = data || [];
 
   return (
     <Box my={2}>
@@ -29,7 +26,7 @@ const Teams = ({ leagueId, title }: Props) => {
         dense
         disablePadding
       >
-        {data.map((team) => (
+        {teams.map((team) => (
           <ListItem key={team.id}>
             <ListItemIcon sx={{ minWidth: "auto", mr: 1 }}>
               <TableFlag alt="" src={team.flag} />

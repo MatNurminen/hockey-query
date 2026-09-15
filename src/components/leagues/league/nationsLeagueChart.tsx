@@ -8,16 +8,10 @@ interface Props {
 }
 
 const NationsLeagueChart = ({ leagueId, seasonId, title }: Props) => {
-  const { data, isLoading, isError } = getCountPlayersByNation({
-    leagueId,
-    seasonId,
-  });
+  const { data } = getCountPlayersByNation({ leagueId, seasonId });
+  const players = data || [];
 
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
-  if (!data) return <h3>No data available</h3>;
-
-  return <NationsChart players={data} seasonId={seasonId} title={title} />;
+  return <NationsChart players={players} seasonId={seasonId} title={title} />;
 };
 
 export default NationsLeagueChart;

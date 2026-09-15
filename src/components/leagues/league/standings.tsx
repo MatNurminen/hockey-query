@@ -120,17 +120,13 @@ const columns: GridColDef<TStandings>[] = [
       return newRow;
     },
     renderCell: (params) => (
-      <span>{String(params.row.postseason?.title ?? "") || "-"}</span>
+      <span>{String(params.row.postseason?.title ?? "") || ""}</span>
     ),
   },
 ];
 
 const Standings = ({ leagueId, seasonId, title }: Props) => {
-  const {
-    data: teams = [],
-    isError,
-    isLoading,
-  } = getStandings({ leagueId: [leagueId], seasonId });
+  const { data } = getStandings({ leagueId: [leagueId], seasonId });
 
   const [teamsState, setTeamsState] = useState<TStandings[]>([]);
   const [updatedCells, setUpdatedCells] = useState<Set<string>>(new Set());
@@ -141,13 +137,14 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
   const saveChainRef = useRef<Promise<unknown>>(Promise.resolve());
 
   useEffect(() => {
+    if (!data) return;
     const currentKey = `${leagueId}-${seasonId}`;
-    if (!isLoading && currentKey !== prevParamsRef.current) {
+    if (currentKey !== prevParamsRef.current) {
       prevParamsRef.current = currentKey;
-      setTeamsState(teams);
+      setTeamsState(data);
       setUpdatedCells(new Set());
     }
-  }, [teams, leagueId, seasonId, isLoading]);
+  }, [data, leagueId, seasonId]);
 
   const rowsWithRank = useMemo(() => {
     const sortedTeams = [...teamsState].sort((a, b) => {
@@ -159,9 +156,6 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
       rank: index + 1,
     }));
   }, [teamsState]);
-
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError) return <h3>Error!</h3>;
 
   const handleProcessRowUpdate = async (
     newRow: TStandings,
