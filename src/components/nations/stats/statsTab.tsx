@@ -107,9 +107,9 @@ const StatsTab = ({ nation, title, players }: Props) => {
                         <TableCell align="center">{player.weight}</TableCell>
                         <TableCell align="center">{player.games}</TableCell>
                         <TableCell align="center">{player.goals}</TableCell>
-                        <TableCell sx={{ minWidth: 160 }}>
+                        {/* <TableCell sx={{ minWidth: 160 }}>
                           {player.postseason}
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     ))}
                 </TableBody>

@@ -11,6 +11,8 @@ import Paper from "@mui/material/Paper";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import LinkRoute from "../../common/LinkRoute";
 
+const CHAMPION = "Champion";
+
 interface Props {
   title: string;
   teamId: number;
@@ -67,8 +69,14 @@ const History = ({ title, teamId, leagues }: Props) => {
                       <TableCell align="center">{team.goals_against}</TableCell>
                       <TableCell align="center">{team.gd}</TableCell>
                       <TableCell align="center">{team.pts}</TableCell>
-                      <TableCell sx={{ minWidth: 160 }}>
-                        {team.postseason?.title}
+                      <TableCell
+                        sx={{
+                          minWidth: 160,
+                          fontWeight:
+                            team.postseason === CHAMPION ? "bold" : undefined,
+                        }}
+                      >
+                        {team.postseason}
                       </TableCell>
                     </TableRow>
                   ))}

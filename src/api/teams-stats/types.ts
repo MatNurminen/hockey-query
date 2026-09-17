@@ -30,7 +30,7 @@ export type StandingsParams = {
 export type TTeamsForNation = {
   season_id: number;
   short_name: string;
-  postseason: { title: string } | null;
+  postseason?: string;
   league_id: number;
   team_id: number;
 };
@@ -56,5 +56,5 @@ export type TTeamChampions = {
   season_id: number;
   team_id: number;
   full_name: string;
-  postseason: string | null;
+  postseason: { title: string } | null;
 };

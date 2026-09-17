@@ -26,11 +26,11 @@ const columns: StatsColumn<TPlayerStatDetail>[] = [
   },
   { align: "center", text: "gp", render: (player) => player.games },
   { align: "center", text: "g", render: (player) => player.goals },
-  {
-    text: "Postseason",
-    sx: { minWidth: 160 },
-    render: (player) => player.postseason,
-  },
+  // {
+  //   text: "Postseason",
+  //   sx: { minWidth: 160 },
+  //   render: (player) => player.postseason,
+  // },
 ];
 
 const StatsSeason = memo(({ seasons, offset }: Props) => {

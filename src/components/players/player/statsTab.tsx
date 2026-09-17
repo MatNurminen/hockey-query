@@ -83,9 +83,9 @@ const StatsTab = ({ playerName, playerId, typeId }: Props) => {
                   <TableCell align="center">
                     {(stat.goals / stat.games || 0).toFixed(1)}
                   </TableCell>
-                  <TableCell sx={{ minWidth: 160 }}>
+                  {/* <TableCell sx={{ minWidth: 160 }}>
                     {stat.postseason}
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               ))}
           </TableBody>

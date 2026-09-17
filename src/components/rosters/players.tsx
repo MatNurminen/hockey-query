@@ -76,9 +76,9 @@ const Players = ({ players, teams }: Props) => {
                       </TableCell>
                       <TableCell align="center">{player.games}</TableCell>
                       <TableCell align="center">{player.goals}</TableCell>
-                      <TableCell sx={{ minWidth: 160 }}>
+                      {/* <TableCell sx={{ minWidth: 160 }}>
                         {player.postseason}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell align="center">
                         {player.season_id - player.birth_year}
                       </TableCell>
