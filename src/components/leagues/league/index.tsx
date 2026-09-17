@@ -27,7 +27,6 @@ const League = () => {
   const seasonId = Number(searchParams.get("season")) || latestSeason;
 
   const { data: league } = getLeague(leagueId);
-
   if (!league) return null;
 
   const title: string = league.short_name;
@@ -69,21 +68,22 @@ const League = () => {
       <Paper sx={{ mt: 2 }}>
         <CompareTeams leagueId={leagueId} seasonId={seasonId} title={title} />
       </Paper>
-      <Paper sx={{ mt: 2 }}>
+       <Paper sx={{ mt: 2 }}>
         <PlayersFacts leagueId={leagueId} seasonId={seasonId} />
       </Paper>
       <Paper sx={{ mt: 4, backgroundColor: "transparent", boxShadow: "none" }}>
         <PlayersStatsTotal leagueId={leagueId} seasonId={seasonId} />
       </Paper>
+      
       <Paper sx={{ mt: 2, backgroundColor: "transparent", boxShadow: "none" }}>
         <PlayersStatsPerSeason leagueId={leagueId} seasonId={seasonId} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
         <Champions title={title} leagueId={leagueId} />
       </Paper>
-      <Paper sx={{ mt: 2 }}>
+      {/* <Paper sx={{ mt: 2 }}>
         <Awards title={title} />
-      </Paper>
+      </Paper> */}
     </Container>
   );
 };

@@ -39,7 +39,6 @@ export type TPlayerStatDetail = {
   player_id: number;
   games: number;
   goals: number;
-  postseason: string;
   first_name: string;
   last_name: string;
   jersey_number: number;

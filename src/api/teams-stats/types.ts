@@ -16,7 +16,8 @@ export type TStandings = {
   league_id: number;
   season: string;
   logo: string;
-  postseason: string;
+  postseason: string | null;
+  postseason_id: number | null;
 };
 
 export type StandingsParams = {
@@ -55,5 +56,5 @@ export type TTeamChampions = {
   season_id: number;
   team_id: number;
   full_name: string;
-  postseason: { title: string } | null;
+  postseason: string | null;
 };

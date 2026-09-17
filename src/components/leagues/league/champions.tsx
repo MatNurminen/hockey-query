@@ -6,6 +6,7 @@ import List from "@mui/material/List";
 import { memo } from "react";
 import Box from "@mui/material/Box";
 import LinkRoute from "../../common/LinkRoute";
+import { formatSeason } from "../../utils/formatSeason";
 
 interface Props {
   title: string;
@@ -31,7 +32,7 @@ const Champions = ({ title, leagueId }: Props) => {
             >
               <ListItemText
                 slotProps={{ primary: { sx: { fontWeight: 600 } } }}
-                primary={team.season_id + 1}
+                primary={formatSeason(team.season_id)}
               />
             </LinkRoute>
             <LinkRoute

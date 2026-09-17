@@ -1,7 +1,3 @@
-type Postseason = {
-  title: string;
-};
-
 export type TTeamTournamentDto = {
   id: number;
   tournament_id: number;
@@ -12,7 +8,7 @@ export type TTeamTournamentDto = {
   losts?: number;
   goals_for?: number;
   goals_against?: number;
-  postseason?: Postseason | null;
+  postseason_id?: number | null;
 };
 
 export type TCreateTeamTournamentDto = {
@@ -24,7 +20,7 @@ export type TCreateTeamTournamentDto = {
   losts?: number;
   goals_for?: number;
   goals_against?: number;
-  postseason?: Postseason | null;
+  postseason_id?: number | null;
 };
 
 export type TTeamByTournamentDto = {

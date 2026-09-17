@@ -1,11 +1,20 @@
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { formatSeason } from "../../utils/formatSeason";
 import { getStandings } from "../../../api/teams-stats/queries";
 import TableFlag from "../../common/Images/tableFlag";
 import AppButton from "../../common/Buttons/appButton";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCellModes,
+  GridColDef,
+  useGridApiRef,
+} from "@mui/x-data-grid";
+import SelectPostseason from "../../common/Selects/selectPostseason";
 import { useUpdateTeamTournament } from "../../../api/teams-tournaments/mutations";
 import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import ClearIcon from "@mui/icons-material/Clear";
 import { TStandings } from "../../../api/teams-stats/types";
 import { TCreateTeamTournamentDto } from "../../../api/teams-tournaments/types";
 import SectionChapter from "../../common/Sections/sectionChapter";
@@ -17,113 +26,13 @@ interface Props {
   title: string;
 }
 
+const DID_NOT_MAKE_PLAYOFFS = "Did not make playoffs";
+
 const stripRank = (row: TStandings & { rank?: number }): TStandings => {
   const { rank: _rank, ...rowWithoutRank } = row;
   void _rank;
   return rowWithoutRank;
 };
-
-const columns: GridColDef<TStandings>[] = [
-  {
-    field: "rank",
-    headerName: "#",
-    width: 50,
-    align: "center",
-    headerAlign: "center",
-  },
-  {
-    field: "fullName",
-    headerName: "TEAM",
-    flex: 1,
-    minWidth: 200,
-    renderCell: (params) => (
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        {params.row.logo && <TableFlag alt="" src={params.row.logo} />}
-        <LinkRoute to={`/teams/${params.row.team_id}`}>
-          {params.row.full_name}
-        </LinkRoute>
-      </div>
-    ),
-  },
-  {
-    field: "games",
-    headerName: "GP",
-    editable: true,
-    align: "center",
-    headerAlign: "center",
-    width: 60,
-  },
-  {
-    field: "wins",
-    headerName: "W",
-    editable: true,
-    align: "center",
-    headerAlign: "center",
-    width: 60,
-  },
-  {
-    field: "ties",
-    headerName: "T",
-    editable: true,
-    align: "center",
-    headerAlign: "center",
-    width: 60,
-  },
-  {
-    field: "losts",
-    headerName: "L",
-    editable: true,
-    align: "center",
-    headerAlign: "center",
-    width: 60,
-  },
-  {
-    field: "goals_for",
-    headerName: "GF",
-    editable: true,
-    align: "center",
-    headerAlign: "center",
-    width: 60,
-  },
-  {
-    field: "goals_against",
-    headerName: "GA",
-    editable: true,
-    align: "center",
-    headerAlign: "center",
-    width: 60,
-  },
-  {
-    field: "gd",
-    headerName: "+/-",
-    align: "center",
-    headerAlign: "center",
-    width: 60,
-  },
-  {
-    field: "pts",
-    headerName: "PTS",
-    align: "center",
-    headerAlign: "center",
-    width: 60,
-  },
-  {
-    field: "postseason",
-    headerName: "POSTSEASON",
-    editable: true,
-    flex: 1,
-    minWidth: 200,
-    valueGetter: (_value, row) => row.postseason?.title ?? "",
-    valueSetter: (newValue, row) => {
-      const newRow = { ...row };
-      newRow.postseason = newValue ? { title: String(newValue) } : null;
-      return newRow;
-    },
-    renderCell: (params) => (
-      <span>{String(params.row.postseason?.title ?? "") || ""}</span>
-    ),
-  },
-];
 
 const Standings = ({ leagueId, seasonId, title }: Props) => {
   const { data } = getStandings({ leagueId: [leagueId], seasonId });
@@ -133,6 +42,8 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
   const prevParamsRef = useRef<string | null>(null);
 
   const { mutateAsync: updateTeamTournament } = useUpdateTeamTournament();
+
+  const apiRef = useGridApiRef();
 
   const saveChainRef = useRef<Promise<unknown>>(Promise.resolve());
 
@@ -145,6 +56,220 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
       setUpdatedCells(new Set());
     }
   }, [data, leagueId, seasonId]);
+
+  const savePostseason = useCallback(
+    async (
+      row: TStandings,
+      postseasonId: number | null,
+      postseasonName: string,
+    ) => {
+      saveChainRef.current = saveChainRef.current
+        .catch(() => undefined)
+        .then(() =>
+          updateTeamTournament({
+            id: row.id,
+            tournament_id: row.tournament_id,
+            team_id: row.team_id,
+            postseason_id: postseasonId,
+          }),
+        );
+
+      const saved = await saveChainRef.current.then(
+        () => true,
+        () => false,
+      );
+      if (!saved) return;
+
+      setTeamsState((prev) =>
+        prev.map((team) =>
+          team.id === row.id
+            ? {
+                ...team,
+                postseason_id: postseasonId,
+                postseason: postseasonName,
+              }
+            : team,
+        ),
+      );
+
+      setUpdatedCells((prev) => {
+        const next = new Set(prev);
+        next.add(`${row.id}-postseason_id`);
+        return next;
+      });
+
+      const field = "postseason_id";
+      if (apiRef.current.getCellMode(row.id, field) === GridCellModes.Edit) {
+        apiRef.current.stopCellEditMode({
+          id: row.id,
+          field,
+          ignoreModifications: true,
+        });
+      }
+    },
+    [apiRef, updateTeamTournament],
+  );
+
+  const columns = useMemo<GridColDef<TStandings>[]>(
+    () => [
+      {
+        field: "rank",
+        headerName: "#",
+        width: 50,
+        align: "center",
+        headerAlign: "center",
+      },
+      {
+        field: "fullName",
+        headerName: "TEAM",
+        flex: 1,
+        minWidth: 200,
+        renderCell: (params) => (
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {params.row.logo && <TableFlag alt="" src={params.row.logo} />}
+            <LinkRoute to={`/teams/${params.row.team_id}`}>
+              {params.row.full_name}
+            </LinkRoute>
+          </div>
+        ),
+      },
+      {
+        field: "games",
+        headerName: "GP",
+        editable: true,
+        align: "center",
+        headerAlign: "center",
+        width: 60,
+      },
+      {
+        field: "wins",
+        headerName: "W",
+        editable: true,
+        align: "center",
+        headerAlign: "center",
+        width: 60,
+      },
+      {
+        field: "ties",
+        headerName: "T",
+        editable: true,
+        align: "center",
+        headerAlign: "center",
+        width: 60,
+      },
+      {
+        field: "losts",
+        headerName: "L",
+        editable: true,
+        align: "center",
+        headerAlign: "center",
+        width: 60,
+      },
+      {
+        field: "goals_for",
+        headerName: "GF",
+        editable: true,
+        align: "center",
+        headerAlign: "center",
+        width: 60,
+      },
+      {
+        field: "goals_against",
+        headerName: "GA",
+        editable: true,
+        align: "center",
+        headerAlign: "center",
+        width: 60,
+      },
+      {
+        field: "gd",
+        headerName: "+/-",
+        align: "center",
+        headerAlign: "center",
+        width: 60,
+      },
+      {
+        field: "pts",
+        headerName: "PTS",
+        align: "center",
+        headerAlign: "center",
+        width: 60,
+      },
+      {
+        field: "postseason_id",
+        headerName: "POSTSEASON",
+        editable: true,
+        flex: 1,
+        minWidth: 200,
+        renderCell: (params) => (
+          <Box display="flex" alignItems="center" gap={0.5} width="100%">
+            <Box
+              flex={1}
+              minWidth={0}
+              sx={(theme) => ({
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                color:
+                  params.row.postseason === DID_NOT_MAKE_PLAYOFFS
+                    ? theme.palette.text.disabled
+                    : undefined,
+              })}
+            >
+              {params.row.postseason ?? ""}
+            </Box>
+            {params.row.postseason_id != null && (
+              <IconButton
+                size="small"
+                aria-label="Clear postseason"
+                title="Clear postseason"
+                sx={(theme) => ({
+                  transition: theme.transitions.create("opacity", {
+                    duration: theme.transitions.duration.shortest,
+                  }),
+                  "@media (hover: hover)": {
+                    opacity: 0,
+                    ".MuiDataGrid-cell:hover &": { opacity: 1 },
+                    "&:focus-visible": { opacity: 1 },
+                  },
+                })}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  void savePostseason(params.row, null, "");
+                }}
+              >
+                <ClearIcon fontSize="small" />
+              </IconButton>
+            )}
+          </Box>
+        ),
+        renderEditCell: (params) => (
+          <Box display="flex" alignItems="center" gap={0.5} width="100%">
+            <Box flex={1} minWidth={0}>
+              <SelectPostseason
+                autoOpen
+                value={(params.value as number | null) ?? null}
+                onChange={(value, option) =>
+                  void savePostseason(params.row, value, option?.name ?? "")
+                }
+              />
+            </Box>
+            {params.value != null && (
+              <IconButton
+                size="small"
+                aria-label="Clear postseason"
+                title="Clear postseason"
+                onClick={() => void savePostseason(params.row, null, "")}
+              >
+                <ClearIcon fontSize="small" />
+              </IconButton>
+            )}
+          </Box>
+        ),
+      },
+    ],
+    [savePostseason],
+  );
 
   const rowsWithRank = useMemo(() => {
     const sortedTeams = [...teamsState].sort((a, b) => {
@@ -206,9 +331,6 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
         payload[key] = updatedRow[key];
       }
     }
-    if (changedFields.includes("postseason")) {
-      payload.postseason = updatedRow.postseason;
-    }
     saveChainRef.current = saveChainRef.current
       .catch(() => undefined)
       .then(() => updateTeamTournament(payload));
@@ -238,6 +360,7 @@ const Standings = ({ leagueId, seasonId, title }: Props) => {
           content={`${formatSeason(seasonId)} ${title} Standings`}
         />
         <DataGrid
+          apiRef={apiRef}
           rows={rowsWithRank}
           columns={columns}
           getRowId={(row) => row.id}

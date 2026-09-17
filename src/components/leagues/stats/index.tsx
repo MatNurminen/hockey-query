@@ -19,7 +19,10 @@ const PlayersStats = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const leagueId = Number(searchParams.get("league"));
   const tab = searchParams.get("tab") || "one";
-  const isSeasonTab = tab === "one";
+  const isDetailTab = tab === "one";
+  const isTotalTab = tab === "two";
+  const isSeasonsTab = tab === "three";
+  const isTeamTab = tab === "four";
   const { startYear: latestSeason } = useLatestSeason();
 
   // Последний выбранный сезон: на All-Time табах параметр уходит из URL,
@@ -28,13 +31,19 @@ const PlayersStats = () => {
   const seasonParam =
     Number(searchParams.get("season")) || lastSeasonRef.current || latestSeason;
   // Сезон показываем только на табе Season: на остальных он не имеет смысла
-  const seasonId = isSeasonTab ? seasonParam : 0;
+  const seasonId = isDetailTab ? seasonParam : 0;
   const playerOrd = searchParams.get("playerOrd")
     ? [Number(searchParams.get("playerOrd"))]
     : undefined;
   const teamId = Number(searchParams.get("teamId")) || undefined;
   const nationId = Number(searchParams.get("nationId")) || undefined;
   const offset = Number(searchParams.get("offset")) || 0;
+
+  // Все таблицы грузим сразу — так переключение табов мгновенное, — но неактивные
+  // табы всегда просят первую страницу: переключение таба сбрасывает offset в 0,
+  // поэтому данные там уже готовы, а пагинация активного таба больше не тянет за
+  // собой три запроса за таблицы, которых на экране нет
+  const tabOffset = (isActiveTab: boolean) => (isActiveTab ? offset : 0);
 
   useEffect(() => {
     const seasonFromUrl = Number(searchParams.get("season"));
@@ -43,7 +52,7 @@ const PlayersStats = () => {
       lastSeasonRef.current = seasonFromUrl;
     }
 
-    if (isSeasonTab) {
+    if (isDetailTab) {
       // Сезон в URL, иначе страница зафиксирует его отсутствие
       if (!seasonFromUrl && latestSeason) {
         setSearchParams(
@@ -58,7 +67,7 @@ const PlayersStats = () => {
         replace: true,
       });
     }
-  }, [isSeasonTab, latestSeason, searchParams, setSearchParams]);
+  }, [isDetailTab, latestSeason, searchParams, setSearchParams]);
 
   const detailParams = {
     leagueId: [leagueId],
@@ -67,7 +76,7 @@ const PlayersStats = () => {
     teamId,
     nationId,
     limit: LIMIT,
-    offset,
+    offset: tabOffset(isDetailTab),
   };
   const totalParams = {
     leagueId,
@@ -75,7 +84,7 @@ const PlayersStats = () => {
     teamId,
     nationId,
     limit: LIMIT,
-    offset,
+    offset: tabOffset(isTotalTab),
   };
   const seasonParams = {
     leagueId: [leagueId],
@@ -83,7 +92,7 @@ const PlayersStats = () => {
     teamId,
     nationId,
     limit: LIMIT,
-    offset,
+    offset: tabOffset(isSeasonsTab),
   };
   const totalByTeamParams = {
     leagueId,
@@ -91,7 +100,7 @@ const PlayersStats = () => {
     teamId,
     nationId,
     limit: LIMIT,
-    offset,
+    offset: tabOffset(isTeamTab),
   };
 
   const { data: playersResponse } = getPlayersStatsDetail(detailParams);
@@ -120,7 +129,7 @@ const PlayersStats = () => {
       <Box sx={{ px: 2, pb: 1 }}>
         <Header league={league} leagueId={leagueId} seasonId={seasonId} />
       </Box>
-      {isSeasonTab && (
+      {isDetailTab && (
         <Box sx={{ mt: 1, p: 2 }}>
           <SelectSeason value={seasonParam ? String(seasonParam) : ""} />
         </Box>
