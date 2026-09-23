@@ -1,3 +1,4 @@
+import { TAwardDto } from "../awards/types";
 import { TExternalLinksDto } from "../external-links/types";
 import { TCreateLeagueLogoDto, TLeagueLogoDto } from "../league-logos/types";
 
@@ -11,6 +12,7 @@ export type TLeagueDto = {
   type_id: number;
   links?: TExternalLinksDto | null;
   logos: TLeagueLogoDto[];
+  awards?: TAwardDto[];
 };
 
 export type TCreateLeagueDto = {

@@ -82,7 +82,7 @@ const League = () => {
         <Champions title={title} leagueId={leagueId} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
-        <Awards title={title} />
+        <Awards league={league}/>
       </Paper>
     </Container>
   );
