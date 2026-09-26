@@ -5,6 +5,22 @@ import { TLeagueDto } from "../leagues/types";
 import queryClient from "../queryClient";
 import { TAwardDto, TCreateAwardDto } from "./types";
 
+export const nameDuplicate =
+  "An award with this name already exists in this league";
+
+export const hasDuplicateAwardName = (
+  league: TLeagueDto | undefined,
+  name: string,
+  ignoreId?: number,
+) =>
+  Boolean(
+    league?.awards?.some(
+      (award) =>
+        award.id !== ignoreId &&
+        award.name.trim().toLowerCase() === name.trim().toLowerCase(),
+    ),
+  );
+
 export function useAddAward(leagueId: number) {
   const queryKey = ["league", leagueId];
   const showSnackbar = useShowSnackbar();
@@ -14,11 +30,16 @@ export function useAddAward(leagueId: number) {
     TCreateAwardDto,
     { previousData?: TLeagueDto; hasShownError?: boolean }
   >("api/awards", "POST", {
-    onMutate: async () => {
+    onMutate: async (values) => {
       await queryClient.cancelQueries({
         queryKey: queryKey,
       });
       const previousData = queryClient.getQueryData<TLeagueDto>(queryKey);
+
+      if (hasDuplicateAwardName(previousData, values.name)) {
+        throw new Error(nameDuplicate);
+      }
+
       return { previousData };
     },
     onSuccess: () => {
@@ -38,7 +59,9 @@ export function useAddAward(leagueId: number) {
         queryClient.setQueryData(queryKey, context.previousData);
       }
       if (!context?.hasShownError) {
-        if (axios.isAxiosError(err) && err.response?.data?.message) {
+        if (err.message === nameDuplicate) {
+          showSnackbar(nameDuplicate, "error");
+        } else if (axios.isAxiosError(err) && err.response?.data?.message) {
           showSnackbar(err.response.data.message, "error");
         } else {
           showSnackbar("Failed to add award", "error");
@@ -69,14 +92,10 @@ export function useUpdateAward(leagueId: number) {
       await queryClient.cancelQueries({ queryKey: queryKey });
       const previousData = queryClient.getQueryData<TLeagueDto>(queryKey);
 
-      const isNameDuplicate = previousData?.awards?.some(
-        (award) =>
-          award.id !== updatedAward.id &&
-          award.name.toLowerCase() === updatedAward.name.toLowerCase(),
-      );
-
-      if (isNameDuplicate) {
-        throw new Error("Award with this name in it league already exists");
+      if (
+        hasDuplicateAwardName(previousData, updatedAward.name, updatedAward.id)
+      ) {
+        throw new Error(nameDuplicate);
       }
 
       queryClient.setQueryData(
@@ -111,12 +130,8 @@ export function useUpdateAward(leagueId: number) {
         queryClient.setQueryData(queryKey, context.previousData);
       }
       if (!context?.hasShownError) {
-        if (err.message === "Award with this name already exists") {
-          showSnackbar("Award with this name already exists", "error");
-        } else if (
-          err.message === "Award with this short name already exists"
-        ) {
-          showSnackbar("Award with this short name already exists", "error");
+        if (err.message === nameDuplicate) {
+          showSnackbar(nameDuplicate, "error");
         } else if (axios.isAxiosError(err) && err.response?.data?.message) {
           showSnackbar(err.response.data.message, "error");
         } else {
