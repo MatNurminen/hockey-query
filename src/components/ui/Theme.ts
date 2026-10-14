@@ -1,7 +1,7 @@
-import { createTheme, responsiveFontSizes } from '@mui/material/styles';
-import type {} from '@mui/x-data-grid/themeAugmentation';
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
+import type {} from "@mui/x-data-grid/themeAugmentation";
 
-declare module '@mui/material/styles' {
+declare module "@mui/material/styles" {
   interface Palette {
     extra: {
       adminMenuBG: string;
@@ -16,7 +16,7 @@ declare module '@mui/material/styles' {
       updatedCellBG: string;
       errorCellBG: string;
     };
-    ocean: Palette['primary'];
+    ocean: Palette["primary"];
   }
   interface PaletteOptions {
     extra?: {
@@ -32,11 +32,11 @@ declare module '@mui/material/styles' {
       updatedCellBG: string;
       errorCellBG: string;
     };
-    ocean?: PaletteOptions['primary'];
+    ocean?: PaletteOptions["primary"];
   }
 }
 
-declare module '@mui/material/Button' {
+declare module "@mui/material/Button" {
   interface ButtonPropsColorOverrides {
     ocean: true;
   }
@@ -52,16 +52,29 @@ const theme = createTheme({
     MuiTableRow: {
       styleOverrides: {
         root: ({ theme }) => ({
-          '&:nth-of-type(even)': {
+          "&:nth-of-type(even)": {
             backgroundColor: theme.palette.extra.zebraBG,
           },
         }),
       },
     },
+    // MuiDataGrid: {
+    //   styleOverrides: {
+    //     row: ({ theme }) => ({
+    //       '&:nth-of-type(even)': {
+    //         backgroundColor: theme.palette.extra.zebraBG,
+    //       },
+    //     }),
+    //   },
+    // },
     MuiDataGrid: {
       styleOverrides: {
-        row: ({ theme }) => ({
-          '&:nth-of-type(even)': {
+        root: ({ theme }) => ({
+          "& .MuiDataGrid-cell": {
+            display: "flex",
+            alignItems: "center",
+          },
+          "& .MuiDataGrid-row:nth-of-type(even)": {
             backgroundColor: theme.palette.extra.zebraBG,
           },
         }),
@@ -70,32 +83,32 @@ const theme = createTheme({
   },
   palette: {
     extra: {
-      adminMenuBG: '#042e41',
-      menuBG: '#063950',
-      menuDividerBG: '#043950',
-      adminMenuText: '#ccdbe3',
-      footerBG: '#252525',
-      footerTextMuted: 'rgba(255,255,255,0.5)',
-      searchBarBG: '#eaecf2',
-      headerPositionBG: '#8abed2',
-      zebraBG: '#eceef3',
-      updatedCellBG: '#d0ffd0',
-      errorCellBG: '#f96b52',
+      adminMenuBG: "#042e41",
+      menuBG: "#063950",
+      menuDividerBG: "#043950",
+      adminMenuText: "#ccdbe3",
+      footerBG: "#252525",
+      footerTextMuted: "rgba(255,255,255,0.5)",
+      searchBarBG: "#eaecf2",
+      headerPositionBG: "#8abed2",
+      zebraBG: "#eceef3",
+      updatedCellBG: "#d0ffd0",
+      errorCellBG: "#f96b52",
     },
     secondary: {
-      main: '#ca3136',
+      main: "#ca3136",
     },
     ocean: {
-      main: '#093f56',
-      light: '#0b4f6a',
-      dark: '#062d3d',
-      contrastText: '#fff',
+      main: "#093f56",
+      light: "#0b4f6a",
+      dark: "#062d3d",
+      contrastText: "#fff",
     },
   },
   typography: {
     fontFamily: '"Exo", sans-serif',
     button: {
-      textTransform: 'none',
+      textTransform: "none",
     },
   },
   shape: {
