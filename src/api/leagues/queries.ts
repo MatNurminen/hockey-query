@@ -5,8 +5,10 @@ export const getLeaguesCurLogo = () => {
   return createQuery<TLeagueDto[]>(["leaguesLogo"], "/api/leagues/logo");
 };
 
-export const getLeague = (id: number) => {
-  return createQuery<TLeagueDto>(["league", id], `/api/leagues/${id}`);
+export const getLeague = (id: number, enabled = true) => {
+  return createQuery<TLeagueDto>(["league", id], `/api/leagues/${id}`, undefined, {
+    enabled,
+  });
 };
 
 export const getLeaguesByNation = (nationId: number) => {

@@ -29,7 +29,7 @@ export function useAddAward(leagueId: number) {
     TAwardDto,
     TCreateAwardDto,
     { previousData?: TLeagueDto; hasShownError?: boolean }
-  >("api/awards", "POST", {
+  >("/api/awards", "POST", {
     onMutate: async (values) => {
       await queryClient.cancelQueries({
         queryKey: queryKey,
