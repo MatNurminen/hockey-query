@@ -1,3 +1,5 @@
+import { TAwardDto } from "../awards/types";
+
 export type TPaginatedResponse<T> = {
   data: T[];
   total: number;
@@ -63,6 +65,7 @@ export type TPlayerStatDetail = {
   type_id: number;
   club_name?: string;
   league_name?: string;
+  awards?: TAwardDto[];
 };
 
 export type PlayersStatsDetailParams = {
