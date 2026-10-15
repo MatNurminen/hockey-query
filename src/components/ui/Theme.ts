@@ -58,15 +58,6 @@ const theme = createTheme({
         }),
       },
     },
-    // MuiDataGrid: {
-    //   styleOverrides: {
-    //     row: ({ theme }) => ({
-    //       '&:nth-of-type(even)': {
-    //         backgroundColor: theme.palette.extra.zebraBG,
-    //       },
-    //     }),
-    //   },
-    // },
     MuiDataGrid: {
       styleOverrides: {
         root: ({ theme }) => ({

@@ -33,6 +33,7 @@ import Teams from "./components/teams/teams";
 import Team from "./components/teams/team";
 
 import Player from "./components/players/player";
+import Awards from "./components/admin/awards";
 const FreeAgents = lazy(() => import("./components/players/free-agents"));
 const Drafts = lazy(() => import("./components/players/drafts"));
 const DraftDetails = lazy(
@@ -63,6 +64,7 @@ function App() {
             <Route path="/leagues" element={<Leagues />} />
             <Route path="/leagues/:id" element={<League />} />
             <Route path="/league-stats" element={<PlayersStats />} />
+            <Route path="/awards" element={<Awards />} />
 
             <Route path="/nations" element={<Nations />} />
             <Route path="/nations/:id" element={<Nation />} />

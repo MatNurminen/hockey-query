@@ -74,16 +74,17 @@ const League = () => {
       <Paper sx={{ mt: 4, backgroundColor: "transparent", boxShadow: "none" }}>
         <PlayersStatsTotal leagueId={leagueId} seasonId={seasonId} />
       </Paper>
-
       <Paper sx={{ mt: 2, backgroundColor: "transparent", boxShadow: "none" }}>
         <PlayersStatsPerSeason leagueId={leagueId} seasonId={seasonId} />
       </Paper>
       <Paper sx={{ mt: 2 }}>
         <Champions title={title} leagueId={leagueId} />
       </Paper>
-      <Paper sx={{ mt: 2 }}>
-        <Awards league={league}/>
-      </Paper>
+      {league.awards && league.awards.length > 0 && (
+        <Paper sx={{ mt: 2 }}>
+          <Awards league={league} />
+        </Paper>
+      )}
     </Container>
   );
 };

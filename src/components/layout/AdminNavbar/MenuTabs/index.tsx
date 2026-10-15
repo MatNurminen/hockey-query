@@ -13,8 +13,11 @@ import AddNation from "../../../admin/nations/addNation";
 import AddPlayer from "../../../admin/players/addPlayer";
 import AddLeague from "../../../admin/leagues/addLeague";
 import AddTournament from "../../../admin/tournaments/addTournament";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import type { ReactElement } from "react";
+import type { SxProps, Theme } from "@mui/material/styles";
 import { useFirstLeague } from "../../../../hooks/useFirstLeague";
+import LinkRoute from "../../../common/LinkRoute";
 
 interface ActionButtonItem {
   label: string;
@@ -30,6 +33,17 @@ function MenuTabs() {
   const { firstLeagueId } = useFirstLeague();
 
   const handleClose = () => setOpenDialog(null);
+
+  const menuButtonSx: SxProps<Theme> = {
+    color: theme.palette.extra.adminMenuText,
+    flexDirection: "column",
+    gap: "4px",
+    minHeight: 48,
+    textDecoration: "none",
+    "& .MuiButton-startIcon": {
+      margin: 0,
+    },
+  };
 
   const buttonItems: ActionButtonItem[] = [
     {
@@ -81,17 +95,20 @@ function MenuTabs() {
             startIcon={item.icon}
             color="inherit"
             onClick={item.onClick}
-            sx={{
-              color: theme.palette.extra.adminMenuText,
-              flexDirection: "column",
-              gap: "4px",
-              minHeight: 48,
-              textDecoration: "none",
-            }}
+            sx={menuButtonSx}
           >
             {item.label}
           </Button>
         ))}
+        <Button
+          component={LinkRoute}
+          to={`/awards?league=${firstLeagueId}`}
+          startIcon={<EmojiEventsIcon />}
+          color="inherit"
+          sx={menuButtonSx}
+        >
+          Awards
+        </Button>
       </Stack>
       {openDialog === "player" && <AddPlayer open onClose={handleClose} />}
       {openDialog === "nation" && <AddNation open onClose={handleClose} />}
