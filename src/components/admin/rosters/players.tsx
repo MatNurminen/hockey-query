@@ -1,4 +1,4 @@
-import { useState, useMemo, memo, useRef } from "react";
+import { useState, useMemo, memo } from "react";
 import Paper from "@mui/material/Paper";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@mui/material/Link";
@@ -12,6 +12,8 @@ import {
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
 import { TStandings } from "../../../api/teams-stats/types";
+import { TAwardDto } from "../../../api/awards/types";
+import { AwardsCell } from "./awardsCell";
 
 const EMPTY_ROWS: TPlayerStatDetail[] = [];
 
@@ -20,6 +22,7 @@ interface TeamGridProps {
   team: TStandings;
   leagueId: number;
   seasonId: number;
+  awards: TAwardDto[];
 }
 
 const TeamGrid = memo(function TeamGrid({
@@ -27,6 +30,7 @@ const TeamGrid = memo(function TeamGrid({
   team,
   leagueId,
   seasonId,
+  awards,
 }: TeamGridProps) {
   const [updatedCells, setUpdatedCells] = useState<Set<string>>(new Set());
 
@@ -134,10 +138,20 @@ const TeamGrid = memo(function TeamGrid({
       },
       {
         headerClassName: "header-bc",
-        field: "postseason",
+        field: "awards",
         headerName: "POSTSEASON",
         editable: false,
         flex: 1,
+        width: 900,
+        renderCell: (params) => (
+          <AwardsCell
+            playerTournamentId={params.row.id}
+            leagueId={leagueId}
+            seasonId={seasonId}
+            options={awards}
+            initialValue={params.row.awards}
+          />
+        ),
       },
       {
         headerClassName: "header-bc",
@@ -162,7 +176,7 @@ const TeamGrid = memo(function TeamGrid({
         ),
       },
     ],
-    [],
+    [awards],
   );
 
   return (
@@ -177,10 +191,10 @@ const TeamGrid = memo(function TeamGrid({
       <DataGrid
         rows={rows}
         columns={columns}
+        getRowHeight={() => "auto"}
         hideFooter
         disableColumnMenu
         columnHeaderHeight={40}
-        rowHeight={40}
         processRowUpdate={handleProcessRowUpdate}
         localeText={{ noRowsLabel: "No players" }}
         getCellClassName={(params) => {
@@ -215,34 +229,20 @@ const TeamGrid = memo(function TeamGrid({
 
 function buildTeamRows(
   players: TPlayerStatDetail[],
-  prevMap: Map<number, TPlayerStatDetail[]>,
 ): Map<number, TPlayerStatDetail[]> {
   const groups = new Map<number, TPlayerStatDetail[]>();
   for (const player of players) {
     const rows = groups.get(player.team_id);
-    if (rows) {
-      rows.push(player);
-    } else {
-      groups.set(player.team_id, [player]);
-    }
+    if (rows) rows.push(player);
+    else groups.set(player.team_id, [player]);
   }
 
   const map = new Map<number, TPlayerStatDetail[]>();
   for (const [teamId, rows] of groups) {
-    const sorted = rows.toSorted(
-      (a: TPlayerStatDetail, b: TPlayerStatDetail) =>
-        a.player_order - b.player_order,
+    map.set(
+      teamId,
+      rows.toSorted((a, b) => a.player_order - b.player_order),
     );
-    const prev = prevMap.get(teamId);
-    if (
-      prev &&
-      prev.length === sorted.length &&
-      prev.every((p, i) => p.id === sorted[i].id)
-    ) {
-      map.set(teamId, prev);
-    } else {
-      map.set(teamId, sorted);
-    }
   }
   return map;
 }
@@ -250,6 +250,7 @@ function buildTeamRows(
 interface Props {
   players: TPlayerStatDetail[];
   teams: TStandings[];
+  awards: TAwardDto[];
   leagueId: number;
   seasonId: number;
 }
@@ -257,15 +258,14 @@ interface Props {
 const Players = ({
   players: initialPlayers,
   teams,
+  awards,
   leagueId,
   seasonId,
 }: Props) => {
-  const prevMapRef = useRef<Map<number, TPlayerStatDetail[]>>(new Map());
-  const teamRows = useMemo(() => {
-    const map = buildTeamRows(initialPlayers, prevMapRef.current);
-    prevMapRef.current = map;
-    return map;
-  }, [initialPlayers]);
+  const teamRows = useMemo(
+    () => buildTeamRows(initialPlayers),
+    [initialPlayers],
+  );
 
   const sortedTeams = useMemo(
     () =>
@@ -284,6 +284,7 @@ const Players = ({
           rows={teamRows.get(team.team_id) ?? EMPTY_ROWS}
           leagueId={leagueId}
           seasonId={seasonId}
+          awards={awards}
         />
       ))}
     </Paper>

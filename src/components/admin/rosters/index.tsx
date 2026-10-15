@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { getPlayersStatsDetail } from "../../../api/players-stats/queries";
 import Header from "./header";
 import { getStandings } from "../../../api/teams-stats/queries";
+import { getAwardsByLeague } from "../../../api/awards/queries";
 
 const AdmRosters = () => {
   const [searchParams] = useSearchParams();
@@ -23,6 +24,9 @@ const AdmRosters = () => {
     isError,
   } = getPlayersStatsDetail({ leagueId, seasonId });
   const players = playersResponse?.data ?? [];
+
+  const { data: awardsByLeague } = getAwardsByLeague(leagueId[0]);
+  const awards = awardsByLeague ?? [];
 
   if (isLoading)
     return (
@@ -55,6 +59,7 @@ const AdmRosters = () => {
         <Players
           players={players}
           teams={teams}
+          awards={awards}
           leagueId={leagueId[0]}
           seasonId={seasonId}
         />
