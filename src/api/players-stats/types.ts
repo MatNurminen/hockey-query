@@ -1,4 +1,4 @@
-type PlayerAwardDto = {
+export type PlayerAwardDto = {
   id: number;
   award_id: number;
   name: string;
@@ -69,7 +69,7 @@ export type TPlayerStatDetail = {
   type_id: number;
   club_name?: string;
   league_name?: string;
-  awards?: PlayerAwardDto[];
+  awards: PlayerAwardDto[];
 };
 
 export type PlayersStatsDetailParams = {
