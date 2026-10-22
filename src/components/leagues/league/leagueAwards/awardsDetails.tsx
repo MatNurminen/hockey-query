@@ -12,14 +12,25 @@ import LinkRoute from "../../../common/LinkRoute";
 import { formatSeason } from "../../../utils/formatSeason";
 import Box from "@mui/material/Box";
 import TableFlag from "../../../common/Images/tableFlag";
+import Pagination from "../../../common/Pagination/pagination";
 
 interface Props {
   players: AwardStatsDetails[];
+  offset: number;
+  limit: number;
+  total: number;
+  onPageChange: (offset: number) => void;
 }
 
-const AwardsDetails = ({ players }: Props) => {
+const AwardsDetails = ({
+  players,
+  offset,
+  limit,
+  total,
+  onPageChange,
+}: Props) => {
   return (
-    <>
+    <Box mt={6}>
       <SectionChapter content="All Winners (Players)" txtAlign="left" />
       <TableContainer component={Paper}>
         <Table size="small">
@@ -32,7 +43,7 @@ const AwardsDetails = ({ players }: Props) => {
             ]}
           />
           <TableBody>
-            {players.map((player: any, key) => (
+            {players.map((player, key) => (
               <TableRow key={key}>
                 <TableCell align="center">
                   {formatSeason(player.season_id)}
@@ -59,7 +70,13 @@ const AwardsDetails = ({ players }: Props) => {
           </TableBody>
         </Table>
       </TableContainer>
-    </>
+      <Pagination
+        offset={offset}
+        limit={limit}
+        total={total}
+        onPageChange={onPageChange}
+      />
+    </Box>
   );
 };
 

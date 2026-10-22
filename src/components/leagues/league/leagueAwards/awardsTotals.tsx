@@ -15,13 +15,21 @@ import TableFlag from "../../../common/Images/tableFlag";
 
 interface Props {
   players: AwardStatsTotals[];
+  offset: number;
+  limit: number;
+  total: number;
+  onPageChange: (offset: number) => void;
 }
 
-const AwardsTotals = ({ players }: Props) => {
-  const handlePageChange = () => {};
-
+const AwardsTotals = ({
+  players,
+  offset,
+  limit,
+  total,
+  onPageChange,
+}: Props) => {
   return (
-    <>
+    <Box mt={6}>
       <SectionChapter content="Most Award Wins (Players)" txtAlign="left" />
       <TableContainer component={Paper}>
         <Table size="small">
@@ -33,7 +41,7 @@ const AwardsTotals = ({ players }: Props) => {
             ]}
           />
           <TableBody>
-            {players.map((player: any, key) => (
+            {players.map((player, key) => (
               <TableRow key={key}>
                 <TableCell align="center">{player.awards}</TableCell>
                 <TableCell sx={{ minWidth: 160 }}>
@@ -52,15 +60,12 @@ const AwardsTotals = ({ players }: Props) => {
         </Table>
       </TableContainer>
       <Pagination
-        //offset={offset}
-        //limit={limit}
-        offset={0}
-        limit={50}
-        //total={currentTotal}
-        total={players.length}
-        onPageChange={handlePageChange}
+        offset={offset}
+        limit={limit}
+        total={total}
+        onPageChange={onPageChange}
       />
-    </>
+    </Box>
   );
 };
 

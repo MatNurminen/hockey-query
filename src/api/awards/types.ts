@@ -9,11 +9,25 @@ export type TCreateAwardDto = {
   name: string;
 };
 
+export type TPaginatedResponse<T> = {
+  data: T[];
+  total: number;
+  limit: number;
+  offset: number;
+};
+
+export type TAwardsStatsParams = {
+  leagueId: number;
+  awardId: number;
+  limit?: number;
+  offset?: number;
+};
+
 interface AwardStats {
   id: number;
   name: string;
   player_id: number;
-  fist_name: string;
+  first_name: string;
   last_name: string;
   birth_year: number;
   player_position: string;
@@ -21,6 +35,7 @@ interface AwardStats {
 }
 
 export interface AwardStatsDetails extends AwardStats {
+  season_id: number;
   full_name: string;
   team_id: number;
 }

@@ -1,5 +1,13 @@
+import { keepPreviousData } from "@tanstack/react-query";
 import { createQuery } from "../factories/queryFactory";
-import { AwardStatsDetails, AwardStatsTotals, TAwardDto } from "./types";
+import { buildQueryString } from "../factories/queryUtils";
+import {
+  AwardStatsDetails,
+  AwardStatsTotals,
+  TAwardDto,
+  TAwardsStatsParams,
+  TPaginatedResponse,
+} from "./types";
 
 export const getAwardsByLeague = (leagueId: number) => {
   return createQuery<TAwardDto[]>(
@@ -8,16 +16,36 @@ export const getAwardsByLeague = (leagueId: number) => {
   );
 };
 
-export const getAwardsPlayersDetails = (leagueId: number, awardId: number) => {
-  return createQuery<AwardStatsDetails[]>(
-    ["awardsPlayersDetails", leagueId, awardId],
-    `/api/awards/detail?leagueId=${leagueId}&awardId=${awardId}`,
+export const getAwardsPlayersDetails = (
+  params: TAwardsStatsParams,
+  options?: { enabled?: boolean },
+) => {
+  const queryString = buildQueryString(params);
+
+  return createQuery<
+    TPaginatedResponse<AwardStatsDetails>,
+    TPaginatedResponse<AwardStatsDetails>
+  >(
+    ["awardsPlayersDetails", params],
+    `/api/awards/detail?${queryString}`,
+    undefined,
+    { placeholderData: keepPreviousData, ...options },
   );
 };
 
-export const getAwardsPlayersTotals = (leagueId: number, awardId: number) => {
-  return createQuery<AwardStatsTotals[]>(
-    ["awardsPlayersTotals", leagueId, awardId],
-    `/api/awards/total?leagueId=${leagueId}&awardId=${awardId}`,
+export const getAwardsPlayersTotals = (
+  params: TAwardsStatsParams,
+  options?: { enabled?: boolean },
+) => {
+  const queryString = buildQueryString(params);
+
+  return createQuery<
+    TPaginatedResponse<AwardStatsTotals>,
+    TPaginatedResponse<AwardStatsTotals>
+  >(
+    ["awardsPlayersTotals", params],
+    `/api/awards/total?${queryString}`,
+    undefined,
+    { placeholderData: keepPreviousData, ...options },
   );
 };
