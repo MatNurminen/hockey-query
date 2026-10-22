@@ -5,6 +5,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { memo } from "react";
+import LinkRoute from "../../common/LinkRoute";
 
 interface Props {
   league: TLeagueDto;
@@ -17,7 +18,11 @@ const Awards = ({ league }: Props) => {
       <List sx={{ columns: { sm: 1, md: 2 }, pb: 1 }} dense disablePadding>
         {league.awards?.map((award) => (
           <ListItem key={award.id}>
-            <ListItemText primary={league.short_name + " " + award.name} />
+            <LinkRoute
+              to={`/league-awards?leagueId=${award.league_id}&awardId=${award.id}`}
+            >
+              <ListItemText primary={league.short_name + " " + award.name} />
+            </LinkRoute>
           </ListItem>
         ))}
       </List>
