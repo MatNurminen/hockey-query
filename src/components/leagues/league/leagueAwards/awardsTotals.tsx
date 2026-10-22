@@ -9,12 +9,17 @@ import { AwardStatsTotals } from "../../../../api/awards/types";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import LinkRoute from "../../../common/LinkRoute";
+import Pagination from "../../../common/Pagination/pagination";
+import Box from "@mui/material/Box";
+import TableFlag from "../../../common/Images/tableFlag";
 
 interface Props {
   players: AwardStatsTotals[];
 }
 
 const AwardsTotals = ({ players }: Props) => {
+  const handlePageChange = () => {};
+
   return (
     <>
       <SectionChapter content="Most Award Wins (Players)" txtAlign="left" />
@@ -32,14 +37,13 @@ const AwardsTotals = ({ players }: Props) => {
               <TableRow key={key}>
                 <TableCell align="center">{player.awards}</TableCell>
                 <TableCell sx={{ minWidth: 160 }}>
-                  <LinkRoute
-                    underline="hover"
-                    //to={`/players/${player.id}`}
-                    to="/"
-                  >
-                    {player.first_name} {player.last_name} (
-                    {player.player_position})
-                  </LinkRoute>
+                  <Box display="flex" alignItems="center">
+                    <TableFlag alt="" src={player.flag} />
+                    <LinkRoute to={`/players/${player.player_id}`} ml={1}>
+                      {player.first_name} {player.last_name} (
+                      {player.player_position})
+                    </LinkRoute>
+                  </Box>
                 </TableCell>
                 <TableCell align="center">{player.birth_year}</TableCell>
               </TableRow>
@@ -47,6 +51,15 @@ const AwardsTotals = ({ players }: Props) => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Pagination
+        //offset={offset}
+        //limit={limit}
+        offset={0}
+        limit={50}
+        //total={currentTotal}
+        total={players.length}
+        onPageChange={handlePageChange}
+      />
     </>
   );
 };

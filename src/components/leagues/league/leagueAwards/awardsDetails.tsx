@@ -10,6 +10,8 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import LinkRoute from "../../../common/LinkRoute";
 import { formatSeason } from "../../../utils/formatSeason";
+import Box from "@mui/material/Box";
+import TableFlag from "../../../common/Images/tableFlag";
 
 interface Props {
   players: AwardStatsDetails[];
@@ -26,6 +28,7 @@ const AwardsDetails = ({ players }: Props) => {
               { align: "center", text: "Season" },
               { text: "Award Winner" },
               { align: "center", text: "Born" },
+              { text: "Team" },
             ]}
           />
           <TableBody>
@@ -35,16 +38,22 @@ const AwardsDetails = ({ players }: Props) => {
                   {formatSeason(player.season_id)}
                 </TableCell>
                 <TableCell sx={{ minWidth: 160 }}>
-                  <LinkRoute
-                    underline="hover"
-                    //to={`/players/${player.id}`}
-                    to="/"
-                  >
-                    {player.first_name} {player.last_name} (
-                    {player.player_position})
-                  </LinkRoute>
+                  <Box display="flex" alignItems="center">
+                    <TableFlag alt="" src={player.flag} />
+                    <LinkRoute to={`/players/${player.player_id}`} ml={1}>
+                      {player.first_name} {player.last_name} (
+                      {player.player_position})
+                    </LinkRoute>
+                  </Box>
                 </TableCell>
                 <TableCell align="center">{player.birth_year}</TableCell>
+                <TableCell sx={{ minWidth: 160 }}>
+                  <LinkRoute
+                    to={`/teams/${player.team_id}?season=${player.season_id}`}
+                  >
+                    {player.full_name}
+                  </LinkRoute>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

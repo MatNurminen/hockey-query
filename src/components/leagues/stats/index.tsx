@@ -25,12 +25,9 @@ const PlayersStats = () => {
   const isTeamTab = tab === "four";
   const { startYear: latestSeason } = useLatestSeason();
 
-  // Последний выбранный сезон: на All-Time табах параметр уходит из URL,
-  // и без этого возврат на таб Season сбрасывал бы выбор на последний сезон
   const lastSeasonRef = useRef<number | null>(null);
   const seasonParam =
     Number(searchParams.get("season")) || lastSeasonRef.current || latestSeason;
-  // Сезон показываем только на табе Season: на остальных он не имеет смысла
   const seasonId = isDetailTab ? seasonParam : 0;
   const playerOrd = searchParams.get("playerOrd")
     ? [Number(searchParams.get("playerOrd"))]
@@ -39,10 +36,6 @@ const PlayersStats = () => {
   const nationId = Number(searchParams.get("nationId")) || undefined;
   const offset = Number(searchParams.get("offset")) || 0;
 
-  // Все таблицы грузим сразу — так переключение табов мгновенное, — но неактивные
-  // табы всегда просят первую страницу: переключение таба сбрасывает offset в 0,
-  // поэтому данные там уже готовы, а пагинация активного таба больше не тянет за
-  // собой три запроса за таблицы, которых на экране нет
   const tabOffset = (isActiveTab: boolean) => (isActiveTab ? offset : 0);
 
   useEffect(() => {
@@ -53,7 +46,6 @@ const PlayersStats = () => {
     }
 
     if (isDetailTab) {
-      // Сезон в URL, иначе страница зафиксирует его отсутствие
       if (!seasonFromUrl && latestSeason) {
         setSearchParams(
           updateSearchParams(searchParams, {
