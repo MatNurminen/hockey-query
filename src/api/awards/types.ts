@@ -12,16 +12,17 @@ export type TCreateAwardDto = {
 interface AwardStats {
   id: number;
   name: string;
+  player_id: number;
   fist_name: string;
   last_name: string;
   birth_year: number;
   player_position: string;
+  flag: string;
 }
 
 export interface AwardStatsDetails extends AwardStats {
-  total_awards: number;
-  first_award_year: number;
-  last_award_year: number;
+  full_name: string;
+  team_id: number;
 }
 
 export interface AwardStatsTotals extends AwardStats {
