@@ -11,6 +11,7 @@ import Box from "@mui/material/Box";
 import TableFlag from "../../common/Images/tableFlag";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import LinkRoute from "../../common/LinkRoute";
+import Postseason from "../../common/Table/postseason";
 
 interface Props {
   playerName: string;
@@ -83,9 +84,9 @@ const StatsTab = ({ playerName, playerId, typeId }: Props) => {
                   <TableCell align="center">
                     {(stat.goals / stat.games || 0).toFixed(1)}
                   </TableCell>
-                  {/* <TableCell sx={{ minWidth: 160 }}>
-                    {stat.postseason}
-                  </TableCell> */}
+                  <TableCell sx={{ minWidth: 160 }}>
+                    <Postseason awards={stat.awards} />
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>

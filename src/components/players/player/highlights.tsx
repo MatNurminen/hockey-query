@@ -2,6 +2,7 @@ import { memo, useState } from "react";
 import Tab from "@mui/material/Tab";
 import StyledTabs from "../../common/Tabs/styledTabs";
 import HighlightsTab from "./highlightsTab";
+import { Cell } from "../../common/Table/types";
 
 interface Props {
   playerName: string;
@@ -11,9 +12,7 @@ interface Props {
 interface Item {
   id: number;
   title: string;
-  headerCells: {
-    text: string;
-  }[];
+  headerCells: Cell[];
 }
 
 const items: Item[] = [
@@ -25,7 +24,7 @@ const items: Item[] = [
   { id: 1, title: "league", headerCells: [{ text: "Awards By League" }] },
 ];
 
-const Highlights = ({ playerName }: Props) => {
+const Highlights = ({ playerId, playerName }: Props) => {
   const [value, setValue] = useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
@@ -48,8 +47,10 @@ const Highlights = ({ playerName }: Props) => {
         <div key={item.id} hidden={value !== item.id}>
           {value === item.id && (
             <HighlightsTab
+              playerId={playerId}
               playerName={playerName}
               headerCells={item.headerCells}
+              tabId={item.id}
             />
           )}
         </div>

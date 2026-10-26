@@ -3,9 +3,10 @@ import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import { TAwardDto } from "../../../../api/awards/types";
 
 interface Props {
-  awards: any[];
+  awards: TAwardDto[];
 }
 
 const Postseason = ({ awards }: Props) => {

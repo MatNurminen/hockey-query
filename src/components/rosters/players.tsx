@@ -12,6 +12,7 @@ import { TPlayerStatDetail } from "../../api/players-stats/types";
 import { memo, useMemo } from "react";
 import { Cell } from "../common/Table/types";
 import LinkRoute from "../common/LinkRoute";
+import Postseason from "../common/Table/postseason";
 
 interface Props {
   players: TPlayerStatDetail[];
@@ -61,8 +62,12 @@ const Players = ({ players, teams }: Props) => {
                   )
                   .map((player: TPlayerStatDetail) => (
                     <TableRow key={player.id}>
-                      <TableCell align="center">{player.jersey_number}</TableCell>
-                      <TableCell align="center">{player.player_position}</TableCell>
+                      <TableCell align="center">
+                        {player.jersey_number}
+                      </TableCell>
+                      <TableCell align="center">
+                        {player.player_position}
+                      </TableCell>
                       <TableCell align="center">
                         <TableFlag src={player.player_flag} alt="" />
                       </TableCell>
@@ -76,9 +81,9 @@ const Players = ({ players, teams }: Props) => {
                       </TableCell>
                       <TableCell align="center">{player.games}</TableCell>
                       <TableCell align="center">{player.goals}</TableCell>
-                      {/* <TableCell sx={{ minWidth: 160 }}>
-                        {player.postseason}
-                      </TableCell> */}
+                      <TableCell sx={{ minWidth: 160 }}>
+                        <Postseason awards={player.awards} />
+                      </TableCell>
                       <TableCell align="center">
                         {player.season_id - player.birth_year}
                       </TableCell>
