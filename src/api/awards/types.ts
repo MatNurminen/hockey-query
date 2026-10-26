@@ -43,3 +43,11 @@ export interface AwardStatsDetails extends AwardStats {
 export interface AwardStatsTotals extends AwardStats {
   awards: number;
 }
+
+export interface AwardByPlayer {
+  id: number;
+  name: string;
+  season_id: number;
+  short_name: string;
+  league_id: number;
+}

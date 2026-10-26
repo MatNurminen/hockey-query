@@ -2,6 +2,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { createQuery } from "../factories/queryFactory";
 import { buildQueryString } from "../factories/queryUtils";
 import {
+  AwardByPlayer,
   AwardStatsDetails,
   AwardStatsTotals,
   TAwardDto,
@@ -47,5 +48,12 @@ export const getAwardsPlayersTotals = (
     `/api/awards/total?${queryString}`,
     undefined,
     { placeholderData: keepPreviousData, ...options },
+  );
+};
+
+export const getAwardsByPlayer = (playerId: number) => {
+  return createQuery<AwardByPlayer[]>(
+    ["awardsByPlayer", playerId],
+    `/api/awards/player?playerId=${playerId}`,
   );
 };
