@@ -2,7 +2,7 @@ import { useState } from "react";
 import Badge from "@mui/material/Badge";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
 import { PlayerAwardDto } from "../../../../api/players-stats/types";
 
 interface Props {
@@ -13,9 +13,6 @@ const Postseason = ({ awards }: Props) => {
   const [expanded, setExpanded] = useState(false);
 
   if (!awards?.length) return null;
-
-console.log('awards', awards);
-
 
   const hasMany = awards.length > 1;
   const visibleAwards = expanded || !hasMany ? awards : awards.slice(0, 1);
@@ -65,7 +62,7 @@ console.log('awards', awards);
                 }}
                 sx={{ padding: 0 }}
               >
-                <OpenInFullIcon
+                <CloseFullscreenIcon
                   fontSize="small"
                   sx={{ transform: "rotate(180deg)" }}
                 />

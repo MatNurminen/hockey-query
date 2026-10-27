@@ -15,6 +15,7 @@ import LinkRoute from "../../common/LinkRoute";
 import Selects from "./selects";
 import { tournaments } from "./tournaments";
 import { useSearchParams } from "react-router-dom";
+import Postseason from "../../common/Table/postseason";
 
 interface Props {
   nation: string;
@@ -72,46 +73,40 @@ const StatsTab = ({ nation, title, players }: Props) => {
 
               return (
                 <TableBody key={league.league_id}>
-                  <HeaderPosition
-                    row
-                    cells={[league.short_name]}
-                    colSpan={8}
-                  />
+                  <HeaderPosition row cells={[league.short_name]} colSpan={8} />
                   {leaguePlayers.map((player) => (
-                      <TableRow key={player.id}>
-                        <TableCell sx={{ minWidth: 160 }}>
+                    <TableRow key={player.id}>
+                      <TableCell sx={{ minWidth: 160 }}>
+                        <LinkRoute
+                          underline="hover"
+                          to={`/players/${player.player_id}`}
+                        >
+                          {player.first_name} {player.last_name} (
+                          {player.player_position})
+                        </LinkRoute>
+                      </TableCell>
+                      <TableCell sx={{ minWidth: 160 }}>
+                        <Box display="flex" alignItems="center">
+                          <TableFlag alt="flag" src={player.team_flag} />
                           <LinkRoute
                             underline="hover"
-                            to={`/players/${player.player_id}`}
+                            to={`/teams/${player.team_id}`}
+                            ml={1}
                           >
-                            {player.first_name} {player.last_name} (
-                            {player.player_position})
+                            {player.full_name}
                           </LinkRoute>
-                        </TableCell>
-                        <TableCell sx={{ minWidth: 160 }}>
-                          <Box display="flex" alignItems="center">
-                            <TableFlag alt="flag" src={player.team_flag} />
-                            <LinkRoute
-                              underline="hover"
-                              to={`/teams/${player.team_id}`}
-                              ml={1}
-                            >
-                              {player.full_name}
-                            </LinkRoute>
-                          </Box>
-                        </TableCell>
-                        <TableCell align="center">
-                          {player.birth_year}
-                        </TableCell>
-                        <TableCell align="center">{player.height}</TableCell>
-                        <TableCell align="center">{player.weight}</TableCell>
-                        <TableCell align="center">{player.games}</TableCell>
-                        <TableCell align="center">{player.goals}</TableCell>
-                        {/* <TableCell sx={{ minWidth: 160 }}>
-                          {player.postseason}
-                        </TableCell> */}
-                      </TableRow>
-                    ))}
+                        </Box>
+                      </TableCell>
+                      <TableCell align="center">{player.birth_year}</TableCell>
+                      <TableCell align="center">{player.height}</TableCell>
+                      <TableCell align="center">{player.weight}</TableCell>
+                      <TableCell align="center">{player.games}</TableCell>
+                      <TableCell align="center">{player.goals}</TableCell>
+                      <TableCell sx={{ minWidth: 160 }}>
+                        <Postseason awards={player.awards} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               );
             })}

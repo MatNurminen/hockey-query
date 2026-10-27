@@ -14,6 +14,7 @@ import { formatSeason } from "../../utils/formatSeason";
 import SectionChapter from "../../common/Sections/sectionChapter";
 import { TPlayerStatDetail } from "../../../api/players-stats/types";
 import { Fragment, memo } from "react";
+import Postseason from "../../common/Table/postseason";
 
 interface Props {
   teamId: number;
@@ -105,7 +106,9 @@ const Roster = ({ teamId, seasonId, title }: Props) => {
                     </TableCell>
                     <TableCell align="center">{player.games}</TableCell>
                     <TableCell align="center">{player.goals}</TableCell>
-                    {/* <TableCell sx={{ minWidth: 160 }}>{player.postseason}</TableCell> */}
+                    <TableCell sx={{ minWidth: 160 }}>
+                      <Postseason awards={player.awards} />
+                    </TableCell>
                     <TableCell align="center">
                       {player.season_id - player.birth_year}
                     </TableCell>
